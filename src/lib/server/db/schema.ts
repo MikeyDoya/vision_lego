@@ -1,4 +1,5 @@
-import { pgTable, text, integer, numeric, boolean, timestamp, primaryKey, pgEnum } from 'drizzle-orm/pg-core'
+import { pgTable, text, integer, numeric, boolean, timestamp, date, primaryKey, pgEnum } from 'drizzle-orm/pg-core'
+import { relations } from 'drizzle-orm'
 
 // ─── Enums ────────────────────────────────────────────────────────────────────
 
@@ -15,6 +16,14 @@ export const orderStatusEnum = pgEnum('order_status', [
 export const productCategoryEnum = pgEnum('product_category', [
 	'sunglasses',   // gafas de sol
 	'optical',      // monturas ópticas
+])
+
+export const expenseCategoryEnum = pgEnum('expense_category', [
+	'rent',         // arriendo
+	'payroll',      // nómina
+	'supplier',     // proveedor
+	'utilities',    // servicios
+	'other',        // otro
 ])
 
 // ─── Users (Better Auth compatible) ──────────────────────────────────────────
@@ -133,6 +142,17 @@ export const wishlistItems = pgTable('wishlist_items', {
 	primaryKey({ columns: [t.userId, t.productId] }),
 ])
 
+// ─── Métodos de envío ─────────────────────────────────────────────────────────
+
+export const shippingMethods = pgTable('shipping_methods', {
+	id:          text('id').primaryKey(),
+	name:        text('name').notNull(),
+	description: text('description'),
+	cost:        numeric('cost', { precision: 10, scale: 2 }).notNull(),
+	isActive:    boolean('is_active').notNull().default(true),
+	createdAt:   timestamp('created_at').notNull().defaultNow(),
+})
+
 // ─── Pedidos ──────────────────────────────────────────────────────────────────
 
 export const orders = pgTable('orders', {
@@ -145,10 +165,12 @@ export const orders = pgTable('orders', {
 	customerPhone:   text('customer_phone'),
 
 	// Dirección de envío
-	shippingAddress: text('shipping_address').notNull(),
-	shippingCity:    text('shipping_city').notNull(),
-	shippingDept:    text('shipping_dept').notNull(),   // departamento en Colombia
-	shippingZip:     text('shipping_zip'),
+	shippingAddress:  text('shipping_address').notNull(),
+	shippingCity:     text('shipping_city').notNull(),
+	shippingDept:     text('shipping_dept').notNull(),
+	shippingZip:      text('shipping_zip'),
+	shippingMethodId: text('shipping_method_id').references(() => shippingMethods.id, { onDelete: 'set null' }),
+	shippingCost:     numeric('shipping_cost', { precision: 10, scale: 2 }).notNull().default('0'),
 
 	status:          orderStatusEnum('status').notNull().default('pending'),
 	total:           numeric('total', { precision: 10, scale: 2 }).notNull(),
@@ -175,6 +197,59 @@ export const orderItems = pgTable('order_items', {
 	subtotal:     numeric('subtotal', { precision: 10, scale: 2 }).notNull(),
 })
 
+// ─── Negocio ──────────────────────────────────────────────────────────────────
+
+export const expenses = pgTable('expenses', {
+	id:          text('id').primaryKey(),
+	description: text('description').notNull(),
+	amount:      numeric('amount', { precision: 10, scale: 2 }).notNull(),
+	category:    expenseCategoryEnum('category').notNull(),
+	date:        date('date').notNull(),
+	notes:       text('notes'),
+	createdAt:   timestamp('created_at').notNull().defaultNow(),
+})
+
+export const receivables = pgTable('receivables', {
+	id:           text('id').primaryKey(),
+	customerName: text('customer_name').notNull(),
+	customerPhone:text('customer_phone'),
+	description:  text('description').notNull(),
+	amount:       numeric('amount', { precision: 10, scale: 2 }).notNull(),
+	paidAmount:   numeric('paid_amount', { precision: 10, scale: 2 }).notNull().default('0'),
+	dueDate:      date('due_date'),
+	isPaid:       boolean('is_paid').notNull().default(false),
+	createdAt:    timestamp('created_at').notNull().defaultNow(),
+	updatedAt:    timestamp('updated_at').notNull().defaultNow(),
+})
+
+// ─── Relations ────────────────────────────────────────────────────────────────
+
+export const productsRelations = relations(products, ({ one, many }) => ({
+	brand:    one(brands, { fields: [products.brandId], references: [brands.id] }),
+	variants: many(productVariants),
+	images:   many(productImages),
+}))
+
+export const productVariantsRelations = relations(productVariants, ({ one }) => ({
+	product: one(products, { fields: [productVariants.productId], references: [products.id] }),
+}))
+
+export const productImagesRelations = relations(productImages, ({ one }) => ({
+	product: one(products, { fields: [productImages.productId], references: [products.id] }),
+	variant: one(productVariants, { fields: [productImages.variantId], references: [productVariants.id] }),
+}))
+
+export const ordersRelations = relations(orders, ({ one, many }) => ({
+	user:           one(users, { fields: [orders.userId], references: [users.id] }),
+	shippingMethod: one(shippingMethods, { fields: [orders.shippingMethodId], references: [shippingMethods.id] }),
+	items:          many(orderItems),
+}))
+
+export const orderItemsRelations = relations(orderItems, ({ one }) => ({
+	order:   one(orders, { fields: [orderItems.orderId], references: [orders.id] }),
+	variant: one(productVariants, { fields: [orderItems.variantId], references: [productVariants.id] }),
+}))
+
 // ─── Tipos de TypeScript ──────────────────────────────────────────────────────
 
 export type User            = typeof users.$inferSelect
@@ -187,7 +262,12 @@ export type CartItem        = typeof cartItems.$inferSelect
 export type WishlistItem    = typeof wishlistItems.$inferSelect
 export type Order           = typeof orders.$inferSelect
 export type OrderItem       = typeof orderItems.$inferSelect
+export type ShippingMethod  = typeof shippingMethods.$inferSelect
+export type Expense         = typeof expenses.$inferSelect
+export type Receivable      = typeof receivables.$inferSelect
 
 export type NewProduct        = typeof products.$inferInsert
 export type NewProductVariant = typeof productVariants.$inferInsert
 export type NewOrder          = typeof orders.$inferInsert
+export type NewExpense        = typeof expenses.$inferInsert
+export type NewReceivable     = typeof receivables.$inferInsert
