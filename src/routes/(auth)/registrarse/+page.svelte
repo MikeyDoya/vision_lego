@@ -10,11 +10,11 @@
 	<title>Crear cuenta — Vision Lego</title>
 </svelte:head>
 
-<div class="rounded-xl bg-white px-8 py-10 shadow-sm ring-1 ring-gray-200">
-	<h1 class="mb-6 text-xl font-semibold text-gray-900">Crear cuenta</h1>
+<div class="rounded-xl bg-gray-900 px-8 py-10 ring-1 ring-gray-800">
+	<h1 class="mb-6 text-xl font-semibold text-white">Crear cuenta</h1>
 
 	{#if form?.message}
-		<p class="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{form.message}</p>
+		<p class="mb-4 rounded-lg bg-red-900/40 px-4 py-3 text-sm text-red-300 ring-1 ring-red-800">{form.message}</p>
 	{/if}
 
 	<form
@@ -29,31 +29,31 @@
 		class="space-y-5"
 	>
 		<div>
-			<label for="name" class="block text-sm font-medium text-gray-700">Nombre completo</label>
+			<label for="name" class="block text-sm font-medium text-gray-300">Nombre completo</label>
 			<input
 				id="name"
 				name="name"
 				type="text"
 				required
 				autocomplete="name"
-				class="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+				class="mt-1 block w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400"
 			/>
 		</div>
 
 		<div>
-			<label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+			<label for="email" class="block text-sm font-medium text-gray-300">Correo electrónico</label>
 			<input
 				id="email"
 				name="email"
 				type="email"
 				required
 				autocomplete="email"
-				class="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+				class="mt-1 block w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400"
 			/>
 		</div>
 
 		<div>
-			<label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+			<label for="password" class="block text-sm font-medium text-gray-300">Contraseña</label>
 			<input
 				id="password"
 				name="password"
@@ -61,22 +61,22 @@
 				required
 				autocomplete="new-password"
 				minlength="8"
-				class="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+				class="mt-1 block w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400"
 			/>
-			<p class="mt-1 text-xs text-gray-500">Mínimo 8 caracteres</p>
+			<p class="mt-1 text-xs text-gray-600">Mínimo 8 caracteres</p>
 		</div>
 
 		<button
 			type="submit"
 			disabled={loading}
-			class="flex w-full items-center justify-center rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-gray-700 disabled:opacity-60"
+			class="flex w-full cursor-pointer items-center justify-center rounded-lg bg-amber-400 px-4 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-amber-300 hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
 		>
 			{loading ? 'Creando cuenta…' : 'Crear cuenta'}
 		</button>
 	</form>
 
-	<p class="mt-6 text-center text-sm text-gray-600">
+	<p class="mt-6 text-center text-sm text-gray-500">
 		¿Ya tienes cuenta?
-		<a href="/iniciar-sesion" class="font-medium text-gray-900 underline">Inicia sesión</a>
+		<a href="/iniciar-sesion" class="font-medium text-amber-400 hover:text-amber-300">Inicia sesión</a>
 	</p>
 </div>

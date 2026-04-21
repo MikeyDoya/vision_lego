@@ -6,23 +6,18 @@
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
 
 	let quantity = $state(1);
-	// _imageIndex is the user's requested index; currentImageIndex clamps it to valid range
 	let _imageIndex = $state(0);
 	let addedToCart = $state(false);
-	// Track wishlist toggle optimistically without capturing stale prop reference
 	let wishlistOverride = $state<boolean | null>(null);
 	const isWishlisted = $derived(wishlistOverride !== null ? wishlistOverride : data.isWishlisted);
 
-	// Touch tracking for mobile swipe
 	let touchStartX = $state(0);
 	let touchEndX = $state(0);
 
-	// Unique option values for selectors
 	const colors = $derived([...new Set(data.variants.filter((v) => v.color).map((v) => v.color!))]);
 	const sizes = $derived([...new Set(data.variants.filter((v) => v.size).map((v) => v.size!))]);
 	const materials = $derived([...new Set(data.variants.filter((v) => v.material).map((v) => v.material!))]);
 
-	// User-explicit selection; null means "follow first available"
 	let _selectedColor = $state<string | null>(null);
 	let _selectedSize = $state<string | null>(null);
 	let _selectedMaterial = $state<string | null>(null);
@@ -31,7 +26,6 @@
 	const selectedSize = $derived(_selectedSize ?? sizes[0] ?? null);
 	const selectedMaterial = $derived(_selectedMaterial ?? materials[0] ?? null);
 
-	// Derive selected variant from chosen dimensions
 	const selectedVariantId = $derived.by(() => {
 		const match = data.variants.find((v) => {
 			const colorOk = !colors.length || !selectedColor || v.color === selectedColor;
@@ -43,7 +37,6 @@
 	});
 
 	const selectedVariant = $derived(data.variants.find((v) => v.id === selectedVariantId) ?? null);
-
 	const displayPrice = $derived(selectedVariant?.price ?? data.product.basePrice);
 
 	const stockStatus = $derived.by(() => {
@@ -53,7 +46,6 @@
 		return 'disponible';
 	});
 
-	// When variant selected, show matching images if available
 	const displayImages = $derived.by(() => {
 		if (!data.images.length) return [];
 		if (selectedVariantId) {
@@ -63,7 +55,6 @@
 		return data.images;
 	});
 
-	// Clamp to valid range; naturally resets toward 0 when displayImages shrinks
 	const currentImageIndex = $derived(displayImages.length ? Math.min(_imageIndex, displayImages.length - 1) : 0);
 
 	function prevImage() {
@@ -98,11 +89,10 @@
 </svelte:head>
 
 <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-	<!-- Breadcrumb -->
 	<nav class="mb-6 flex items-center gap-2 text-sm text-gray-500">
-		<a href="/productos" class="hover:text-gray-900">Productos</a>
+		<a href="/productos" class="hover:text-white">Productos</a>
 		<span>/</span>
-		<span class="text-gray-900">{data.product.name}</span>
+		<span class="text-gray-300">{data.product.name}</span>
 	</nav>
 
 	<div class="grid gap-8 lg:grid-cols-2">
@@ -110,7 +100,7 @@
 		<div>
 			{#if displayImages.length > 0}
 				<div
-					class="relative aspect-square overflow-hidden rounded-2xl bg-gray-100"
+					class="relative aspect-square overflow-hidden rounded-2xl bg-gray-900"
 					ontouchstart={handleTouchStart}
 					ontouchend={handleTouchEnd}
 					role="img"
@@ -124,7 +114,7 @@
 					{#if displayImages.length > 1}
 						<button
 							onclick={prevImage}
-							class="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 shadow hover:bg-white"
+							class="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-gray-950/80 text-white shadow hover:bg-gray-950"
 							aria-label="Imagen anterior"
 						>
 							<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,7 +123,7 @@
 						</button>
 						<button
 							onclick={nextImage}
-							class="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 shadow hover:bg-white"
+							class="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-gray-950/80 text-white shadow hover:bg-gray-950"
 							aria-label="Imagen siguiente"
 						>
 							<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -142,7 +132,6 @@
 						</button>
 					{/if}
 				</div>
-				<!-- Thumbnails -->
 				{#if displayImages.length > 1}
 					<div class="mt-3 flex gap-2 overflow-x-auto pb-1">
 						{#each displayImages as img, i (img.id)}
@@ -150,7 +139,7 @@
 								onclick={() => (_imageIndex = i)}
 								class={[
 									'h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 transition-colors',
-									i === currentImageIndex ? 'border-gray-900' : 'border-transparent',
+									i === currentImageIndex ? 'border-amber-400' : 'border-gray-700',
 								].join(' ')}
 								aria-label="Ver imagen {i + 1}"
 							>
@@ -160,8 +149,8 @@
 					</div>
 				{/if}
 			{:else}
-				<div class="flex aspect-square items-center justify-center rounded-2xl bg-gray-100">
-					<svg class="h-24 w-24 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<div class="flex aspect-square items-center justify-center rounded-2xl bg-gray-900">
+					<svg class="h-24 w-24 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
 					</svg>
 				</div>
@@ -170,22 +159,21 @@
 
 		<!-- Product info -->
 		<div class="flex flex-col">
-			<p class="text-sm font-medium uppercase tracking-wider text-gray-400">
+			<p class="text-sm font-medium uppercase tracking-wider text-gray-500">
 				{categoryLabel[data.product.category] ?? data.product.category}
 			</p>
-			<h1 class="mt-1 text-2xl font-bold text-gray-900 sm:text-3xl">{data.product.name}</h1>
-			<p class="mt-3 text-2xl font-bold text-gray-900">{formatCOP(displayPrice)}</p>
+			<h1 class="mt-1 text-2xl font-bold text-white sm:text-3xl">{data.product.name}</h1>
+			<p class="mt-3 text-2xl font-bold text-amber-400">{formatCOP(displayPrice)}</p>
 
 			{#if data.product.description}
-				<p class="mt-4 text-sm leading-relaxed text-gray-600">{data.product.description}</p>
+				<p class="mt-4 text-sm leading-relaxed text-gray-400">{data.product.description}</p>
 			{/if}
 
 			{#if data.variants.length > 0}
 				<div class="mt-6 space-y-4">
-					<!-- Color selector -->
 					{#if colors.length > 0}
 						<div>
-							<p class="mb-2 text-sm font-medium text-gray-900">
+							<p class="mb-2 text-sm font-medium text-gray-300">
 								Color{selectedColor ? `: ${selectedColor}` : ''}
 							</p>
 							<div class="flex flex-wrap gap-2">
@@ -195,8 +183,8 @@
 										class={[
 											'min-h-11 rounded-lg border px-3 py-2 text-sm transition-colors',
 											selectedColor === color
-												? 'border-gray-900 bg-gray-900 text-white'
-												: 'border-gray-300 text-gray-700 hover:border-gray-900',
+												? 'border-amber-400 bg-amber-400 text-gray-950 font-semibold'
+												: 'border-gray-700 text-gray-300 hover:border-gray-500',
 										].join(' ')}
 									>{color}</button>
 								{/each}
@@ -204,10 +192,9 @@
 						</div>
 					{/if}
 
-					<!-- Size selector -->
 					{#if sizes.length > 0}
 						<div>
-							<p class="mb-2 text-sm font-medium text-gray-900">
+							<p class="mb-2 text-sm font-medium text-gray-300">
 								Talla{selectedSize ? `: ${selectedSize}` : ''}
 							</p>
 							<div class="flex flex-wrap gap-2">
@@ -217,8 +204,8 @@
 										class={[
 											'min-h-11 rounded-lg border px-3 py-2 text-sm transition-colors',
 											selectedSize === size
-												? 'border-gray-900 bg-gray-900 text-white'
-												: 'border-gray-300 text-gray-700 hover:border-gray-900',
+												? 'border-amber-400 bg-amber-400 text-gray-950 font-semibold'
+												: 'border-gray-700 text-gray-300 hover:border-gray-500',
 										].join(' ')}
 									>{size}</button>
 								{/each}
@@ -226,10 +213,9 @@
 						</div>
 					{/if}
 
-					<!-- Material selector -->
 					{#if materials.length > 0}
 						<div>
-							<p class="mb-2 text-sm font-medium text-gray-900">
+							<p class="mb-2 text-sm font-medium text-gray-300">
 								Material{selectedMaterial ? `: ${selectedMaterial}` : ''}
 							</p>
 							<div class="flex flex-wrap gap-2">
@@ -239,8 +225,8 @@
 										class={[
 											'min-h-11 rounded-lg border px-3 py-2 text-sm transition-colors',
 											selectedMaterial === material
-												? 'border-gray-900 bg-gray-900 text-white'
-												: 'border-gray-300 text-gray-700 hover:border-gray-900',
+												? 'border-amber-400 bg-amber-400 text-gray-950 font-semibold'
+												: 'border-gray-700 text-gray-300 hover:border-gray-500',
 										].join(' ')}
 									>{material}</button>
 								{/each}
@@ -249,21 +235,20 @@
 					{/if}
 				</div>
 
-				<!-- Stock status -->
 				{#if selectedVariant}
 					<div class="mt-4">
 						{#if stockStatus === 'agotado'}
-							<span class="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-3 py-1 text-sm font-medium text-red-700">
+							<span class="inline-flex items-center gap-1.5 rounded-full bg-red-900/40 px-3 py-1 text-sm font-medium text-red-300 ring-1 ring-red-800">
 								<span class="h-2 w-2 rounded-full bg-red-500"></span>
 								Agotado
 							</span>
 						{:else if stockStatus === 'ultimas'}
-							<span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-sm font-medium text-amber-700">
+							<span class="inline-flex items-center gap-1.5 rounded-full bg-amber-900/40 px-3 py-1 text-sm font-medium text-amber-300 ring-1 ring-amber-800">
 								<span class="h-2 w-2 rounded-full bg-amber-500"></span>
 								Últimas unidades
 							</span>
 						{:else}
-							<span class="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-3 py-1 text-sm font-medium text-green-700">
+							<span class="inline-flex items-center gap-1.5 rounded-full bg-green-900/40 px-3 py-1 text-sm font-medium text-green-300 ring-1 ring-green-800">
 								<span class="h-2 w-2 rounded-full bg-green-500"></span>
 								Disponible
 							</span>
@@ -272,12 +257,11 @@
 				{/if}
 			{/if}
 
-			<!-- Add to cart -->
 			{#if form?.error}
-				<p class="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{form.error}</p>
+				<p class="mt-4 rounded-lg bg-red-900/40 px-4 py-3 text-sm text-red-300 ring-1 ring-red-800">{form.error}</p>
 			{/if}
 			{#if addedToCart}
-				<p class="mt-4 rounded-lg bg-green-50 px-4 py-3 text-sm text-green-700">¡Agregado al carrito!</p>
+				<p class="mt-4 rounded-lg bg-green-900/40 px-4 py-3 text-sm text-green-300 ring-1 ring-green-700">¡Agregado al carrito!</p>
 			{/if}
 
 			<div class="mt-6 flex gap-3">
@@ -295,18 +279,18 @@
 					class="flex flex-1 gap-3"
 				>
 					<input type="hidden" name="variantId" value={selectedVariantId ?? ''} />
-					<div class="flex items-center rounded-lg border border-gray-300">
+					<div class="flex items-center rounded-lg border border-gray-700">
 						<button
 							type="button"
 							onclick={() => (quantity = Math.max(1, quantity - 1))}
-							class="flex h-11 w-11 items-center justify-center text-gray-500 hover:text-gray-900"
+							class="flex h-11 w-11 items-center justify-center text-gray-500 hover:text-white"
 							aria-label="Reducir cantidad"
 						>−</button>
-						<span class="w-8 text-center text-sm font-medium">{quantity}</span>
+						<span class="w-8 text-center text-sm font-medium text-white">{quantity}</span>
 						<button
 							type="button"
 							onclick={() => (quantity = Math.min(selectedVariant?.stock ?? 1, quantity + 1))}
-							class="flex h-11 w-11 items-center justify-center text-gray-500 hover:text-gray-900"
+							class="flex h-11 w-11 items-center justify-center text-gray-500 hover:text-white"
 							aria-label="Aumentar cantidad"
 						>+</button>
 						<input type="hidden" name="quantity" value={quantity} />
@@ -314,13 +298,12 @@
 					<button
 						type="submit"
 						disabled={!selectedVariantId || stockStatus === 'agotado'}
-						class="h-11 flex-1 rounded-lg bg-gray-900 text-sm font-medium text-white hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50"
+						class="h-11 flex-1 cursor-pointer rounded-lg bg-amber-400 text-sm font-semibold text-gray-950 transition hover:bg-amber-300 disabled:cursor-not-allowed disabled:opacity-50"
 					>
 						{data.user ? 'Agregar al carrito' : 'Iniciar sesión para comprar'}
 					</button>
 				</form>
 
-				<!-- Wishlist button -->
 				<form
 					method="post"
 					action="?/toggleWishlist"
@@ -336,10 +319,10 @@
 					<button
 						type="submit"
 						class={[
-							'flex h-11 w-11 items-center justify-center rounded-lg border transition-colors',
+							'flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg border transition-colors',
 							isWishlisted
-								? 'border-red-200 bg-red-50 text-red-500'
-								: 'border-gray-300 text-gray-500 hover:border-gray-900 hover:text-gray-900',
+								? 'border-red-800 bg-red-900/40 text-red-400'
+								: 'border-gray-700 text-gray-500 hover:border-gray-500 hover:text-white',
 						].join(' ')}
 						aria-label={isWishlisted ? 'Quitar de lista de deseos' : 'Agregar a lista de deseos'}
 					>
@@ -350,16 +333,15 @@
 				</form>
 			</div>
 
-			<!-- Trust signals -->
-			<div class="mt-8 space-y-2 border-t border-gray-100 pt-6">
-				<div class="flex items-center gap-3 text-sm text-gray-600">
-					<svg class="h-5 w-5 shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			<div class="mt-8 space-y-2 border-t border-gray-800 pt-6">
+				<div class="flex items-center gap-3 text-sm text-gray-500">
+					<svg class="h-5 w-5 shrink-0 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
 					</svg>
 					Pago 100% seguro
 				</div>
-				<div class="flex items-center gap-3 text-sm text-gray-600">
-					<svg class="h-5 w-5 shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<div class="flex items-center gap-3 text-sm text-gray-500">
+					<svg class="h-5 w-5 shrink-0 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
 					</svg>
 					Devoluciones fáciles

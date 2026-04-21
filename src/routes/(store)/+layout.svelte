@@ -8,32 +8,37 @@
 	const isStaff = $derived(data.role === 'owner' || data.role === 'staff');
 </script>
 
-<div class="flex min-h-screen flex-col">
-	<header class="sticky top-0 z-40 border-b border-gray-200 bg-white">
+<div class="flex min-h-screen flex-col bg-gray-950">
+	<header class="sticky top-0 z-40 border-b border-gray-800 bg-gray-950/95 backdrop-blur">
 		<div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-			<a href="/" class="text-xl font-bold tracking-tight text-gray-900">Vision Lego</a>
+			<a href="/" class="text-xl font-bold tracking-tight text-white">Vision Lego</a>
 
 			<nav class="hidden items-center gap-6 md:flex">
-				<a href="/productos" class="text-sm font-medium text-gray-700 hover:text-gray-900">Productos</a>
+				<a
+					href="/productos"
+					class="text-sm font-semibold text-amber-400 transition hover:text-amber-300"
+				>
+					Productos
+				</a>
 				{#if isStaff}
-					<a href="/negocio" class="text-sm font-medium text-gray-700 hover:text-gray-900">Panel</a>
+					<a href="/negocio" class="text-sm font-medium text-gray-300 transition hover:text-white">Panel</a>
 					<form method="post" action="/cuenta?/salir" use:enhance>
-						<button type="submit" class="text-sm font-medium text-gray-500 hover:text-gray-900">Salir</button>
+						<button type="submit" class="cursor-pointer text-sm font-medium text-gray-500 transition hover:text-white">Salir</button>
 					</form>
 				{:else if data.user}
-					<a href="/carrito" class="text-sm font-medium text-gray-700 hover:text-gray-900">Carrito</a>
-					<a href="/cuenta" class="text-sm font-medium text-gray-700 hover:text-gray-900">Mi cuenta</a>
+					<a href="/carrito" class="text-sm font-medium text-gray-300 transition hover:text-white">Carrito</a>
+					<a href="/cuenta" class="text-sm font-medium text-gray-300 transition hover:text-white">Mi cuenta</a>
 					<form method="post" action="/cuenta?/salir" use:enhance>
-						<button type="submit" class="text-sm font-medium text-gray-500 hover:text-gray-900">Salir</button>
+						<button type="submit" class="cursor-pointer text-sm font-medium text-gray-500 transition hover:text-white">Salir</button>
 					</form>
 				{:else}
-					<a href="/iniciar-sesion" class="text-sm font-medium text-gray-700 hover:text-gray-900">Iniciar sesión</a>
-					<a href="/registrarse" class="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700">Registrarse</a>
+					<a href="/iniciar-sesion" class="text-sm font-medium text-gray-300 transition hover:text-white">Iniciar sesión</a>
+					<a href="/registrarse" class="rounded-lg bg-amber-400 px-4 py-2 text-sm font-semibold text-gray-950 transition hover:bg-amber-300">Registrarse</a>
 				{/if}
 			</nav>
 
 			<button
-				class="flex h-11 w-11 items-center justify-center rounded-lg md:hidden"
+				class="flex h-11 w-11 items-center justify-center rounded-lg text-gray-300 hover:text-white md:hidden"
 				onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
 				aria-label="Menú"
 			>
@@ -48,23 +53,23 @@
 		</div>
 
 		{#if mobileMenuOpen}
-			<div class="border-t border-gray-200 bg-white px-4 py-4 md:hidden">
+			<div class="border-t border-gray-800 bg-gray-950 px-4 py-4 md:hidden">
 				<nav class="flex flex-col gap-4">
-					<a href="/productos" class="text-sm font-medium text-gray-700">Productos</a>
+					<a href="/productos" class="text-sm font-semibold text-amber-400">Productos</a>
 					{#if isStaff}
-						<a href="/negocio" class="text-sm font-medium text-gray-700">Panel</a>
+						<a href="/negocio" class="text-sm font-medium text-gray-300">Panel</a>
 						<form method="post" action="/cuenta?/salir" use:enhance>
-							<button type="submit" class="text-sm font-medium text-gray-500">Salir</button>
+							<button type="submit" class="cursor-pointer text-sm font-medium text-gray-500">Salir</button>
 						</form>
 					{:else if data.user}
-						<a href="/carrito" class="text-sm font-medium text-gray-700">Carrito</a>
-						<a href="/cuenta" class="text-sm font-medium text-gray-700">Mi cuenta</a>
+						<a href="/carrito" class="text-sm font-medium text-gray-300">Carrito</a>
+						<a href="/cuenta" class="text-sm font-medium text-gray-300">Mi cuenta</a>
 						<form method="post" action="/cuenta?/salir" use:enhance>
-							<button type="submit" class="text-sm font-medium text-gray-500">Salir</button>
+							<button type="submit" class="cursor-pointer text-sm font-medium text-gray-500">Salir</button>
 						</form>
 					{:else}
-						<a href="/iniciar-sesion" class="text-sm font-medium text-gray-700">Iniciar sesión</a>
-						<a href="/registrarse" class="inline-block rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white">Registrarse</a>
+						<a href="/iniciar-sesion" class="text-sm font-medium text-gray-300">Iniciar sesión</a>
+						<a href="/registrarse" class="inline-block rounded-lg bg-amber-400 px-4 py-2 text-sm font-semibold text-gray-950">Registrarse</a>
 					{/if}
 				</nav>
 			</div>
@@ -75,7 +80,7 @@
 		{@render children()}
 	</main>
 
-	<footer class="border-t border-gray-200 bg-white py-8 text-center text-sm text-gray-500">
+	<footer class="border-t border-gray-800 bg-gray-950 py-8 text-center text-sm text-gray-500">
 		<p>&copy; {new Date().getFullYear()} Vision Lego. Todos los derechos reservados.</p>
 	</footer>
 </div>

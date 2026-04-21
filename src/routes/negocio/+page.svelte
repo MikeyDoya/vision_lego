@@ -15,31 +15,31 @@
 	<title>Dashboard — Vision Lego</title>
 </svelte:head>
 
-<h1 class="mb-6 text-2xl font-bold text-gray-900">Dashboard</h1>
+<h1 class="mb-6 text-2xl font-bold text-white">Dashboard</h1>
 
 <div class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
-	<div class="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+	<div class="rounded-xl bg-gray-900 p-6 ring-1 ring-gray-800">
 		<p class="text-sm font-medium text-gray-500">Ventas hoy</p>
-		<p class="mt-2 text-3xl font-bold text-gray-900">{data.todaySales}</p>
+		<p class="mt-2 text-3xl font-bold text-amber-400">{data.todaySales}</p>
 	</div>
-	<div class="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+	<div class="rounded-xl bg-gray-900 p-6 ring-1 ring-gray-800">
 		<p class="text-sm font-medium text-gray-500">Pedidos pendientes</p>
-		<p class="mt-2 text-3xl font-bold text-gray-900">{data.pendingOrders}</p>
+		<p class="mt-2 text-3xl font-bold text-white">{data.pendingOrders}</p>
 	</div>
-	<div class="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+	<div class="rounded-xl bg-gray-900 p-6 ring-1 ring-gray-800">
 		<p class="text-sm font-medium text-gray-500">Productos con stock bajo</p>
-		<p class="mt-2 text-3xl font-bold {data.lowStockCount > 0 ? 'text-red-600' : 'text-gray-900'}">{data.lowStockCount}</p>
+		<p class="mt-2 text-3xl font-bold {data.lowStockCount > 0 ? 'text-red-400' : 'text-white'}">{data.lowStockCount}</p>
 	</div>
 </div>
 
-<h2 class="mb-4 text-lg font-semibold text-gray-900">Accesos rápidos</h2>
+<h2 class="mb-4 text-lg font-semibold text-white">Accesos rápidos</h2>
 <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
 	{#each shortcuts as s (s.href)}
 		<a
 			href={s.href}
-			class="rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200 hover:ring-gray-400 transition"
+			class="rounded-xl bg-gray-900 p-5 ring-1 ring-gray-800 transition hover:bg-gray-800 hover:ring-amber-400/30"
 		>
-			<p class="font-semibold text-gray-900">{s.label}</p>
+			<p class="font-semibold text-white">{s.label}</p>
 			<p class="mt-1 text-sm text-gray-500">{s.desc}</p>
 		</a>
 	{/each}
