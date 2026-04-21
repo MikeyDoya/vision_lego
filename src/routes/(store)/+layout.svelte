@@ -4,6 +4,8 @@
 
 	let { children, data }: { children: import('svelte').Snippet; data: LayoutServerData } = $props();
 	let mobileMenuOpen = $state(false);
+
+	const isStaff = $derived(data.role === 'owner' || data.role === 'staff');
 </script>
 
 <div class="flex min-h-screen flex-col">
@@ -13,7 +15,12 @@
 
 			<nav class="hidden items-center gap-6 md:flex">
 				<a href="/productos" class="text-sm font-medium text-gray-700 hover:text-gray-900">Productos</a>
-				{#if data.user}
+				{#if isStaff}
+					<a href="/negocio" class="text-sm font-medium text-gray-700 hover:text-gray-900">Panel</a>
+					<form method="post" action="/cuenta?/salir" use:enhance>
+						<button type="submit" class="text-sm font-medium text-gray-500 hover:text-gray-900">Salir</button>
+					</form>
+				{:else if data.user}
 					<a href="/carrito" class="text-sm font-medium text-gray-700 hover:text-gray-900">Carrito</a>
 					<a href="/cuenta" class="text-sm font-medium text-gray-700 hover:text-gray-900">Mi cuenta</a>
 					<form method="post" action="/cuenta?/salir" use:enhance>
@@ -44,7 +51,12 @@
 			<div class="border-t border-gray-200 bg-white px-4 py-4 md:hidden">
 				<nav class="flex flex-col gap-4">
 					<a href="/productos" class="text-sm font-medium text-gray-700">Productos</a>
-					{#if data.user}
+					{#if isStaff}
+						<a href="/negocio" class="text-sm font-medium text-gray-700">Panel</a>
+						<form method="post" action="/cuenta?/salir" use:enhance>
+							<button type="submit" class="text-sm font-medium text-gray-500">Salir</button>
+						</form>
+					{:else if data.user}
 						<a href="/carrito" class="text-sm font-medium text-gray-700">Carrito</a>
 						<a href="/cuenta" class="text-sm font-medium text-gray-700">Mi cuenta</a>
 						<form method="post" action="/cuenta?/salir" use:enhance>

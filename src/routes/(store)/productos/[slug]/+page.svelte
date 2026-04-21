@@ -17,14 +17,19 @@
 	let touchStartX = $state(0);
 	let touchEndX = $state(0);
 
-	let selectedColor = $state<string | null>(null);
-	let selectedSize = $state<string | null>(null);
-	let selectedMaterial = $state<string | null>(null);
-
 	// Unique option values for selectors
 	const colors = $derived([...new Set(data.variants.filter((v) => v.color).map((v) => v.color!))]);
 	const sizes = $derived([...new Set(data.variants.filter((v) => v.size).map((v) => v.size!))]);
 	const materials = $derived([...new Set(data.variants.filter((v) => v.material).map((v) => v.material!))]);
+
+	// User-explicit selection; null means "follow first available"
+	let _selectedColor = $state<string | null>(null);
+	let _selectedSize = $state<string | null>(null);
+	let _selectedMaterial = $state<string | null>(null);
+
+	const selectedColor = $derived(_selectedColor ?? colors[0] ?? null);
+	const selectedSize = $derived(_selectedSize ?? sizes[0] ?? null);
+	const selectedMaterial = $derived(_selectedMaterial ?? materials[0] ?? null);
 
 	// Derive selected variant from chosen dimensions
 	const selectedVariantId = $derived.by(() => {
@@ -186,7 +191,7 @@
 							<div class="flex flex-wrap gap-2">
 								{#each colors as color (color)}
 									<button
-										onclick={() => (selectedColor = selectedColor === color ? null : color)}
+										onclick={() => (_selectedColor = selectedColor === color ? null : color)}
 										class={[
 											'min-h-11 rounded-lg border px-3 py-2 text-sm transition-colors',
 											selectedColor === color
@@ -208,7 +213,7 @@
 							<div class="flex flex-wrap gap-2">
 								{#each sizes as size (size)}
 									<button
-										onclick={() => (selectedSize = selectedSize === size ? null : size)}
+										onclick={() => (_selectedSize = selectedSize === size ? null : size)}
 										class={[
 											'min-h-11 rounded-lg border px-3 py-2 text-sm transition-colors',
 											selectedSize === size
@@ -230,7 +235,7 @@
 							<div class="flex flex-wrap gap-2">
 								{#each materials as material (material)}
 									<button
-										onclick={() => (selectedMaterial = selectedMaterial === material ? null : material)}
+										onclick={() => (_selectedMaterial = selectedMaterial === material ? null : material)}
 										class={[
 											'min-h-11 rounded-lg border px-3 py-2 text-sm transition-colors',
 											selectedMaterial === material

@@ -2,7 +2,6 @@ import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import { products, productImages } from '$lib/server/db/schema';
 import { eq, and } from 'drizzle-orm';
-import { formatCOP } from '$lib/utils/currency';
 
 export const load: PageServerLoad = async () => {
 	const featuredProducts = await db
@@ -11,6 +10,7 @@ export const load: PageServerLoad = async () => {
 			name: products.name,
 			slug: products.slug,
 			basePrice: products.basePrice,
+			category: products.category,
 		})
 		.from(products)
 		.where(and(eq(products.isActive, true), eq(products.isFeatured, true)))
@@ -24,8 +24,11 @@ export const load: PageServerLoad = async () => {
 	const imageMap = new Map(primaryImages.map((img) => [img.productId, img.url]));
 
 	const featured = featuredProducts.map((p) => ({
-		...p,
-		price: formatCOP(Number(p.basePrice)),
+		id: p.id,
+		name: p.name,
+		slug: p.slug,
+		basePrice: Number(p.basePrice),
+		category: p.category,
 		primaryImage: imageMap.get(p.id) ?? null,
 	}));
 

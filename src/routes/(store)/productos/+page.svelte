@@ -49,7 +49,8 @@
 
 	let hasFilters = $derived(
 		!!(data.filters.category || data.filters.brandId || data.filters.gender ||
-			data.filters.color || data.filters.material || data.filters.minPrice || data.filters.maxPrice)
+			data.filters.color || data.filters.material || data.filters.size ||
+			data.filters.minPrice || data.filters.maxPrice)
 	);
 </script>
 
@@ -166,6 +167,72 @@
 						{/each}
 					</div>
 				</div>
+
+				<!-- Color -->
+				{#if data.distinctColors.length > 0}
+					<div>
+						<p class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">Color</p>
+						<div class="space-y-1">
+							{#each data.distinctColors as color (color)}
+								<label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700">
+									<input
+										type="radio"
+										name="color"
+										value={color}
+										checked={data.filters.color === color}
+										onchange={() => setFilter('color', data.filters.color === color ? '' : color)}
+										class="rounded-full"
+									/>
+									{color}
+								</label>
+							{/each}
+						</div>
+					</div>
+				{/if}
+
+				<!-- Material -->
+				{#if data.distinctMaterials.length > 0}
+					<div>
+						<p class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">Material</p>
+						<div class="space-y-1">
+							{#each data.distinctMaterials as material (material)}
+								<label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700">
+									<input
+										type="radio"
+										name="material"
+										value={material}
+										checked={data.filters.material === material}
+										onchange={() => setFilter('material', data.filters.material === material ? '' : material)}
+										class="rounded-full"
+									/>
+									{material}
+								</label>
+							{/each}
+						</div>
+					</div>
+				{/if}
+
+				<!-- Talla -->
+				{#if data.distinctSizes.length > 0}
+					<div>
+						<p class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">Talla</p>
+						<div class="space-y-1">
+							{#each data.distinctSizes as size (size)}
+								<label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700">
+									<input
+										type="radio"
+										name="talla"
+										value={size}
+										checked={data.filters.size === size}
+										onchange={() => setFilter('talla', data.filters.size === size ? '' : size)}
+										class="rounded-full"
+									/>
+									{size}
+								</label>
+							{/each}
+						</div>
+					</div>
+				{/if}
 
 				<!-- Price range -->
 				<div>

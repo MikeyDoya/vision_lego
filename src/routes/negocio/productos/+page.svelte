@@ -3,6 +3,8 @@
 	import type { PageServerData } from './$types';
 
 	let { data }: { data: PageServerData } = $props();
+
+	let deletingId = $state<string | null>(null);
 </script>
 
 <svelte:head>
@@ -107,9 +109,34 @@
 								</form>
 							</td>
 							<td class="px-4 py-3 text-right">
-								<a href="/negocio/productos/{product.id}" class="text-sm font-medium text-gray-900 hover:underline">
-									Editar
-								</a>
+								<div class="flex items-center justify-end gap-3">
+									<a href="/negocio/productos/{product.id}" class="text-sm font-medium text-gray-900 hover:underline">
+										Editar
+									</a>
+									{#if deletingId === product.id}
+										<form method="post" action="?/deleteProduct" use:enhance={() => () => { deletingId = null; }}>
+											<input type="hidden" name="id" value={product.id} />
+											<button type="submit" class="text-sm font-medium text-red-600 hover:underline">
+												Confirmar
+											</button>
+										</form>
+										<button
+											type="button"
+											onclick={() => (deletingId = null)}
+											class="text-sm text-gray-400 hover:text-gray-700"
+										>
+											Cancelar
+										</button>
+									{:else}
+										<button
+											type="button"
+											onclick={() => (deletingId = product.id)}
+											class="text-sm text-gray-400 hover:text-red-600"
+										>
+											Eliminar
+										</button>
+									{/if}
+								</div>
 							</td>
 						</tr>
 					{/each}

@@ -2,6 +2,9 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { auth } from '$lib/server/auth';
 import { APIError } from 'better-auth/api';
+import { db } from '$lib/server/db';
+import { users } from '$lib/server/db/schema';
+import { eq } from 'drizzle-orm';
 
 export const load: PageServerLoad = (event) => {
 	if (event.locals.user) {
@@ -33,9 +36,10 @@ export const actions: Actions = {
 			return fail(500, { message: 'Error inesperado. Intenta de nuevo.' });
 		}
 
-		const session = await auth.api.getSession({ headers: event.request.headers });
-		const role = (session?.user as { role?: string } | undefined)?.role;
-		if (role === 'owner' || role === 'staff') {
+		// getSession uses the original request headers which don't contain the new
+		// session cookie yet — query the role directly from the DB instead.
+		const [user] = await db.select({ role: users.role }).from(users).where(eq(users.email, email)).limit(1);
+		if (user?.role === 'owner' || user?.role === 'staff') {
 			redirect(302, '/negocio');
 		}
 		redirect(302, '/');

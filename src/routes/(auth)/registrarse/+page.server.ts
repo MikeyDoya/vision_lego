@@ -25,6 +25,7 @@ export const actions: Actions = {
 		try {
 			await auth.api.signUpEmail({ body: { name, email, password } });
 		} catch (error) {
+			console.error('[registrarse] sign-up error:', error);
 			if (error instanceof APIError) {
 				return fail(400, { message: 'Este correo ya está registrado.' });
 			}

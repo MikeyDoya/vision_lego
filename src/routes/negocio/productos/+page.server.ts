@@ -1,6 +1,6 @@
 import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
-import { products, brands, productVariants } from '$lib/server/db/schema';
+import { products, brands, productVariants, productImages, cartItems, wishlistItems, orderItems } from '$lib/server/db/schema';
 import { eq, ilike, and, sum, sql } from 'drizzle-orm';
 import { formatCOP } from '$lib/utils/currency';
 import { fail } from '@sveltejs/kit';
@@ -57,5 +57,27 @@ export const actions: Actions = {
 		const current = data.get('isFeatured') === 'true';
 		if (!id) return fail(400, { message: 'ID requerido' });
 		await db.update(products).set({ isFeatured: !current, updatedAt: new Date() }).where(eq(products.id, id));
+	},
+	deleteProduct: async ({ request }) => {
+		const data = await request.formData();
+		const id = data.get('id')?.toString();
+		if (!id) return fail(400, { message: 'ID requerido' });
+
+		// Get variant IDs for this product to cascade cart/order cleanup
+		const variants = await db
+			.select({ id: productVariants.id })
+			.from(productVariants)
+			.where(eq(productVariants.productId, id));
+		const variantIds = variants.map((v) => v.id);
+
+		if (variantIds.length > 0) {
+			for (const variantId of variantIds) {
+				await db.delete(cartItems).where(eq(cartItems.variantId, variantId));
+			}
+		}
+		await db.delete(wishlistItems).where(eq(wishlistItems.productId, id));
+		await db.delete(productImages).where(eq(productImages.productId, id));
+		await db.delete(productVariants).where(eq(productVariants.productId, id));
+		await db.delete(products).where(eq(products.id, id));
 	},
 };

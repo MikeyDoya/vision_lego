@@ -59,30 +59,39 @@
 
 								<div class="mt-2 flex items-center gap-4">
 									<!-- Quantity update -->
-									<form
-										method="post"
-										action="?/updateQuantity"
-										use:enhance={() => ({ update }) => update({ reset: false })}
-										class="flex items-center rounded-lg border border-gray-300"
-									>
-										<input type="hidden" name="cartItemId" value={item.cartItemId} />
-										<button
-											type="submit"
-											name="quantity"
-											value={Math.max(1, item.quantity - 1)}
-											class="flex h-9 w-9 items-center justify-center text-gray-500 hover:text-gray-900"
-											aria-label="Reducir cantidad"
-										>−</button>
+									<div class="flex items-center rounded-lg border border-gray-300">
+										<!-- Decrease: remove when at 1 -->
+										<form
+											method="post"
+											action={item.quantity === 1 ? '?/removeItem' : '?/updateQuantity'}
+											use:enhance={() => ({ update }) => update({ reset: false })}
+										>
+											<input type="hidden" name="cartItemId" value={item.cartItemId} />
+											{#if item.quantity > 1}
+												<input type="hidden" name="quantity" value={item.quantity - 1} />
+											{/if}
+											<button
+												type="submit"
+												class="flex h-9 w-9 items-center justify-center text-gray-500 hover:text-red-600"
+												aria-label={item.quantity === 1 ? 'Eliminar producto' : 'Reducir cantidad'}
+											>−</button>
+										</form>
 										<span class="w-8 text-center text-sm">{item.quantity}</span>
-										<button
-											type="submit"
-											name="quantity"
-											value={Math.min(item.stock, item.quantity + 1)}
-											disabled={item.quantity >= item.stock}
-											class="flex h-9 w-9 items-center justify-center text-gray-500 hover:text-gray-900 disabled:opacity-30"
-											aria-label="Aumentar cantidad"
-										>+</button>
-									</form>
+										<form
+											method="post"
+											action="?/updateQuantity"
+											use:enhance={() => ({ update }) => update({ reset: false })}
+										>
+											<input type="hidden" name="cartItemId" value={item.cartItemId} />
+											<input type="hidden" name="quantity" value={item.quantity + 1} />
+											<button
+												type="submit"
+												disabled={item.quantity >= item.stock}
+												class="flex h-9 w-9 items-center justify-center text-gray-500 hover:text-gray-900 disabled:opacity-30"
+												aria-label="Aumentar cantidad"
+											>+</button>
+										</form>
+									</div>
 
 									<!-- Remove -->
 									<form method="post" action="?/removeItem" use:enhance={() => ({ update }) => update()}>
