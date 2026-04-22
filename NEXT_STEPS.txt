@@ -1,0 +1,110 @@
+VISION LEGO — PROJECT STATUS (2026-04-21)
+==========================================
+
+COMPLETED (Steps 1–16)
+-----------------------
+1.  Drizzle schema — all tables (users, sessions, accounts, brands, products,
+    productVariants, productImages, cartItems, wishlistItems, orders, orderItems,
+    expenses, receivables, shippingMethods). Migration applied.
+
+2.  Better Auth — email+password auth, /iniciar-sesion and /registrarse pages,
+    role-based redirect (owner/staff → /negocio, customer → /).
+
+3.  Route protection — hooks.server.ts guards all /negocio/** routes.
+    Redirects to /iniciar-sesion if unauthenticated, / if not owner/staff.
+
+4.  Product CRUD (/negocio/productos) — list with search and toggle, create
+    with inline brand creation, full edit form.
+
+5.  Image upload — multipart form on /negocio/productos/[id], saves to
+    static/uploads/products/[productId]/, set-primary and delete actions.
+
+6.  Inventory (/negocio/inventario) — per-variant stock, inline edit,
+    low-stock alerts (threshold ≤ 3), filter to low-stock only.
+
+7.  Catalog (/productos) — SSR URL-param filters (category, brand, gender,
+    color, material, price range), sort options, only active in-stock products.
+
+8.  Product detail (/productos/[slug]) — variant selector, swipeable image
+    gallery (touch events), stock indicator, add-to-cart and wishlist actions.
+
+9.  Cart (/carrito) — DB-persisted per user, inline quantity edit, remove,
+    order summary, proceeds to checkout.
+
+10. Checkout (/checkout) — contact + shipping address form, shipping method
+    selector, creates order + order items, clears cart, redirects to /cuenta.
+
+11. Order management (/negocio/pedidos) — order list + detail page with
+    status change (dropdown with all statuses).
+
+12. Expenses (/negocio/gastos) — record expense with category, monthly filter,
+    running total always visible.
+
+13. Receivables (/negocio/cuentas-por-cobrar) — record debt, partial payment,
+    overdue highlight, paid/partial/pending status.
+
+14. Analytics (/negocio/analiticas) — date range selector, bar chart (sales
+    by day), top 5 products, income/expenses/profit summary.
+
+15. Shipping methods (/negocio/envios) — CRUD, activate/deactivate, edit cost.
+
+16. Customer account (/cuenta) — order history (expandable), profile edit,
+    sign-out action. Wishlist (/cuenta/lista-de-deseos) — manage with
+    stock-aware display.
+
+17. Dark theme — applied across all 20 Svelte routes. Palette: gray-950 main
+    bg, gray-900 cards, amber-400 accent, gray-800 inputs/borders. Verified
+    and fixed remaining light-theme leaks on homepage and product pages.
+
+
+PENDING
+-------
+Step 17: MercadoPago Checkout Bricks (Payment Brick on /checkout)
+  - This is the only remaining feature.
+  - Do NOT start until the owner has a MercadoPago account and access token.
+  - Only activate the MercadoPago MCP server (https://mcp.mercadopago.com/mcp)
+    when this step begins.
+
+
+NEXT STEPS
+----------
+When ready to start MercadoPago integration:
+
+1. Get the owner's MercadoPago access token (Credenciales → Access Token
+   in the MercadoPago dashboard).
+
+2. Add to .env:
+     MP_ACCESS_TOKEN=APP_USR-...
+     MP_PUBLIC_KEY=APP_USR-...
+
+3. Add the same two values as GitHub Actions secrets for production.
+
+4. Enable the MercadoPago MCP server in Claude Code settings with
+   Authorization: Bearer <ACCESS_TOKEN> header.
+
+5. Use the MCP's search-documentation tool to look up:
+   - Checkout Bricks / Payment Brick integration for Colombia
+   - Test cards for sandbox testing
+   - Webhook setup for payment status updates (mp-webhook endpoint)
+
+6. Implementation outline:
+   a. On /checkout, after order is created with status='pending', show the
+      Payment Brick (renders card/PSE/Nequi/Efecty payment options).
+   b. Configure a /api/mp-webhook endpoint to receive payment notifications.
+   c. On successful payment notification: update order.status to 'paid',
+      store mpPaymentId and mpStatus on the order.
+   d. Redirect customer to /cuenta?pedido=[id] with a success message.
+
+7. Test end-to-end with MercadoPago sandbox test cards before going live.
+
+
+DEPLOYMENT REMINDERS (one-time server setup not yet done)
+----------------------------------------------------------
+- PostgreSQL on the droplet: create the vision_lego database and mikey user
+  (see CLAUDE.md Deployment section for exact commands).
+- Add GitHub Actions secrets: DROPLET_HOST, DROPLET_USER, DROPLET_SSH_KEY,
+  DATABASE_URL, BETTER_AUTH_SECRET, BETTER_AUTH_URL.
+- After first deploy: run `pm2 startup` + `pm2 save` on the droplet.
+- Copy nginx.conf to /etc/nginx/sites-available/vision_lego on the droplet.
+- HTTPS via Certbot: do this after the domain is purchased and pointed to
+  the droplet IP.
