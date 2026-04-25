@@ -63,6 +63,7 @@ jobs:
             echo "DATABASE_URL=${DATABASE_URL}"
             echo "BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}"
             echo "BETTER_AUTH_URL=${BETTER_AUTH_URL}"
+            echo "ORIGIN=${BETTER_AUTH_URL}"
             echo "PORT=3000"
             echo "BODY_SIZE_LIMIT=5242880"
           } | ssh "${REMOTE}" "cat > ~/vision_lego/.env"
