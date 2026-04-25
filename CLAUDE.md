@@ -7,7 +7,7 @@
 - **Package manager**: pnpm
 - **ORM**: Drizzle + PostgreSQL (existing instance, no Docker)
 - **Auth**: Better Auth (email + password)
-- **Payments**: MercadoPago Checkout Bricks — Payment Brick (integrate last)
+- **Payments**: Wompi — REST API integration (integrate last, replaces original MercadoPago plan)
 - **Styles**: Tailwind CSS with `typography` and `forms` plugins
 - **Testing**: Vitest (unit + component) + Playwright (e2e)
 - **Currency**: COP (Colombian pesos), no decimals
@@ -32,11 +32,12 @@ Use this throughout the entire project:
 - Call `get-documentation` to fetch up-to-date docs before writing any Svelte/SvelteKit code
 - Run `svelte-autofixer` on **every** `.svelte` component before delivering it — keep iterating until there are zero errors and zero suggestions
 
-### MercadoPago MCP (`https://mcp.mercadopago.com/mcp`)
-Available for future use — **only activate this MCP when starting step 16 (payment integration).**
-- Requires an `Authorization: Bearer <ACCESS_TOKEN>` header with the owner's MercadoPago access token
-- Use `search-documentation` to look up Checkout Bricks integration details, test cards, webhook setup, and Colombia-specific payment methods
-- Do not use this MCP before the rest of the app is complete
+### Wompi (payment integration — no MCP available)
+Wompi replaces MercadoPago by client decision — lower transaction fees for Colombia.
+- No MCP server available for Wompi — use the official REST API docs at https://docs.wompi.co
+- Integration approach: Wompi REST API (server-side order creation + signature) or Wompi JS widget (client-side)
+- Do not start this integration until the owner provides their Wompi merchant credentials (public key + private key)
+- DB fields `mpPaymentId` and `mpStatus` on the `orders` table must be renamed to `wompiPaymentId` and `wompiStatus` when starting this step — generate a Drizzle migration for this change
 
 ---
 
@@ -172,7 +173,7 @@ productCategory: 'sunglasses' | 'optical'
 - Shipping method selector (loaded from `shippingMethods` table)
 - Order summary with total + shipping cost
 - On confirm: create `order` with status `pending`, clear cart
-- MercadoPago Checkout Bricks is wired in here at the end of the project
+- Wompi payment integration is wired in here at the end of the project
 
 ### Account (`/cuenta`)
 - Order history with visual status
@@ -208,7 +209,7 @@ productCategory: 'sunglasses' | 'optical'
 - Filter by status (pendiente, pagado, en proceso, enviado, entregado, cancelado)
 - Order detail: customer info, items purchased, shipping address, shipping method
 - Change order status with a visual selector (stepper or dropdown)
-- Show MercadoPago payment data if available
+- Show Wompi payment data if available (wompiPaymentId, wompiStatus)
 
 ### Expenses (`/negocio/gastos`)
 - Record expense: descripción, monto COP, categoría (arriendo, nómina, proveedor, servicios, otro), fecha, notas
@@ -323,7 +324,7 @@ Vision Lego must beat them on simplicity, speed, and trust — not on how much c
 13. Analytics and reports
 14. Shipping methods
 15. Customer account (profile + order history + wishlist)
-16. MercadoPago Checkout Bricks — Payment Brick (last step)
+16. Wompi payment integration — REST API (last step)
 
 ---
 
@@ -347,23 +348,9 @@ Vision Lego must beat them on simplicity, speed, and trust — not on how much c
   BODY_SIZE_LIMIT=5242880
   ```
 
-### PostgreSQL setup (manual, one-time on the droplet)
-PostgreSQL is installed (latest) but the database and user have not been created yet.
-The developer must run these commands on the droplet before the first deploy:
-
-```sh
-sudo -u postgres psql
-
-# Inside psql:
--- mikey user already exists, just set a password if not done yet:
-ALTER USER mikey WITH PASSWORD 'your_strong_password';
-CREATE DATABASE vision_lego OWNER mikey;
-GRANT ALL PRIVILEGES ON DATABASE vision_lego TO mikey;
-\q
-```
-
-- **Database name**: `vision_lego`
-- **DB user**: `mikey`
+### PostgreSQL setup ✓ DONE
+- **DB user**: `mikey` — created and configured
+- **Database**: `vision_lego` — created and owned by `mikey`
 - **Resulting DATABASE_URL**: `postgresql://mikey:your_strong_password@localhost:5432/vision_lego`
 - This value goes in the local `.env` file and also as the `DATABASE_URL` GitHub Actions secret
 
@@ -406,8 +393,7 @@ The droplet has two users: `root` and `mikey`. Always use `mikey`.
 `mikey` has passwordless sudo scoped only to Nginx and PM2 commands needed for deployment.
 
 ```sh
-# 1. Install PM2 on the droplet
-pnpm add -g pm2
+# 1. ✓ DONE — PM2 installed globally: pnpm add -g pm2
 
 # 2. After the first successful deploy, register PM2 with systemd so it survives reboots
 pm2 startup        # copy and run the command it prints
@@ -419,12 +405,9 @@ sudo ln -s /etc/nginx/sites-available/vision_lego /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
-### What the developer does manually (one-time GitHub setup)
-Add these secrets in the repo under Settings → Secrets → Actions:
-- `DROPLET_HOST` — droplet IP address
-- `DROPLET_USER` — `mikey`
-- `DROPLET_SSH_KEY` — contents of `~/.ssh/Digital_Ocean_Key` (the private key)
-- `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` — injected into `.env` on the droplet during each deploy
+### GitHub Actions secrets ✓ DONE
+All secrets added under Settings → Secrets → Actions:
+- `DROPLET_HOST`, `DROPLET_USER`, `DROPLET_SSH_KEY`, `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`
 
 ---
 
@@ -442,4 +425,145 @@ BETTER_AUTH_URL=http://localhost:5173
 # BETTER_AUTH_URL=http://YOUR_DROPLET_IP  <- update to https://domain when domain is ready
 ```
 
-_(MercadoPago credentials are added when payment integration begins)_
+_(Wompi merchant credentials — public key + private key — are added when payment integration begins)_
+
+---
+
+## Completed work log
+
+### Dark/light mode toggle (2026-04-22)
+- `src/routes/layout.css` — added `@custom-variant dark (&:where(.dark, .dark *));` for Tailwind v4 class-based dark mode
+- `src/app.html` — inline anti-flash script in `<head>` reads `localStorage` / `prefers-color-scheme` and sets `.dark` on `<html>` before first paint
+- `src/lib/theme.svelte.ts` — module-level `$state` reactive store; `theme.init()` syncs to what the anti-flash script set, `theme.toggle()` updates class + localStorage
+- `src/lib/components/ui/ThemeToggle.svelte` — sun/moon button, calls `theme.init()` in `onMount`
+- Toggle added to store navbar (both desktop and mobile) and `/negocio` sidebar
+- All 27 Svelte files across every route updated with `dark:` variants
+- Light mode palette: `bg-white / gray-50 / gray-100`, `text-gray-900 / gray-700`; dark palette unchanged (`gray-950 / gray-900 / gray-800`, amber-400 accents)
+- Build passes; `svelte-autofixer` returns zero issues on all modified components
+
+### Full app implementation — steps 1–15 (2026-04-22)
+All 15 steps of the implementation order are complete:
+- **Schema + migrations**: Drizzle schema with all tables (auth, catalog, store, orders, business)
+- **Auth**: Better Auth with email + password; login/register pages; role-based redirect (`owner`/`staff` → `/negocio`, `customer` → store)
+- **Route protection**: `src/hooks.server.ts` guards all `/negocio/**` routes; redirects unauthenticated users to `/iniciar-sesion`
+- **Product CRUD** (`/negocio/productos`): list, create, edit, delete, activate/deactivate toggle, featured toggle
+- **Image upload**: multi-file input, stored at `static/uploads/products/[productId]/`, reorderable, primary image marking
+- **Inventory** (`/negocio/inventario`): inline stock editing, low-stock alerts (≤ 3 units highlighted in red), filter for low-stock only
+- **Public catalog** (`/productos`): SSR-compatible URL-param filters (category, brand, gender, color, material, size, price range), sort options
+- **Product detail** (`/productos/[slug]`): variant selector, image gallery, stock indicator, add to cart / wishlist (requires login)
+- **Cart** (`/carrito`): DB-persisted per user, editable quantities, subtotals + grand total in COP
+- **Checkout** (`/checkout`): shipping address form, shipping method selector, order creation with status `pending`, cart cleared on confirm
+- **Order management** (`/negocio/pedidos`): list with status filter, order detail, status change
+- **Expenses** (`/negocio/gastos`): record expenses by category, filter by month + category, monthly total always visible
+- **Receivables** (`/negocio/cuentas-por-cobrar`): record debts, partial/full payment, overdue highlighting
+- **Analytics** (`/negocio/analiticas`): date-range selector, sales bar chart, top 5 products, income/expenses/net profit summary in COP
+- **Shipping methods** (`/negocio/envios`): create, activate/deactivate, edit cost
+- **Customer account** (`/cuenta`): order history with status, editable profile, wishlist
+
+### UI polish — cursor-pointer on interactive controls (2026-04-22)
+Added `cursor-pointer` to all controls that previously showed the default arrow cursor:
+- `ThemeToggle.svelte` — day/night toggle button
+- `/productos` — "Limpiar filtros" button, sort select ("Más recientes")
+- `/negocio/productos` — "Todas las categorías" select, "Filtrar" button, "Eliminar" button
+- `/negocio/pedidos` — "Todos los estados" select
+- `/negocio/gastos` — month calendar input, "Todas las categorías" select, "Filtrar" button
+- `/negocio/analiticas` — "Desde" and "Hasta" date inputs
+- `/negocio/productos/[id]` — Categoría select, Género select, Activo label, Destacado label, Guardar cambios button, OK button (stock update), Borrar buttons (image + variant), + Agregar variante toggle
+
+### UI polish — custom file input in `/negocio/productos/[id]` (2026-04-22)
+Replaced the native `<input type="file">` in the Imágenes section with a hidden input + `<label>` button:
+- Button shows **"Seleccionar archivos"** (replaces browser-native "Choose Files")
+- Status text shows **"Ningún archivo seleccionado"** / filename / "N archivos seleccionados" (replaces "No file chosen")
+- `fileNames` state added alongside `imagePreviews`; both are cleared on upload completion
+
+### UI polish — variant buttons and quantity controls in `/productos/[slug]` (2026-04-22)
+- Color, Talla, Material option buttons — `cursor-pointer` added
+- Quantity `−` and `+` buttons — `cursor-pointer` added
+
+### UI polish — Agregar variante flow in `/negocio/productos/[id]` (2026-04-22)
+- Replaced hyperlink-style "+ Agregar variante" toggle with a proper amber button (same style as the submit button inside the form)
+- "Cancelar" moved inside the form as a neutral outlined button alongside the submit button
+- "Subir imágenes" and the "Agregar variante" submit button also got `cursor-pointer`
+
+### Feature — per-variant image assignment (2026-04-22)
+Images can now be tagged to a specific Color / Material combination. Talla is intentionally ignored (it doesn't affect appearance).
+
+**Schema**: `productImages.variantId` was already nullable — no migration needed.
+
+**Upload** (`/negocio/productos/[id]` — Imágenes section):
+- A **"Variante (Color / Material)"** select appears when the product has variants
+- Options are unique Color / Material combos derived from `data.product.variants` via `variantGroups` (`$derived.by` using `SvelteSet`)
+- Default option "Imagen general (todas las variantes)" leaves `variantId` null
+- `uploadImages` server action now reads `variantId` from form data and stores it on the image record
+
+**Display** (`/productos/[slug]` store page — `displayImages` derived):
+- When a variant is selected, finds all variant IDs sharing the same color + material (`groupIds` Set)
+- Shows images tagged to any of those variant IDs
+- Falls back to images with `variantId = null` (general) if no group match
+- Falls back to all images as last resort
+
+### Feature — inline variant editing in `/negocio/productos/[id]` and `/negocio/inventario` (2026-04-22)
+Variants can now be edited directly in the table rows without navigating to a separate page.
+
+**Technique**: HTML5 `form` attribute — the `<form>` element lives in the last `<td>`, inputs in other `<td>` cells reference it via `form="edit-{id}"`. This avoids invalid `<form>` nesting inside `<tr>` while letting `use:enhance` collect all row inputs into one FormData submission.
+
+**`/negocio/productos/[id]`**:
+- "Editar" button (same gray style as OK) toggles the row to edit mode
+- Edit row: Color, Talla, Material, SKU, Precio override, Stock inputs stacked/side-by-side
+- "Guardar" submits `?/updateVariant` action; "Cancelar" reverts without saving
+- `use:enhance` callback sets `editingVariantId = null` and `reset: false` after save
+- Form ID: `edit-{variant.id}`
+
+**`/negocio/inventario`**:
+- Same pattern; form ID: `edit-inv-{v.id}` (avoids collision if both pages are open)
+- Price column intentionally omitted — inventory page doesn't show price, so the `updateVariant` action here only updates color, size, material, sku, stock
+- OK button (quick stock update) remains alongside new Editar button in normal mode
+
+**Server actions**: `updateVariant` added to both `+page.server.ts` files. The inventario version excludes `price` to avoid nulling an existing price override.
+
+### Feature — guest checkout (no account required) (2026-04-23)
+Visitors can now browse, add to cart, and complete a purchase without creating an account.
+
+**Cart storage**:
+- Logged-in users: DB `cartItems` table (unchanged)
+- Guests: `guest_cart` cookie (JSON array of `{variantId, quantity}`), 30-day expiry, `sameSite: lax`
+- Cookie utility: `src/lib/server/cartCookie.ts` — `readGuestCart` / `writeGuestCart`
+
+**Changed files**:
+- `src/routes/(store)/productos/[slug]/+page.server.ts` — `addToCart` no longer redirects to login; guests get cookie cart. `toggleWishlist` keeps login redirect (wishlist is account-tied)
+- `src/routes/(store)/productos/[slug]/+page.svelte` — button text changed from "Iniciar sesión para comprar" to "Agregar al carrito"
+- `src/routes/(store)/carrito/+page.server.ts` — load + `updateQuantity` + `removeItem` handle both user (DB) and guest (cookie). For guests, `cartItemId === variantId` (no separate DB row ID)
+- `src/routes/(store)/checkout/+page.server.ts` — load + `placeOrder` handle both. Guests get `userId: null` on the order (schema already nullable). After order: logged-in users redirect to `/conta?pedido=X`, guests redirect to `/pedido/{orderId}`
+
+**New page — `src/routes/(store)/pedido/[id]/`**:
+- Simple order confirmation page accessible without login
+- Shows short order number (first 8 chars of UUID) and links back to the store
+- No sensitive data exposed; UUID not guessable
+
+**What still requires login**: wishlist (`toggleWishlist`), `/cuenta`, `/conta/lista-de-deseos`
+
+---
+
+## Pending
+
+### Step 16 — Wompi payment integration (next major feature)
+- Payment provider changed from MercadoPago to Wompi by client decision (lower fees for Colombia)
+- Integration: Wompi REST API (server-side) — docs at https://docs.wompi.co
+- Before starting: rename `orders.mpPaymentId` → `wompiPaymentId` and `orders.mpStatus` → `wompiStatus` via Drizzle migration
+- Wire up a `/api/wompi-webhook` endpoint to receive payment event notifications
+- On successful payment: update `orders.status` to `paid`, store `wompiPaymentId` and `wompiStatus`
+- Requires owner's Wompi merchant credentials (public key + private key) — do not start without them
+- Test end-to-end in Wompi sandbox before going live
+
+### Deployment (in progress)
+- ✓ DONE: `.github/workflows/deploy.yml`, `ecosystem.config.cjs`, and `nginx.conf` generated
+- ✓ DONE: `vision_lego` PostgreSQL database created, `mikey` user configured, PM2 installed globally, GitHub Actions secrets added
+- One-time manual steps still remaining on the droplet:
+  1. Copy nginx config, disable default site, reload Nginx (see comments inside `nginx.conf`)
+  2. After first successful deploy: `pm2 startup` + `pm2 save` to survive reboots
+
+### HTTPS + domain (future)
+- Purchase and point a domain to the DigitalOcean droplet
+- Run Certbot (Let's Encrypt) to enable HTTPS
+- Update `BETTER_AUTH_URL` secret to `https://yourdomain.com`
+- Update nginx config to redirect HTTP → HTTPS and proxy SSL

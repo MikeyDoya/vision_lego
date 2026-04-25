@@ -3,6 +3,7 @@ import { db } from '$lib/server/db';
 import { products, productVariants, productImages, cartItems, wishlistItems } from '$lib/server/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { error, redirect, fail } from '@sveltejs/kit';
+import { readGuestCart, writeGuestCart } from '$lib/server/cartCookie';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	const product = await db.query.products.findFirst({
@@ -17,7 +18,6 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		error(404, 'Producto no encontrado');
 	}
 
-	// Check wishlist status if logged in
 	let isWishlisted = false;
 	if (locals.user) {
 		const wish = await db
@@ -63,11 +63,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 };
 
 export const actions: Actions = {
-	addToCart: async ({ request, locals }) => {
-		if (!locals.user) {
-			redirect(302, '/iniciar-sesion');
-		}
-
+	addToCart: async ({ request, locals, cookies }) => {
 		const data = await request.formData();
 		const variantId = data.get('variantId') as string;
 		const quantity = Number(data.get('quantity') ?? 1);
@@ -84,25 +80,35 @@ export const actions: Actions = {
 			return fail(400, { error: 'Variante no disponible o sin stock' });
 		}
 
-		// Check if already in cart — update quantity instead
-		const existing = await db
-			.select()
-			.from(cartItems)
-			.where(and(eq(cartItems.userId, locals.user.id), eq(cartItems.variantId, variantId)))
-			.limit(1);
+		if (locals.user) {
+			const existing = await db
+				.select()
+				.from(cartItems)
+				.where(and(eq(cartItems.userId, locals.user.id), eq(cartItems.variantId, variantId)))
+				.limit(1);
 
-		if (existing.length) {
-			await db
-				.update(cartItems)
-				.set({ quantity: existing[0].quantity + quantity })
-				.where(eq(cartItems.id, existing[0].id));
+			if (existing.length) {
+				await db
+					.update(cartItems)
+					.set({ quantity: existing[0].quantity + quantity })
+					.where(eq(cartItems.id, existing[0].id));
+			} else {
+				await db.insert(cartItems).values({
+					id: crypto.randomUUID(),
+					userId: locals.user.id,
+					variantId,
+					quantity,
+				});
+			}
 		} else {
-			await db.insert(cartItems).values({
-				id: crypto.randomUUID(),
-				userId: locals.user.id,
-				variantId,
-				quantity,
-			});
+			const cart = readGuestCart(cookies);
+			const idx = cart.findIndex((i) => i.variantId === variantId);
+			if (idx >= 0) {
+				cart[idx].quantity += quantity;
+			} else {
+				cart.push({ variantId, quantity });
+			}
+			writeGuestCart(cookies, cart);
 		}
 
 		return { success: true };

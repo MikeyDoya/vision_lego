@@ -175,9 +175,9 @@ export const orders = pgTable('orders', {
 	status:          orderStatusEnum('status').notNull().default('pending'),
 	total:           numeric('total', { precision: 10, scale: 2 }).notNull(),
 
-	// MercadoPago (se llena al integrar pagos)
-	mpPaymentId:     text('mp_payment_id'),
-	mpStatus:        text('mp_status'),
+	// Wompi (se llena al integrar pagos)
+	wompiPaymentId:  text('wompi_payment_id'),
+	wompiStatus:     text('wompi_status'),
 
 	notes:           text('notes'),                    // notas del cliente
 	createdAt:       timestamp('created_at').notNull().defaultNow(),

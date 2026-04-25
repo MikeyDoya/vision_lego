@@ -1,8 +1,8 @@
-VISION LEGO — PROJECT STATUS (2026-04-21)
+VISION LEGO — PROJECT STATUS (2026-04-25)
 ==========================================
 
-COMPLETED (Steps 1–16)
------------------------
+COMPLETED (Steps 1–16 + extras)
+---------------------------------
 1.  Drizzle schema — all tables (users, sessions, accounts, brands, products,
     productVariants, productImages, cartItems, wishlistItems, orders, orderItems,
     expenses, receivables, shippingMethods). Migration applied.
@@ -52,50 +52,49 @@ COMPLETED (Steps 1–16)
     sign-out action. Wishlist (/cuenta/lista-de-deseos) — manage with
     stock-aware display.
 
-17. Dark theme — applied across all 20 Svelte routes. Palette: gray-950 main
-    bg, gray-900 cards, amber-400 accent, gray-800 inputs/borders. Verified
-    and fixed remaining light-theme leaks on homepage and product pages.
+17. Dark/light theme toggle — applied across all routes. Palette: gray-950 main
+    bg, gray-900 cards, amber-400 accent, gray-800 inputs/borders.
+
+18. Guest checkout — visitors can add to cart and check out without an account.
+    Guest cart stored in guest_cart cookie. Orders get userId=null.
+    /pedido/[id] confirmation page for guests.
+
+19. Wompi rename — orders.mpPaymentId → wompiPaymentId, mpStatus → wompiStatus.
+    Migration 0001_rename_mp_to_wompi applied. All UI references updated.
 
 
 PENDING
 -------
-Step 17: MercadoPago Checkout Bricks (Payment Brick on /checkout)
-  - This is the only remaining feature.
-  - Do NOT start until the owner has a MercadoPago account and access token.
-  - Only activate the MercadoPago MCP server (https://mcp.mercadopago.com/mcp)
-    when this step begins.
+Step 20: Wompi Payment Integration (the only remaining feature)
+  - Do NOT start until the owner provides Wompi merchant credentials.
+  - Required: public key + private key from the Wompi dashboard.
 
 
 NEXT STEPS
 ----------
-When ready to start MercadoPago integration:
+When ready to start Wompi integration:
 
-1. Get the owner's MercadoPago access token (Credenciales → Access Token
-   in the MercadoPago dashboard).
+1. Get the owner's Wompi keys (Wompi dashboard → Desarrolladores → Llaves API).
+   - Public key  (starts with pub_)
+   - Private key (starts with prv_)
 
 2. Add to .env:
-     MP_ACCESS_TOKEN=APP_USR-...
-     MP_PUBLIC_KEY=APP_USR-...
+     WOMPI_PUBLIC_KEY=pub_...
+     WOMPI_PRIVATE_KEY=prv_...
 
 3. Add the same two values as GitHub Actions secrets for production.
 
-4. Enable the MercadoPago MCP server in Claude Code settings with
-   Authorization: Bearer <ACCESS_TOKEN> header.
+4. Implementation outline (REST API, no MCP server available):
+   a. Docs: https://docs.wompi.co
+   b. On /checkout, after order is created (status='pending'), compute
+      the Wompi redirect signature and show the payment widget or redirect.
+   c. Create /api/wompi-webhook to receive payment event notifications.
+   d. On successful payment: update order.status → 'paid',
+      store wompiPaymentId and wompiStatus on the order.
+   e. Redirect customer to /cuenta?pedido=[id] (or /pedido/[id] for guests)
+      with a success message.
 
-5. Use the MCP's search-documentation tool to look up:
-   - Checkout Bricks / Payment Brick integration for Colombia
-   - Test cards for sandbox testing
-   - Webhook setup for payment status updates (mp-webhook endpoint)
-
-6. Implementation outline:
-   a. On /checkout, after order is created with status='pending', show the
-      Payment Brick (renders card/PSE/Nequi/Efecty payment options).
-   b. Configure a /api/mp-webhook endpoint to receive payment notifications.
-   c. On successful payment notification: update order.status to 'paid',
-      store mpPaymentId and mpStatus on the order.
-   d. Redirect customer to /cuenta?pedido=[id] with a success message.
-
-7. Test end-to-end with MercadoPago sandbox test cards before going live.
+5. Test end-to-end in Wompi sandbox before going live.
 
 
 DEPLOYMENT REMINDERS (one-time server setup not yet done)

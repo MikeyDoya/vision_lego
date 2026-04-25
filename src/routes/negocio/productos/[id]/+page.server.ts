@@ -89,9 +89,25 @@ export const actions: Actions = {
 		await db.update(productVariants).set({ stock }).where(eq(productVariants.id, id));
 	},
 
+	updateVariant: async ({ request }) => {
+		const data = await request.formData();
+		const id = data.get('id')?.toString();
+		if (!id) return fail(400, { message: 'ID requerido' });
+		const color = data.get('color')?.toString().trim() || null;
+		const size = data.get('size')?.toString().trim() || null;
+		const material = data.get('material')?.toString().trim() || null;
+		const sku = data.get('sku')?.toString().trim() || null;
+		const priceRaw = data.get('price')?.toString().trim();
+		const price = priceRaw ? String(Number(priceRaw)) : null;
+		const stock = Number(data.get('stock') ?? 0);
+		if (isNaN(stock) || stock < 0) return fail(400, { message: 'Stock inválido' });
+		await db.update(productVariants).set({ color, size, material, sku, price, stock }).where(eq(productVariants.id, id));
+	},
+
 	uploadImages: async ({ request, params }) => {
 		const data = await request.formData();
 		const files = data.getAll('images') as File[];
+		const variantId = data.get('variantId')?.toString() || null;
 
 		const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 		const maxSize = 5 * 1024 * 1024;
@@ -125,6 +141,7 @@ export const actions: Actions = {
 			await db.insert(productImages).values({
 				id: crypto.randomUUID(),
 				productId: params.id,
+				variantId,
 				url,
 				altText: null,
 				position: nextPosition,

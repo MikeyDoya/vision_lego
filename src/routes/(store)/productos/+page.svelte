@@ -60,10 +60,10 @@
 
 <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 	<div class="flex items-center justify-between gap-4 pb-6">
-		<h1 class="text-2xl font-bold text-white">Productos</h1>
+		<h1 class="text-2xl font-bold text-gray-900 dark:text-white">Productos</h1>
 		<div class="flex items-center gap-3">
 			<button
-				class="flex h-11 items-center gap-2 rounded-lg border border-gray-700 bg-gray-900 px-4 text-sm font-medium text-gray-300 hover:border-gray-600 hover:text-white lg:hidden"
+				class="flex h-11 items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 text-sm font-medium text-gray-700 hover:border-gray-400 hover:text-gray-900 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:text-white lg:hidden"
 				onclick={() => (filtersOpen = !filtersOpen)}
 			>
 				<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -77,7 +77,7 @@
 			<label for="orden" class="sr-only">Ordenar por</label>
 			<select
 				id="orden"
-				class="h-11 rounded-lg border-gray-700 bg-gray-900 text-sm text-gray-300 focus:border-amber-400 focus:ring-amber-400"
+				class="h-11 cursor-pointer rounded-lg border-gray-300 bg-white text-sm text-gray-700 focus:border-amber-400 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
 				value={data.filters.sort}
 				onchange={(e) => setFilter('orden', (e.target as HTMLSelectElement).value)}
 			>
@@ -100,7 +100,7 @@
 				{#if hasFilters}
 					<button
 						onclick={clearFilters}
-						class="text-sm font-medium text-amber-400 underline underline-offset-2 hover:text-amber-300"
+						class="cursor-pointer text-sm font-medium text-amber-500 underline underline-offset-2 hover:text-amber-400 dark:text-amber-400 dark:hover:text-amber-300"
 					>
 						Limpiar filtros
 					</button>
@@ -111,7 +111,7 @@
 					<p class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">Categoría</p>
 					<div class="space-y-1">
 						{#each Object.entries(categoryLabels) as [val, label] (val)}
-							<label class="flex cursor-pointer items-center gap-2 text-sm text-gray-300">
+							<label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
 								<input
 									type="radio"
 									name="categoria"
@@ -132,7 +132,7 @@
 						<p class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">Marca</p>
 						<div class="space-y-1">
 							{#each data.brands as brand (brand.id)}
-								<label class="flex cursor-pointer items-center gap-2 text-sm text-gray-300">
+								<label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
 									<input
 										type="radio"
 										name="marca"
@@ -153,7 +153,7 @@
 					<p class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">Género</p>
 					<div class="space-y-1">
 						{#each Object.entries(genderLabels) as [val, label] (val)}
-							<label class="flex cursor-pointer items-center gap-2 text-sm text-gray-300">
+							<label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
 								<input
 									type="radio"
 									name="genero"
@@ -174,7 +174,7 @@
 						<p class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">Color</p>
 						<div class="space-y-1">
 							{#each data.distinctColors as color (color)}
-								<label class="flex cursor-pointer items-center gap-2 text-sm text-gray-300">
+								<label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
 									<input
 										type="radio"
 										name="color"
@@ -196,7 +196,7 @@
 						<p class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">Material</p>
 						<div class="space-y-1">
 							{#each data.distinctMaterials as material (material)}
-								<label class="flex cursor-pointer items-center gap-2 text-sm text-gray-300">
+								<label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
 									<input
 										type="radio"
 										name="material"
@@ -218,7 +218,7 @@
 						<p class="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">Talla</p>
 						<div class="space-y-1">
 							{#each data.distinctSizes as size (size)}
-								<label class="flex cursor-pointer items-center gap-2 text-sm text-gray-300">
+								<label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
 									<input
 										type="radio"
 										name="talla"
@@ -248,7 +248,7 @@
 								step="10000"
 								value={data.filters.minPrice ?? ''}
 								onblur={(e) => setFilter('precioMin', (e.target as HTMLInputElement).value)}
-								class="w-full rounded-lg border-gray-700 bg-gray-900 text-sm text-white placeholder-gray-600 focus:border-amber-400 focus:ring-amber-400"
+								class="w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-600"
 							/>
 						</div>
 						<div class="flex-1">
@@ -261,7 +261,7 @@
 								step="10000"
 								value={data.filters.maxPrice ?? ''}
 								onblur={(e) => setFilter('precioMax', (e.target as HTMLInputElement).value)}
-								class="w-full rounded-lg border-gray-700 bg-gray-900 text-sm text-white placeholder-gray-600 focus:border-amber-400 focus:ring-amber-400"
+								class="w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-600"
 							/>
 						</div>
 					</div>
@@ -280,10 +280,10 @@
 		<div class={filtersOpen ? 'hidden lg:block lg:flex-1' : 'flex-1'}>
 			{#if data.products.length === 0}
 				<div class="flex flex-col items-center justify-center py-24 text-center">
-					<p class="text-lg font-medium text-white">No encontramos productos</p>
+					<p class="text-lg font-medium text-gray-900 dark:text-white">No encontramos productos</p>
 					<p class="mt-1 text-sm text-gray-500">Intenta cambiar los filtros de búsqueda.</p>
 					{#if hasFilters}
-						<button onclick={clearFilters} class="mt-4 text-sm font-medium text-amber-400 underline hover:text-amber-300">
+						<button onclick={clearFilters} class="mt-4 text-sm font-medium text-amber-500 underline hover:text-amber-400 dark:text-amber-400 dark:hover:text-amber-300">
 							Ver todos los productos
 						</button>
 					{/if}
@@ -292,7 +292,7 @@
 				<div class="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
 					{#each data.products as product (product.id)}
 						<a href="/productos/{product.slug}" class="group flex flex-col">
-							<div class="aspect-square overflow-hidden rounded-xl bg-gray-900">
+							<div class="aspect-square overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-900">
 								{#if product.primaryImage}
 									<img
 										src={product.primaryImage}
@@ -302,7 +302,7 @@
 									/>
 								{:else}
 									<div class="flex h-full items-center justify-center">
-										<svg class="h-12 w-12 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<svg class="h-12 w-12 text-gray-400 dark:text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
 										</svg>
 									</div>
@@ -312,8 +312,8 @@
 								<p class="text-xs font-medium uppercase tracking-wide text-gray-500">
 									{categoryLabels[product.category] ?? product.category}
 								</p>
-								<p class="text-sm font-semibold leading-tight text-white line-clamp-2">{product.name}</p>
-								<p class="text-sm font-bold text-amber-400">{formatCOP(product.basePrice)}</p>
+								<p class="line-clamp-2 text-sm font-semibold leading-tight text-gray-900 dark:text-white">{product.name}</p>
+								<p class="text-sm font-bold text-amber-500 dark:text-amber-400">{formatCOP(product.basePrice)}</p>
 							</div>
 						</a>
 					{/each}
