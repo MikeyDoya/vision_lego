@@ -44,7 +44,7 @@ jobs:
         env:
           REMOTE: ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}
         run: |
-          ssh "${REMOTE}" "mkdir -p ~/vision_lego/build"
+          ssh -vvv "${REMOTE}" "mkdir -p ~/vision_lego/build"
           # Sync build output — preserve any uploaded images already on the server
           rsync -az --delete --exclude='client/uploads/' \
             build/ "${REMOTE}:~/vision_lego/build/"
