@@ -36,7 +36,7 @@ jobs:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          printf '%s' "${{ secrets.DROPLET_SSH_KEY }}" > ~/.ssh/id_rsa
+          printf '%s\n' "${{ secrets.DROPLET_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H "${{ secrets.DROPLET_HOST }}" >> ~/.ssh/known_hosts
 
