@@ -20,7 +20,7 @@ export const load: PageServerLoad = (event) => {
 export const actions: Actions = {
 	default: async (event) => {
 		const formData = await event.request.formData();
-		const email = formData.get('email')?.toString() ?? '';
+		const email = formData.get('email')?.toString().trim().toLowerCase() ?? '';
 		const password = formData.get('password')?.toString() ?? '';
 
 		if (!email || !password) {
