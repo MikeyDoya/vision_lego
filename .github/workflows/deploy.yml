@@ -73,6 +73,7 @@ jobs:
         run: |
           ssh "${REMOTE}" bash << 'DEPLOY'
             set -e
+            export PATH="/home/mikey/.local/share/fnm/node-versions/v24.14.1/installation/bin:/home/mikey/.local/share/pnpm:$PATH"
             cd ~/vision_lego
             pnpm install --prod --frozen-lockfile
             pm2 restart vision_lego || pm2 start ecosystem.config.cjs
