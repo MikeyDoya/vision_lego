@@ -2,6 +2,7 @@
 	import type { PageServerData } from './$types';
 	import { formatCOP } from '$lib/utils/currency';
 	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 
 	let { data }: { data: PageServerData } = $props();
 </script>
@@ -71,7 +72,7 @@
 									Ver producto
 								</a>
 							{/if}
-							<form method="post" action="?/remove" use:enhance>
+							<form method="post" action="?/remove" use:enhance={() => async ({ result, update }) => { if (result.type === 'success') { await invalidateAll(); } else { await update(); } }}>
 								<input type="hidden" name="productId" value={item.productId} />
 								<button
 									type="submit"

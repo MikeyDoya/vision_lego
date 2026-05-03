@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 	import type { PageServerData } from './$types';
 
 	let { data }: { data: PageServerData } = $props();
@@ -77,7 +78,7 @@
 									<input type="number" name="stock" value={editStock} oninput={(e) => (editStock = Number((e.target as HTMLInputElement).value))} form="edit-inv-{v.id}" min="0" class="w-16 rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
 								</td>
 								<td class="w-px whitespace-nowrap px-4 py-3">
-									<form id="edit-inv-{v.id}" method="post" action="?/updateVariant" use:enhance={() => async ({ update }) => { editingVariantId = null; update({ reset: false }); }}>
+									<form id="edit-inv-{v.id}" method="post" action="?/updateVariant" use:enhance={() => async ({ result, update }) => { editingVariantId = null; if (result.type === 'success') { await invalidateAll(); } else { await update({ reset: false }); } }}>
 										<input type="hidden" name="id" value={v.id} />
 										<div class="flex items-center gap-1">
 											<button type="submit" class="cursor-pointer rounded bg-gray-200 px-2 py-1 text-xs text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
@@ -109,7 +110,7 @@
 								</td>
 								<td class="w-px whitespace-nowrap px-4 py-3">
 									<div class="flex items-center gap-1">
-										<form method="post" action="?/updateStock" use:enhance={() => async ({ update }) => { update({ reset: false }); }} class="flex items-center gap-1">
+										<form method="post" action="?/updateStock" use:enhance={() => async ({ result, update }) => { if (result.type === 'success') { await invalidateAll(); } else { await update({ reset: false }); } }} class="flex items-center gap-1">
 											<input type="hidden" name="id" value={v.id} />
 											<input
 												type="number"

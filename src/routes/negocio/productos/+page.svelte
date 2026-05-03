@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 	import type { PageServerData } from './$types';
 
 	let { data }: { data: PageServerData } = $props();
@@ -81,7 +82,7 @@
 								{product.totalStock}
 							</td>
 							<td class="px-4 py-3">
-								<form method="post" action="?/toggleActive" use:enhance>
+								<form method="post" action="?/toggleActive" use:enhance={() => async ({ result, update }) => { if (result.type === 'success') { await invalidateAll(); } else { await update(); } }}>
 									<input type="hidden" name="id" value={product.id} />
 									<input type="hidden" name="isActive" value={String(product.isActive)} />
 									<button
@@ -95,7 +96,7 @@
 								</form>
 							</td>
 							<td class="px-4 py-3">
-								<form method="post" action="?/toggleFeatured" use:enhance>
+								<form method="post" action="?/toggleFeatured" use:enhance={() => async ({ result, update }) => { if (result.type === 'success') { await invalidateAll(); } else { await update(); } }}>
 									<input type="hidden" name="id" value={product.id} />
 									<input type="hidden" name="isFeatured" value={String(product.isFeatured)} />
 									<button
@@ -114,7 +115,7 @@
 										Editar
 									</a>
 									{#if deletingId === product.id}
-										<form method="post" action="?/deleteProduct" use:enhance={() => () => { deletingId = null; }}>
+										<form method="post" action="?/deleteProduct" use:enhance={() => async ({ result, update }) => { deletingId = null; if (result.type === 'success') { await invalidateAll(); } else { await update(); } }}>
 											<input type="hidden" name="id" value={product.id} />
 											<button type="submit" class="text-sm font-medium text-red-500 hover:underline">
 												Confirmar

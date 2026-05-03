@@ -2,6 +2,7 @@
 	import type { PageServerData, ActionData } from './$types';
 	import { formatCOP } from '$lib/utils/currency';
 	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
 
@@ -276,10 +277,11 @@
 					method="post"
 					action="?/addToCart"
 					use:enhance={() => {
-						return ({ result }) => {
+						return async ({ result }) => {
 							if (result.type === 'success') {
 								addedToCart = true;
 								setTimeout(() => (addedToCart = false), 3000);
+								await invalidateAll();
 							}
 						};
 					}}
@@ -315,9 +317,10 @@
 					method="post"
 					action="?/toggleWishlist"
 					use:enhance={() => {
-						return ({ result }) => {
+						return async ({ result }) => {
 							if (result.type === 'success') {
 								wishlistOverride = !isWishlisted;
+								await invalidateAll();
 							}
 						};
 					}}

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 	import type { ActionData, PageServerData } from './$types';
 
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
@@ -89,7 +90,7 @@
 				{data.order.statusLabel}
 			</span>
 
-			<form method="post" action="?/updateStatus" use:enhance class="mt-4 space-y-2">
+			<form method="post" action="?/updateStatus" use:enhance={() => async ({ result, update }) => { if (result.type === 'success') { await invalidateAll(); } else { await update(); } }} class="mt-4 space-y-2">
 				<label for="status" class="block text-sm font-medium text-gray-600 dark:text-gray-400">Cambiar estado</label>
 				<select
 					id="status"

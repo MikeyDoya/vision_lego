@@ -542,6 +542,17 @@ Visitors can now browse, add to cart, and complete a purchase without creating a
 
 **What still requires login**: wishlist (`toggleWishlist`), `/cuenta`, `/conta/lista-de-deseos`
 
+### Fix — form reactivity audit: use:enhance + invalidateAll across all routes (2026-05-03)
+Root bug: forms with bare `use:enhance` submitted via AJAX but never called `invalidateAll()`, so the UI stayed stale until a manual page refresh (e.g. deleting a product left the row visible).
+
+Fixed 22 forms across 11 files — every state-mutating form that stays on the same page now uses the full callback pattern:
+```svelte
+use:enhance={() => async ({ result, update }) => {
+  if (result.type === 'success') { await invalidateAll(); } else { await update(); }
+}}
+```
+Existing state cleanup (e.g. `saving = false`, `editingVariantId = null`, `showForm = false`, optimistic wishlist flip) was preserved and combined with `invalidateAll()`. The `?/salir` action in `/cuenta` was correctly left alone — it calls `redirect(302, '/')` which re-runs load automatically. `svelte-autofixer` returned zero issues on all 11 modified files; `pnpm build` passed.
+
 ---
 
 ## Pending

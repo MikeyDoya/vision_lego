@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 	import type { ActionData, PageServerData } from './$types';
 
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
@@ -26,7 +27,7 @@
 		{#if form?.message}
 			<p class="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 ring-1 ring-red-200 dark:bg-red-900/40 dark:text-red-300 dark:ring-red-800">{form.message}</p>
 		{/if}
-		<form method="post" action="?/create" use:enhance={() => async ({ update }) => { showForm = false; update(); }} class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+		<form method="post" action="?/create" use:enhance={() => async ({ result, update }) => { if (result.type === 'success') { showForm = false; await invalidateAll(); } else { await update(); } }} class="grid grid-cols-1 gap-4 sm:grid-cols-3">
 			<div>
 				<label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre</label>
 				<input id="name" name="name" type="text" required placeholder="Domicilio Medellín" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-600" />
@@ -67,7 +68,7 @@
 						<td class="px-4 py-3 text-gray-600 dark:text-gray-400">{method.description ?? '—'}</td>
 						<td class="px-4 py-3 text-gray-700 dark:text-gray-300">
 							{#if editingId === method.id}
-								<form method="post" action="?/update" use:enhance={() => async ({ update }) => { editingId = null; update(); }} class="flex gap-1">
+								<form method="post" action="?/update" use:enhance={() => async ({ result, update }) => { editingId = null; if (result.type === 'success') { await invalidateAll(); } else { await update(); } }} class="flex gap-1">
 									<input type="hidden" name="id" value={method.id} />
 									<input type="number" name="cost" min="0" value={method.cost} class="w-24 rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
 									<button type="submit" class="rounded bg-gray-200 px-2 py-1 text-xs text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">OK</button>
@@ -78,7 +79,7 @@
 							{/if}
 						</td>
 						<td class="px-4 py-3">
-							<form method="post" action="?/toggleActive" use:enhance>
+							<form method="post" action="?/toggleActive" use:enhance={() => async ({ result, update }) => { if (result.type === 'success') { await invalidateAll(); } else { await update(); } }}>
 								<input type="hidden" name="id" value={method.id} />
 								<input type="hidden" name="isActive" value={String(method.isActive)} />
 								<button type="submit" class="cursor-pointer rounded-full px-2 py-1 text-xs font-medium {method.isActive

@@ -2,6 +2,7 @@
 	import type { PageServerData, ActionData } from './$types';
 	import { formatCOP } from '$lib/utils/currency';
 	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
 
@@ -138,7 +139,7 @@
 			{/if}
 
 			{#if editingProfile}
-				<form method="post" action="?/updateProfile" use:enhance={() => ({ update }) => { editingProfile = false; update(); }}>
+				<form method="post" action="?/updateProfile" use:enhance={() => async ({ result, update }) => { editingProfile = false; if (result.type === 'success') { await invalidateAll(); } else { await update(); } }}>
 					<div class="space-y-4">
 						<div>
 							<label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre</label>

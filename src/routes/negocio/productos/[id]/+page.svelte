@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 	import { SvelteSet } from 'svelte/reactivity';
 	import type { ActionData, PageServerData } from './$types';
 
@@ -88,9 +89,13 @@
 			action="?/updateProduct"
 			use:enhance={() => {
 				saving = true;
-				return async ({ update }) => {
+				return async ({ result, update }) => {
 					saving = false;
-					update();
+					if (result.type === 'success') {
+						await invalidateAll();
+					} else {
+						await update();
+					}
 				};
 			}}
 			class="space-y-4"
@@ -209,7 +214,7 @@
 						{/if}
 						<div class="absolute inset-0 flex items-end gap-1 bg-black/50 p-2 opacity-0 transition group-hover:opacity-100">
 							{#if !image.isPrimary}
-								<form method="post" action="?/setPrimaryImage" use:enhance class="flex-1">
+								<form method="post" action="?/setPrimaryImage" use:enhance={() => async ({ result, update }) => { if (result.type === 'success') { await invalidateAll(); } else { await update(); } }} class="flex-1">
 									<input type="hidden" name="imageId" value={image.id} />
 									<input type="hidden" name="productId" value={data.product.id} />
 									<button type="submit" class="w-full rounded bg-gray-700 px-1 py-1 text-xs font-medium text-white hover:bg-gray-600">
@@ -217,7 +222,7 @@
 									</button>
 								</form>
 							{/if}
-							<form method="post" action="?/deleteImage" use:enhance>
+							<form method="post" action="?/deleteImage" use:enhance={() => async ({ result, update }) => { if (result.type === 'success') { await invalidateAll(); } else { await update(); } }}>
 								<input type="hidden" name="id" value={image.id} />
 								<button type="submit" class="cursor-pointer rounded bg-red-600 px-1 py-1 text-xs font-medium text-white hover:bg-red-500">
 									Borrar
@@ -235,11 +240,15 @@
 			enctype="multipart/form-data"
 			use:enhance={() => {
 				uploadingImages = true;
-				return async ({ update }) => {
+				return async ({ result, update }) => {
 					uploadingImages = false;
 					imagePreviews = [];
 					fileNames = [];
-					update();
+					if (result.type === 'success') {
+						await invalidateAll();
+					} else {
+						await update();
+					}
 				};
 			}}
 			class="space-y-3"
@@ -339,9 +348,13 @@
 											id="edit-{variant.id}"
 											method="post"
 											action="?/updateVariant"
-											use:enhance={() => async ({ update }) => {
+											use:enhance={() => async ({ result, update }) => {
 												editingVariantId = null;
-												await update({ reset: false });
+												if (result.type === 'success') {
+													await invalidateAll();
+												} else {
+													await update({ reset: false });
+												}
 											}}
 										>
 											<input type="hidden" name="id" value={variant.id} />
@@ -360,7 +373,7 @@
 									<td class="px-3 py-2 text-gray-500">{variant.sku ?? '—'}</td>
 									<td class="px-3 py-2 text-gray-700 dark:text-gray-300">{variant.price ?? 'Base'}</td>
 									<td class="px-3 py-2">
-										<form method="post" action="?/updateStock" use:enhance={() => async ({ update }) => { update({ reset: false }); }} class="flex items-center gap-1">
+										<form method="post" action="?/updateStock" use:enhance={() => async ({ result, update }) => { if (result.type === 'success') { await invalidateAll(); } else { await update({ reset: false }); } }} class="flex items-center gap-1">
 											<input type="hidden" name="id" value={variant.id} />
 											<input
 												type="number"
@@ -375,7 +388,7 @@
 									<td class="w-px whitespace-nowrap px-3 py-2">
 										<div class="flex items-center gap-2">
 											<button type="button" onclick={() => startEdit(variant)} class="cursor-pointer rounded bg-gray-200 px-2 py-1 text-xs text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white">Editar</button>
-											<form method="post" action="?/deleteVariant" use:enhance>
+											<form method="post" action="?/deleteVariant" use:enhance={() => async ({ result, update }) => { if (result.type === 'success') { await invalidateAll(); } else { await update(); } }}>
 												<input type="hidden" name="id" value={variant.id} />
 												<button type="submit" class="cursor-pointer text-sm text-red-500 hover:underline dark:text-red-400">Borrar</button>
 											</form>
@@ -402,7 +415,7 @@
 		{/if}
 
 		{#if addingVariant}
-			<form method="post" action="?/addVariant" use:enhance class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+			<form method="post" action="?/addVariant" use:enhance={() => async ({ result, update }) => { if (result.type === 'success') { await invalidateAll(); } else { await update(); } }} class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
 				<div>
 					<label for="v-color" class="block text-xs font-medium text-gray-600 dark:text-gray-400">Color</label>
 					<input id="v-color" name="color" type="text" placeholder="Negro" class="mt-1 w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500" />

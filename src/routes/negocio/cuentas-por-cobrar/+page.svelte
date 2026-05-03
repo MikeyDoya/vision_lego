@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 	import type { ActionData, PageServerData } from './$types';
 
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
@@ -43,10 +44,14 @@
 			action="?/create"
 			use:enhance={() => {
 				saving = true;
-				return async ({ update }) => {
+				return async ({ result, update }) => {
 					saving = false;
-					showForm = false;
-					update();
+					if (result.type === 'success') {
+						showForm = false;
+						await invalidateAll();
+					} else {
+						await update();
+					}
 				};
 			}}
 			class="grid grid-cols-1 gap-4 sm:grid-cols-2"
@@ -110,7 +115,7 @@
 
 				{#if !rec.isPaid}
 					{#if payingId === rec.id}
-						<form method="post" action="?/recordPayment" use:enhance class="mt-4 flex gap-2">
+						<form method="post" action="?/recordPayment" use:enhance={() => async ({ result, update }) => { if (result.type === 'success') { await invalidateAll(); } else { await update(); } }} class="mt-4 flex gap-2">
 							<input type="hidden" name="id" value={rec.id} />
 							<input type="number" name="payment" min="1" placeholder="Monto recibido" class="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-600" />
 							<button type="submit" class="cursor-pointer rounded-lg bg-green-600 px-3 py-2 text-sm font-medium text-white hover:bg-green-500">Registrar</button>

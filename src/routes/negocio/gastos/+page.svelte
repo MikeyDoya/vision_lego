@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 	import type { ActionData, PageServerData } from './$types';
 
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
@@ -36,10 +37,14 @@
 			action="?/create"
 			use:enhance={() => {
 				saving = true;
-				return async ({ update }) => {
+				return async ({ result, update }) => {
 					saving = false;
-					showForm = false;
-					update();
+					if (result.type === 'success') {
+						showForm = false;
+						await invalidateAll();
+					} else {
+						await update();
+					}
 				};
 			}}
 			class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"

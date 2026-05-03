@@ -2,6 +2,7 @@
 	import type { PageServerData } from './$types';
 	import { formatCOP } from '$lib/utils/currency';
 	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 
 	let { data }: { data: PageServerData } = $props();
 </script>
@@ -61,7 +62,7 @@
 										<form
 											method="post"
 											action={item.quantity === 1 ? '?/removeItem' : '?/updateQuantity'}
-											use:enhance={() => ({ update }) => update({ reset: false })}
+											use:enhance={() => async ({ result, update }) => { if (result.type === 'success') { await invalidateAll(); } else { await update({ reset: false }); } }}
 										>
 											<input type="hidden" name="cartItemId" value={item.cartItemId} />
 											{#if item.quantity > 1}
@@ -77,7 +78,7 @@
 										<form
 											method="post"
 											action="?/updateQuantity"
-											use:enhance={() => ({ update }) => update({ reset: false })}
+											use:enhance={() => async ({ result, update }) => { if (result.type === 'success') { await invalidateAll(); } else { await update({ reset: false }); } }}
 										>
 											<input type="hidden" name="cartItemId" value={item.cartItemId} />
 											<input type="hidden" name="quantity" value={item.quantity + 1} />
@@ -90,7 +91,7 @@
 										</form>
 									</div>
 
-									<form method="post" action="?/removeItem" use:enhance={() => ({ update }) => update()}>
+									<form method="post" action="?/removeItem" use:enhance={() => async ({ result, update }) => { if (result.type === 'success') { await invalidateAll(); } else { await update(); } }}>
 										<input type="hidden" name="cartItemId" value={item.cartItemId} />
 										<button type="submit" class="text-sm text-gray-400 hover:text-red-500 dark:text-gray-600">
 											Eliminar
