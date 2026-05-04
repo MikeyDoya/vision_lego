@@ -3,6 +3,7 @@
 	import { formatCOP } from '$lib/utils/currency';
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
+	import ProductImage from '$lib/components/ui/ProductImage.svelte';
 
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
 
@@ -114,9 +115,11 @@
 					role="img"
 					aria-label="Galería de imágenes del producto"
 				>
-					<img
-						src={displayImages[currentImageIndex].url}
+					<ProductImage
+						basePath={displayImages[currentImageIndex].url}
 						alt={displayImages[currentImageIndex].altText ?? data.product.name}
+						size="large"
+						loading="eager"
 						class="h-full w-full object-cover"
 					/>
 					{#if displayImages.length > 1}
@@ -151,7 +154,7 @@
 								].join(' ')}
 								aria-label="Ver imagen {i + 1}"
 							>
-								<img src={img.url} alt={img.altText ?? ''} class="h-full w-full object-cover" />
+								<ProductImage basePath={img.url} alt={img.altText ?? ''} size="thumb" class="h-full w-full object-cover" />
 							</button>
 						{/each}
 					</div>

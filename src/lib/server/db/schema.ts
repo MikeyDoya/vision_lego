@@ -116,6 +116,7 @@ export const productImages = pgTable('product_images', {
 	id:        text('id').primaryKey(),
 	productId: text('product_id').notNull().references(() => products.id, { onDelete: 'cascade' }),
 	variantId: text('variant_id').references(() => productVariants.id, { onDelete: 'set null' }),
+	// Base path without extension. Append -thumb.webp, -medium.webp, or -large.webp to load a variant. Original is at -original.<ext>.
 	url:       text('url').notNull(),
 	altText:   text('alt_text'),
 	position:  integer('position').notNull().default(0), // orden de aparición

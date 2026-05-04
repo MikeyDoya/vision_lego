@@ -3,6 +3,7 @@
 	import { formatCOP } from '$lib/utils/currency';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
+	import ProductImage from '$lib/components/ui/ProductImage.svelte';
 
 	let { data }: { data: PageServerData } = $props();
 
@@ -294,9 +295,10 @@
 						<a href="/productos/{product.slug}" class="group flex flex-col">
 							<div class="aspect-square overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-900">
 								{#if product.primaryImage}
-									<img
-										src={product.primaryImage}
+									<ProductImage
+										basePath={product.primaryImage}
 										alt={product.name}
+										size="thumb"
 										class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
 										loading="lazy"
 									/>

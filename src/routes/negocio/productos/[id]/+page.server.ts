@@ -4,8 +4,7 @@ import { db } from '$lib/server/db';
 import { products, brands, productVariants, productImages } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import { toSlug } from '$lib/utils/slug';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
+import { processProductImage } from '$lib/server/imageProcessing';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const product = await db.query.products.findFirst({
@@ -110,10 +109,7 @@ export const actions: Actions = {
 		const variantId = data.get('variantId')?.toString() || null;
 
 		const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-		const maxSize = 5 * 1024 * 1024;
-
-		const uploadDir = join('static', 'uploads', 'products', params.id);
-		await mkdir(uploadDir, { recursive: true });
+		const maxSize = 10 * 1024 * 1024;
 
 		const existing = await db
 			.select({ position: productImages.position })
@@ -128,21 +124,23 @@ export const actions: Actions = {
 			if (!validTypes.includes(file.type)) continue;
 			if (file.size > maxSize) continue;
 
-			const ext = file.name.split('.').pop() ?? 'jpg';
-			const filename = `${crypto.randomUUID()}.${ext}`;
-			const filePath = join(uploadDir, filename);
-
+			const ext = (file.name.split('.').pop() ?? 'jpg').toLowerCase();
 			const buffer = Buffer.from(await file.arrayBuffer());
-			await writeFile(filePath, buffer);
 
-			const url = `/uploads/products/${params.id}/${filename}`;
+			let basePath: string;
+			try {
+				({ basePath } = await processProductImage(buffer, ext, params.id));
+			} catch (err) {
+				return fail(422, { message: err instanceof Error ? err.message : 'Error al procesar la imagen.' });
+			}
+
 			const isPrimary = !hasPrimary && nextPosition === 0;
 
 			await db.insert(productImages).values({
 				id: crypto.randomUUID(),
 				productId: params.id,
 				variantId,
-				url,
+				url: basePath,
 				altText: null,
 				position: nextPosition,
 				isPrimary,

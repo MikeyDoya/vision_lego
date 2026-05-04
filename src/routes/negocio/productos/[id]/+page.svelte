@@ -3,6 +3,7 @@
 	import { invalidateAll } from '$app/navigation';
 	import { SvelteSet } from 'svelte/reactivity';
 	import type { ActionData, PageServerData } from './$types';
+	import ProductImage from '$lib/components/ui/ProductImage.svelte';
 
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
 
@@ -206,7 +207,7 @@
 			<div class="mb-4 grid grid-cols-3 gap-2">
 				{#each data.product.images as image (image.id)}
 					<div class="group relative aspect-square overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
-						<img src={image.url} alt={image.altText ?? ''} class="h-full w-full object-cover" />
+						<ProductImage basePath={image.url} alt={image.altText ?? ''} size="medium" class="h-full w-full object-cover" />
 						{#if image.isPrimary}
 							<span class="absolute left-1 top-1 rounded bg-amber-400 px-1.5 py-0.5 text-xs font-medium text-gray-950">
 								Principal
@@ -276,7 +277,7 @@
 							: `${fileNames.length} archivos seleccionados`
 						: 'Ningún archivo seleccionado'}
 				</p>
-				<p class="mt-1 text-xs text-gray-400 dark:text-gray-500">JPG, PNG, WEBP — máx. 5 MB por imagen</p>
+				<p class="mt-1 text-xs text-gray-400 dark:text-gray-500">JPG, PNG, WEBP — máx. 10 MB por imagen · mín. 1200×1200 px</p>
 			</div>
 
 			{#if imagePreviews.length > 0}

@@ -3,6 +3,7 @@
 	import { formatCOP } from '$lib/utils/currency';
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
+	import ProductImage from '$lib/components/ui/ProductImage.svelte';
 
 	let { data }: { data: PageServerData } = $props();
 </script>
@@ -34,9 +35,10 @@
 						<li class="flex gap-4 py-6">
 							<a href="/productos/{item.productSlug}" class="shrink-0">
 								{#if item.primaryImage}
-									<img
-										src={item.primaryImage}
+									<ProductImage
+										basePath={item.primaryImage}
 										alt={item.productName}
+										size="thumb"
 										class="h-24 w-24 rounded-lg object-cover"
 									/>
 								{:else}

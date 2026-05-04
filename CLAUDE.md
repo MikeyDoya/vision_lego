@@ -261,9 +261,8 @@ export function formatCOP(amount: number): string {
 - Use `crypto.randomUUID()` for all entity IDs
 
 ### Product images
-- Store at `static/uploads/products/[productId]/`
-- File name: `[uuid].[ext]`
-- Accepted formats: jpg, jpeg, png, webp — max 5MB per image
+See `docs/IMAGE_STANDARDS.md` for the full image processing spec, sizes, formats, and the ProductImage component API.
+The owner-facing photo guide lives at `guia-fotos-productos.txt` (Spanish, plain language).
 
 ### Route protection for `/negocio`
 ```ts
