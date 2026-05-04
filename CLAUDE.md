@@ -541,6 +541,42 @@ Visitors can now browse, add to cart, and complete a purchase without creating a
 
 **What still requires login**: wishlist (`toggleWishlist`), `/cuenta`, `/conta/lista-de-deseos`
 
+### Feature — image processing pipeline + responsive ProductImage component (2026-05-03)
+Every product image upload is now processed server-side into three square WebP variants plus a preserved original.
+
+**New dependency**: `sharp` (Apache 2.0) — uses prebuilt x64 Linux binaries, no build toolchain needed on the droplet.
+
+**`src/lib/server/imageProcessing.ts`** (new):
+- `processProductImage(buffer, ext, productId)` — validates ≥ 1200×1200 px, rejects with Spanish error if too small or corrupt
+- Generates `[uuid]-thumb.webp` (400×400, q80), `[uuid]-medium.webp` (800×800, q85), `[uuid]-large.webp` (1600×1600, q85)
+- Saves `[uuid]-original.<ext>` alongside variants for future reprocessing
+- All variants are square; non-square source images are center-cropped automatically
+
+**`src/routes/negocio/productos/[id]/+page.server.ts`**:
+- `uploadImages` action now calls `processProductImage()` and stores the base path (no extension) in `productImages.url`
+- Upload size limit raised from 5 MB to 10 MB
+- Returns `fail(422)` with Spanish message on validation or processing errors
+
+**`productImages.url` semantic change** (no migration): column now stores a base path like `/uploads/products/[productId]/[uuid]`. Consumers append `-thumb.webp`, `-medium.webp`, or `-large.webp`.
+
+**`src/lib/components/ui/ProductImage.svelte`** (new):
+- Renders `<picture class="contents">` with full `srcset` (400w / 800w / 1600w) and context-aware `sizes` attribute
+- Props: `basePath`, `alt`, `size` (`'thumb' | 'medium' | 'large'`, default `'medium'`), `class`, `loading`
+- `class="contents"` on `<picture>` makes it layout-transparent — wrapper div constraints apply directly to `<img>`
+
+**Consumer updates** — replaced `<img>` with `<ProductImage>` in 5 files:
+- `/productos/+page.svelte` — catalog grid → `size="thumb"`
+- `/productos/[slug]/+page.svelte` — main gallery → `size="large" loading="eager"`, thumbnails → `size="thumb"`
+- `/carrito/+page.svelte` — cart line items → `size="thumb"`
+- `/cuenta/lista-de-deseos/+page.svelte` — wishlist → `size="thumb"`
+- `/negocio/productos/[id]/+page.svelte` — admin image preview → `size="medium"`
+
+**Documentation**:
+- `docs/IMAGE_STANDARDS.md` — full technical spec (pipeline rationale, source requirements, output table, storage layout, component API, srcset reasoning, guide for adding future variants)
+- `guia-fotos-productos.txt` — plain-Spanish owner guide (iPhone config, lighting, background, framing, three shots per color, send via Drive/WeTransfer not WhatsApp)
+
+`svelte-autofixer` returned zero issues on all 6 modified/new Svelte files; `pnpm build` passed.
+
 ### Fix — form reactivity audit: use:enhance + invalidateAll across all routes (2026-05-03)
 Root bug: forms with bare `use:enhance` submitted via AJAX but never called `invalidateAll()`, so the UI stayed stale until a manual page refresh (e.g. deleting a product left the row visible).
 
