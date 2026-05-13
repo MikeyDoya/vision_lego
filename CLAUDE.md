@@ -622,6 +622,20 @@ Added a per-image cropper modal that opens automatically after the owner picks f
 
 `svelte-autofixer` returned zero issues on all modified/new Svelte files; `pnpm build` passed.
 
+### Fix — guest cart delete/decrement not updating UI (2026-05-13)
+Root cause: `use:enhance` callbacks in `/carrito/+page.svelte` were calling `await invalidateAll()` then `localCart = null` on every action result. For guest users the cart lives in a cookie; the cookie update from the form action response is not always reflected in the immediate `invalidateAll()` re-fetch, so `data.cart` came back stale — and nulling `localCart` then switched the view to that stale data, making the deleted item reappear.
+
+**Rule**: on success, keep `localCart` (the optimistic state) and only call `invalidateAll()` to refresh layout data (cart badge count). Only reset `localCart = null` on failure, to revert the optimistic update and show the authoritative server state.
+
+```js
+return async ({ result }) => {
+    if (result.type !== 'success') localCart = null;
+    await invalidateAll();
+};
+```
+
+Applied to all three enhance callbacks in `/carrito/+page.svelte` (−, +, Eliminar).
+
 ---
 
 ## Pending
