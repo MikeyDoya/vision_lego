@@ -68,9 +68,13 @@
 										<form
 											method="post"
 											action={item.quantity === 1 ? '?/removeItem' : '?/updateQuantity'}
-											use:enhance={() => {
+											use:enhance={({ formData }) => {
 												const id = item.cartItemId;
 												const qty = item.quantity;
+												// Explicitly set in formData — Svelte 5 may flush the DOM
+												// before SvelteKit serialises the form, clearing input values
+												formData.set('cartItemId', id);
+												if (qty > 1) formData.set('quantity', String(qty - 1));
 												if (qty === 1) {
 													localCart = cart.filter((i) => i.cartItemId !== id);
 												} else {
@@ -97,10 +101,11 @@
 										<form
 											method="post"
 											action="?/updateQuantity"
-											use:enhance={() => {
+											use:enhance={({ formData }) => {
 												const id = item.cartItemId;
-												const qty = item.quantity;
-												const newQty = qty + 1;
+												const newQty = item.quantity + 1;
+												formData.set('cartItemId', id);
+												formData.set('quantity', String(newQty));
 												localCart = cart.map((i) => i.cartItemId === id ? { ...i, quantity: newQty, subtotal: i.unitPrice * newQty } : i);
 												return async ({ result }) => {
 													if (result.type !== 'success') localCart = null;
@@ -122,8 +127,9 @@
 									<form
 										method="post"
 										action="?/removeItem"
-										use:enhance={() => {
+										use:enhance={({ formData }) => {
 											const id = item.cartItemId;
+											formData.set('cartItemId', id);
 											localCart = cart.filter((i) => i.cartItemId !== id);
 											return async ({ result }) => {
 												if (result.type !== 'success') localCart = null;

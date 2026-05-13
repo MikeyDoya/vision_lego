@@ -165,13 +165,16 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const cartItemId = data.get('cartItemId') as string;
 
+		if (!cartItemId) return fail(400, { error: 'Datos inválidos' });
+
 		if (locals.user) {
 			await db
 				.delete(cartItems)
 				.where(and(eq(cartItems.id, cartItemId), eq(cartItems.userId, locals.user.id)));
 		} else {
 			const cart = readGuestCart(cookies);
-			writeGuestCart(cookies, cart.filter((i) => i.variantId !== cartItemId));
+			const next = cart.filter((i) => i.variantId !== cartItemId);
+			writeGuestCart(cookies, next);
 		}
 
 		return { success: true };

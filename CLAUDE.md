@@ -636,6 +636,23 @@ return async ({ result }) => {
 
 Applied to all three enhance callbacks in `/carrito/+page.svelte` (−, +, Eliminar).
 
+### Fix — guest cart FormData empty on server (Svelte 5 / SvelteKit timing) (2026-05-13)
+Second root cause of the same bug: even with the optimistic-update fix above, the server was receiving `cartItemId: null` from the form actions — the cookie was never updated, so items reappeared on refresh.
+
+**Root cause**: SvelteKit's `use:enhance` captures `form_data = new FormData(form_element)` before calling the submit function, then calls `await submit({formData: form_data, ...})`. That `await` creates a microtask boundary. Svelte 5 flushes reactive DOM updates during this boundary — removing the `{#each}` item from the DOM. When SvelteKit later serializes the FormData to `URLSearchParams`, the input `value` attributes may have been cleared by the DOM flush, so the server receives empty fields.
+
+**Fix**: explicitly set all required values on `formData` inside the submit function, sourced from the closure (not from DOM inputs):
+
+```js
+use:enhance={({ formData }) => {
+    const id = item.cartItemId;   // captured before any DOM change
+    formData.set('cartItemId', id);
+    // ... rest of optimistic update
+}}
+```
+
+Applied to all three enhance callbacks in `/carrito/+page.svelte`. Hidden inputs are kept as fallback but the explicit `formData.set()` is the authoritative source.
+
 ---
 
 ## Pending
