@@ -31,6 +31,27 @@ Corrupt or unreadable files are rejected with:
 
 ---
 
+## Client-side crop before upload
+
+Owners crop each image to a 1:1 frame in a modal at `/negocio/productos/[id]` before
+upload begins. The cropper enforces:
+
+- Square aspect ratio (locked)
+- Minimum 1200×1200 px source (validated client-side via `createImageBitmap`; rejected before the cropper opens)
+- Maximum zoom: 100% of original (no upscaling)
+- Output: 1600×1600 WebP at quality 0.92, sent to the server as one Blob per image
+
+The server pipeline (`processProductImage`) still runs on the cropped output — it
+generates the thumb/medium/large variants from the 1600×1600 source. The 1200 px
+minimum check in `processProductImage` remains as a defense-in-depth guarantee
+(always passes for client-cropped uploads, but catches direct API calls or future
+upload paths that bypass the cropper).
+
+**Component**: `src/lib/components/ui/ImageCropper.svelte` — wraps cropperjs v1.6.x.
+Uses a Svelte attachment (`{@attach initCropper}`) for third-party DOM initialization.
+
+---
+
 ## Processed outputs
 
 Each upload generates four files on disk. They share a UUID:

@@ -4,14 +4,19 @@
 	import { SvelteSet } from 'svelte/reactivity';
 	import type { ActionData, PageServerData } from './$types';
 	import ProductImage from '$lib/components/ui/ProductImage.svelte';
+	import ImageCropper from '$lib/components/ui/ImageCropper.svelte';
 
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
 
 	let saving = $state(false);
 	let addingVariant = $state(false);
 	let uploadingImages = $state(false);
-	let imagePreviews = $state<string[]>([]);
-	let fileNames = $state<string[]>([]);
+	let cropQueue = $state<File[]>([]);
+	let croppedBlobs = $state<Blob[]>([]);
+	let croppedPreviews = $state<string[]>([]);
+	let cropIndex = $state(0);
+	let validationErrors = $state<string[]>([]);
+	let uploadError = $state('');
 
 	const variantGroups = $derived.by(() => {
 		const seen = new SvelteSet<string>();
@@ -52,19 +57,64 @@
 		editingVariantId = null;
 	}
 
-	function handleImageSelect(e: Event) {
+	async function handleImageSelect(e: Event) {
 		const input = e.currentTarget as HTMLInputElement;
-		imagePreviews = [];
-		fileNames = [];
+		cropQueue = [];
+		croppedBlobs = [];
+		croppedPreviews = [];
+		cropIndex = 0;
+		validationErrors = [];
+		uploadError = '';
+
 		if (!input.files) return;
-		for (const file of Array.from(input.files)) {
-			fileNames = [...fileNames, file.name];
-			const reader = new FileReader();
-			reader.onload = (ev) => {
-				imagePreviews = [...imagePreviews, ev.target?.result as string];
-			};
-			reader.readAsDataURL(file);
+		const files = Array.from(input.files);
+		input.value = '';
+
+		for (const f of files) {
+			if (!f.type.startsWith('image/')) {
+				validationErrors = [...validationErrors, `"${f.name}" no es una imagen válida.`];
+				continue;
+			}
+			try {
+				const bitmap = await createImageBitmap(f);
+				const { width, height } = bitmap;
+				bitmap.close();
+				if (width < 1200 || height < 1200) {
+					validationErrors = [
+						...validationErrors,
+						`La imagen "${f.name}" es demasiado pequeña. Mínimo 1200×1200 px.`,
+					];
+					continue;
+				}
+			} catch {
+				validationErrors = [
+					...validationErrors,
+					`La imagen "${f.name}" no se pudo leer.`,
+				];
+				continue;
+			}
+			cropQueue = [...cropQueue, f];
 		}
+	}
+
+	function handleCropConfirm(blob: Blob) {
+		croppedBlobs = [...croppedBlobs, blob];
+		croppedPreviews = [...croppedPreviews, URL.createObjectURL(blob)];
+		cropIndex++;
+	}
+
+	function handleCropCancel() {
+		clearCropState();
+	}
+
+	function clearCropState() {
+		for (const url of croppedPreviews) URL.revokeObjectURL(url);
+		cropQueue = [];
+		croppedBlobs = [];
+		croppedPreviews = [];
+		cropIndex = 0;
+		validationErrors = [];
+		uploadError = '';
 	}
 </script>
 
@@ -235,20 +285,44 @@
 			</div>
 		{/if}
 
+		{#if validationErrors.length > 0}
+			<div class="mb-3 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 ring-1 ring-red-200 dark:bg-red-900/40 dark:text-red-300 dark:ring-red-800">
+				{#each validationErrors as err, i (i)}
+					<p>{err}</p>
+				{/each}
+				<button
+					type="button"
+					onclick={() => (validationErrors = [])}
+					class="mt-2 cursor-pointer text-xs underline opacity-70 hover:opacity-100"
+				>Cerrar</button>
+			</div>
+		{/if}
+
+		{#if uploadError}
+			<p class="mb-3 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 ring-1 ring-red-200 dark:bg-red-900/40 dark:text-red-300 dark:ring-red-800">{uploadError}</p>
+		{/if}
+
 		<form
 			method="post"
 			action="?/uploadImages"
 			enctype="multipart/form-data"
-			use:enhance={() => {
+			use:enhance={({ formData, cancel }) => {
+				if (croppedBlobs.length === 0) {
+					cancel();
+					return;
+				}
 				uploadingImages = true;
+				croppedBlobs.forEach((blob, i) => {
+					formData.append('images', new File([blob], `cropped-${i}.webp`, { type: 'image/webp' }));
+				});
 				return async ({ result, update }) => {
 					uploadingImages = false;
-					imagePreviews = [];
-					fileNames = [];
 					if (result.type === 'success') {
+						clearCropState();
 						await invalidateAll();
 					} else {
-						await update();
+						uploadError = 'Error al subir las imágenes. Intenta de nuevo.';
+						await update({ reset: false });
 					}
 				};
 			}}
@@ -257,7 +331,6 @@
 			<div class="rounded-lg border-2 border-dashed border-gray-300 p-4 text-center dark:border-gray-700">
 				<input
 					id="image-upload"
-					name="images"
 					type="file"
 					multiple
 					accept="image/jpeg,image/jpg,image/png,image/webp"
@@ -270,25 +343,18 @@
 				>
 					Seleccionar archivos
 				</label>
-				<p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-					{fileNames.length > 0
-						? fileNames.length === 1
-							? fileNames[0]
-							: `${fileNames.length} archivos seleccionados`
-						: 'Ningún archivo seleccionado'}
-				</p>
-				<p class="mt-1 text-xs text-gray-400 dark:text-gray-500">JPG, PNG, WEBP — máx. 10 MB por imagen · mín. 1200×1200 px</p>
+				<p class="mt-1 text-xs text-gray-400 dark:text-gray-500">JPG, PNG, WEBP — máx. 10 MB · mín. 1200×1200 px</p>
 			</div>
 
-			{#if imagePreviews.length > 0}
+			{#if croppedPreviews.length > 0}
 				<div class="grid grid-cols-4 gap-2">
-					{#each imagePreviews as preview, i (i)}
-						<img src={preview} alt="Vista previa" class="aspect-square rounded-lg object-cover" />
+					{#each croppedPreviews as preview, i (i)}
+						<img src={preview} alt="Vista previa {i + 1}" class="aspect-square rounded-lg object-cover" />
 					{/each}
 				</div>
 			{/if}
 
-			{#if variantGroups.length > 0}
+			{#if variantGroups.length > 0 && croppedBlobs.length > 0}
 				<div>
 					<label for="img-variant" class="block text-xs font-medium text-gray-600 dark:text-gray-400">
 						Variante (Color / Material)
@@ -306,13 +372,24 @@
 				</div>
 			{/if}
 
-			<button
-				type="submit"
-				disabled={uploadingImages}
-				class="cursor-pointer rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 disabled:opacity-60 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
-			>
-				{uploadingImages ? 'Subiendo…' : 'Subir imágenes'}
-			</button>
+			{#if croppedBlobs.length > 0}
+				<div class="flex gap-3">
+					<button
+						type="submit"
+						disabled={uploadingImages}
+						class="cursor-pointer rounded-lg bg-amber-400 px-4 py-2.5 text-sm font-semibold text-gray-950 hover:bg-amber-300 disabled:opacity-60"
+					>
+						{uploadingImages ? 'Subiendo…' : 'Subir imágenes'}
+					</button>
+					<button
+						type="button"
+						onclick={clearCropState}
+						class="cursor-pointer rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+					>
+						Cancelar
+					</button>
+				</div>
+			{/if}
 		</form>
 	</section>
 
@@ -453,3 +530,15 @@
 		{/if}
 	</section>
 </div>
+
+{#if cropQueue.length > 0 && cropIndex < cropQueue.length}
+	{#key cropIndex}
+		<ImageCropper
+			file={cropQueue[cropIndex]}
+			currentIndex={cropIndex + 1}
+			totalCount={cropQueue.length}
+			onConfirm={handleCropConfirm}
+			onCancel={handleCropCancel}
+		/>
+	{/key}
+{/if}

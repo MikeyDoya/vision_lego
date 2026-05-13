@@ -56,6 +56,7 @@
 		"vitest-browser-svelte": "^2.1.0"
 	},
 	"dependencies": {
+		"cropperjs": "^1.6.2",
 		"sharp": "^0.34.5"
 	}
 }

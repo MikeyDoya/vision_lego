@@ -97,13 +97,11 @@ When ready to start Wompi integration:
 5. Test end-to-end in Wompi sandbox before going live.
 
 
-DEPLOYMENT REMINDERS (one-time server setup not yet done)
+DEPLOYMENT REMINDERS (one-time server setup DONE)
 ----------------------------------------------------------
-- PostgreSQL on the droplet: create the vision_lego database and mikey user
-  (see CLAUDE.md Deployment section for exact commands).
-- Add GitHub Actions secrets: DROPLET_HOST, DROPLET_USER, DROPLET_SSH_KEY,
-  DATABASE_URL, BETTER_AUTH_SECRET, BETTER_AUTH_URL.
-- After first deploy: run `pm2 startup` + `pm2 save` on the droplet.
-- Copy nginx.conf to /etc/nginx/sites-available/vision_lego on the droplet.
-- HTTPS via Certbot: do this after the domain is purchased and pointed to
+- ✓ PostgreSQL on the droplet database and mikey user created.
+- ✓ GitHub Actions secrets added.
+- ✓ PM2 startup registered on droplet.
+- ✓ Nginx config copied and enabled on droplet.
+- PENDING (Future): HTTPS via Certbot: do this after the domain is purchased and pointed to
   the droplet IP.
