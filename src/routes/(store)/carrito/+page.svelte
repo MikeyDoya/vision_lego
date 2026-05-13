@@ -6,6 +6,10 @@
 	import ProductImage from '$lib/components/ui/ProductImage.svelte';
 
 	let { data }: { data: PageServerData } = $props();
+
+	let localCart = $state<typeof data.cart | null>(null);
+	let cart = $derived(localCart ?? data.cart);
+	let total = $derived(cart.reduce((sum, i) => sum + i.subtotal, 0));
 </script>
 
 <svelte:head>
@@ -15,7 +19,7 @@
 <div class="mx-auto max-w-4xl px-4 py-8 sm:px-6">
 	<h1 class="mb-8 text-2xl font-bold text-gray-900 dark:text-white">Tu carrito</h1>
 
-	{#if data.cart.length === 0}
+	{#if cart.length === 0}
 		<div class="flex flex-col items-center py-24 text-center">
 			<svg class="h-16 w-16 text-gray-300 dark:text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -31,7 +35,7 @@
 			<!-- Cart items -->
 			<div class="lg:col-span-2">
 				<ul class="divide-y divide-gray-200 dark:divide-gray-800">
-					{#each data.cart as item (item.cartItemId)}
+					{#each cart as item (item.cartItemId)}
 						<li class="flex gap-4 py-6">
 							<a href="/productos/{item.productSlug}" class="shrink-0">
 								{#if item.primaryImage}
@@ -64,7 +68,19 @@
 										<form
 											method="post"
 											action={item.quantity === 1 ? '?/removeItem' : '?/updateQuantity'}
-											use:enhance={() => async ({ result, update }) => { if (result.type === 'success') { await invalidateAll(); } else { await update({ reset: false }); } }}
+											use:enhance={() => {
+												const id = item.cartItemId;
+												const qty = item.quantity;
+												if (qty === 1) {
+													localCart = cart.filter((i) => i.cartItemId !== id);
+												} else {
+													const newQty = qty - 1;
+													localCart = cart.map((i) => i.cartItemId === id ? { ...i, quantity: newQty, subtotal: i.unitPrice * newQty } : i);
+												}
+												return async ({ result }) => {
+													if (result.type !== 'success') { localCart = null; await invalidateAll(); }
+												};
+											}}
 										>
 											<input type="hidden" name="cartItemId" value={item.cartItemId} />
 											{#if item.quantity > 1}
@@ -72,7 +88,7 @@
 											{/if}
 											<button
 												type="submit"
-												class="flex h-9 w-9 items-center justify-center text-gray-500 hover:text-red-500"
+												class="flex h-9 w-9 cursor-pointer items-center justify-center text-gray-500 hover:text-red-500"
 												aria-label={item.quantity === 1 ? 'Eliminar producto' : 'Reducir cantidad'}
 											>−</button>
 										</form>
@@ -80,22 +96,40 @@
 										<form
 											method="post"
 											action="?/updateQuantity"
-											use:enhance={() => async ({ result, update }) => { if (result.type === 'success') { await invalidateAll(); } else { await update({ reset: false }); } }}
+											use:enhance={() => {
+												const id = item.cartItemId;
+												const qty = item.quantity;
+												const newQty = qty + 1;
+												localCart = cart.map((i) => i.cartItemId === id ? { ...i, quantity: newQty, subtotal: i.unitPrice * newQty } : i);
+												return async ({ result }) => {
+													if (result.type !== 'success') { localCart = null; await invalidateAll(); }
+												};
+											}}
 										>
 											<input type="hidden" name="cartItemId" value={item.cartItemId} />
 											<input type="hidden" name="quantity" value={item.quantity + 1} />
 											<button
 												type="submit"
 												disabled={item.quantity >= item.stock}
-												class="flex h-9 w-9 items-center justify-center text-gray-500 hover:text-gray-900 disabled:opacity-30 dark:hover:text-white"
+												class="flex h-9 w-9 cursor-pointer items-center justify-center text-gray-500 hover:text-gray-900 disabled:opacity-30 dark:hover:text-white"
 												aria-label="Aumentar cantidad"
 											>+</button>
 										</form>
 									</div>
 
-									<form method="post" action="?/removeItem" use:enhance={() => async ({ result, update }) => { if (result.type === 'success') { await invalidateAll(); } else { await update(); } }}>
+									<form
+										method="post"
+										action="?/removeItem"
+										use:enhance={() => {
+											const id = item.cartItemId;
+											localCart = cart.filter((i) => i.cartItemId !== id);
+											return async ({ result }) => {
+												if (result.type !== 'success') { localCart = null; await invalidateAll(); }
+											};
+										}}
+									>
 										<input type="hidden" name="cartItemId" value={item.cartItemId} />
-										<button type="submit" class="text-sm text-gray-400 hover:text-red-500 dark:text-gray-600">
+										<button type="submit" class="cursor-pointer text-sm text-gray-400 hover:text-red-500 dark:text-gray-600">
 											Eliminar
 										</button>
 									</form>
@@ -115,7 +149,7 @@
 				<div class="rounded-2xl bg-gray-50 p-6 ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-800">
 					<h2 class="text-lg font-semibold text-gray-900 dark:text-white">Resumen</h2>
 					<div class="mt-4 space-y-2">
-						{#each data.cart as item (item.cartItemId)}
+						{#each cart as item (item.cartItemId)}
 							<div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
 								<span class="line-clamp-1 flex-1 pr-2">{item.productName} ×{item.quantity}</span>
 								<span class="shrink-0">{formatCOP(item.subtotal)}</span>
@@ -125,7 +159,7 @@
 					<div class="mt-4 border-t border-gray-200 pt-4 dark:border-gray-800">
 						<div class="flex justify-between font-semibold text-gray-900 dark:text-white">
 							<span>Subtotal</span>
-							<span>{formatCOP(data.total)}</span>
+							<span>{formatCOP(total)}</span>
 						</div>
 						<p class="mt-1 text-xs text-gray-400 dark:text-gray-600">Envío calculado al finalizar el pedido</p>
 					</div>
