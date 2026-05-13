@@ -77,9 +77,9 @@
 													const newQty = qty - 1;
 													localCart = cart.map((i) => i.cartItemId === id ? { ...i, quantity: newQty, subtotal: i.unitPrice * newQty } : i);
 												}
-												return async () => {
+												return async ({ result }) => {
+													if (result.type !== 'success') localCart = null;
 													await invalidateAll();
-													localCart = null;
 												};
 											}}
 										>
@@ -102,9 +102,9 @@
 												const qty = item.quantity;
 												const newQty = qty + 1;
 												localCart = cart.map((i) => i.cartItemId === id ? { ...i, quantity: newQty, subtotal: i.unitPrice * newQty } : i);
-												return async () => {
+												return async ({ result }) => {
+													if (result.type !== 'success') localCart = null;
 													await invalidateAll();
-													localCart = null;
 												};
 											}}
 										>
@@ -125,9 +125,9 @@
 										use:enhance={() => {
 											const id = item.cartItemId;
 											localCart = cart.filter((i) => i.cartItemId !== id);
-											return async () => {
+											return async ({ result }) => {
+												if (result.type !== 'success') localCart = null;
 												await invalidateAll();
-												localCart = null;
 											};
 										}}
 									>
