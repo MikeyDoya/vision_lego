@@ -165,6 +165,8 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const cartItemId = data.get('cartItemId') as string;
 
+		console.log('[removeItem] cartItemId received:', JSON.stringify(cartItemId));
+
 		if (!cartItemId) return fail(400, { error: 'Datos inválidos' });
 
 		if (locals.user) {
@@ -172,9 +174,14 @@ export const actions: Actions = {
 				.delete(cartItems)
 				.where(and(eq(cartItems.id, cartItemId), eq(cartItems.userId, locals.user.id)));
 		} else {
+			const rawCookie = cookies.get('guest_cart');
+			console.log('[removeItem] raw cookie:', JSON.stringify(rawCookie));
 			const cart = readGuestCart(cookies);
+			console.log('[removeItem] parsed cart:', JSON.stringify(cart));
 			const next = cart.filter((i) => i.variantId !== cartItemId);
+			console.log('[removeItem] filtered array to write:', JSON.stringify(next));
 			writeGuestCart(cookies, next);
+			console.log('[removeItem] done');
 		}
 
 		return { success: true };

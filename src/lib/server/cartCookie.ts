@@ -19,8 +19,12 @@ export function readGuestCart(cookies: Cookies): GuestCartItem[] {
 
 export function writeGuestCart(cookies: Cookies, items: GuestCartItem[]): void {
 	if (items.length === 0) {
+		console.log('[writeGuestCart] deleting cookie, opts:', JSON.stringify({ path: '/' }));
 		cookies.delete(NAME, { path: '/' });
+		console.log('[writeGuestCart] delete called');
 	} else {
+		console.log('[writeGuestCart] setting cookie, items:', JSON.stringify(items), 'opts:', JSON.stringify(OPTS));
 		cookies.set(NAME, JSON.stringify(items), OPTS);
+		console.log('[writeGuestCart] set called');
 	}
 }
