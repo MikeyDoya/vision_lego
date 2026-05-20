@@ -653,6 +653,18 @@ use:enhance={({ formData }) => {
 
 Applied to all three enhance callbacks in `/carrito/+page.svelte`. Hidden inputs are kept as fallback but the explicit `formData.set()` is the authoritative source.
 
+### Fix — guest cart cookie delete ignored by browser on HTTP (2026-05-20)
+Root cause of the item resurrection bug: `cookies.delete` in SvelteKit defaults `secure` to `true`. Over plain HTTP, Chrome 52+ silently drops any `Set-Cookie` with the `Secure` attribute — the deletion was a no-op and the cookie persisted across refreshes.
+
+**Fix** (`src/lib/server/cartCookie.ts`): pass `secure: false, sameSite: 'lax'` explicitly to `cookies.delete` to match the same attributes used by `cookies.set`:
+```ts
+cookies.delete(NAME, { path: '/', secure: false, sameSite: 'lax' });
+```
+
+**Found via:** curl inspection of raw `Set-Cookie` headers (Playwright can't read them directly) revealed `Secure` on the delete response but not on the set response. The mismatch was the entire bug.
+
+**Note:** when HTTPS is enabled, both `OPTS.secure` and the delete opts must be updated to `true`.
+
 ### Fix — guest cart item resurrection after Eliminar (2026-05-20)
 Items deleted from the guest cart reappeared on page refresh. Root cause: a race condition between two concurrent HTTP requests, not a load-function write.
 
