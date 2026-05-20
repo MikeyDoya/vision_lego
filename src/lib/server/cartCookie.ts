@@ -24,6 +24,7 @@ export function writeGuestCart(cookies: Cookies, items: GuestCartItem[]): void {
 		console.log('[writeGuestCart] delete called');
 	} else {
 		console.log('[writeGuestCart] setting cookie, items:', JSON.stringify(items), 'opts:', JSON.stringify(OPTS));
+		console.log('[writeGuestCart] caller stack:', new Error().stack?.split('\n').slice(1, 6).join(' | '));
 		cookies.set(NAME, JSON.stringify(items), OPTS);
 		console.log('[writeGuestCart] set called');
 	}
