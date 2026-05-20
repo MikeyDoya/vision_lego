@@ -165,7 +165,6 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const cartItemId = data.get('cartItemId') as string;
 
-		console.log('[removeItem] cartItemId:', cartItemId, '| hasUser:', !!locals.user);
 		if (!cartItemId) return fail(400, { error: 'Datos inválidos' });
 
 		if (locals.user) {
@@ -175,7 +174,6 @@ export const actions: Actions = {
 		} else {
 			const cart = readGuestCart(cookies);
 			const next = cart.filter((i) => i.variantId !== cartItemId);
-			console.log('[removeItem] guest branch: cart before:', JSON.stringify(cart), '| next:', JSON.stringify(next));
 			writeGuestCart(cookies, next);
 		}
 

@@ -19,7 +19,7 @@ export function readGuestCart(cookies: Cookies): GuestCartItem[] {
 
 export function writeGuestCart(cookies: Cookies, items: GuestCartItem[]): void {
 	if (items.length === 0) {
-		cookies.delete(NAME, { path: '/' });
+		cookies.delete(NAME, { path: '/', secure: false, sameSite: 'lax' });
 	} else {
 		cookies.set(NAME, JSON.stringify(items), OPTS);
 	}
