@@ -653,6 +653,23 @@ use:enhance={({ formData }) => {
 
 Applied to all three enhance callbacks in `/carrito/+page.svelte`. Hidden inputs are kept as fallback but the explicit `formData.set()` is the authoritative source.
 
+### Fix — guest cart item resurrection after Eliminar (2026-05-20)
+Items deleted from the guest cart reappeared on page refresh. Root cause: a race condition between two concurrent HTTP requests, not a load-function write.
+
+**Race**: `addToCart` (product page, ~100-300ms — has a DB stock-check query) and `removeItem` (cart page, faster — no DB query for guests) each receive the same original `Cookie` header snapshot. Whichever request responds last wins: if `addToCart` had already been submitted before the user hit "Eliminar", its response arrived after `removeItem`'s delete, and it wrote the stale cookie (with the item still present) as the final Set-Cookie header.
+
+**How it was found**: added `new Error().stack` logging to `writeGuestCart` and deployed; PM2 logs showed `addToCart` from `productos/[slug]/+page.server.ts` as the second writer.
+
+**Fix** (`/productos/[slug]/+page.svelte`):
+- Added `submitting = $state(false)` — set to `true` at the start of the `addToCart` enhance callback, `false` after the response
+- Button is disabled and shows "Agregando..." while in flight
+- On success, calls `goto('/carrito')` instead of showing an in-page banner — the user lands on the cart only after `addToCart` has fully completed, so they cannot be deleting items on the cart page while `addToCart` is still writing the cookie
+- Removed `addedToCart` state and its success banner (redundant now that we navigate to the cart)
+
+**Inherent limitation**: the cookie-backed race cannot be fully closed for two-tab scenarios or direct URL navigation mid-flight. The fix eliminates the race in the normal single-tab flow.
+
+Also removed all diagnostic `console.log` lines added during investigation from `cartCookie.ts` and `carrito/+page.server.ts`.
+
 ---
 
 ## Pending
