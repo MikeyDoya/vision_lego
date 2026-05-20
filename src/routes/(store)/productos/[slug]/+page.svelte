@@ -2,14 +2,14 @@
 	import type { PageServerData, ActionData } from './$types';
 	import { formatCOP } from '$lib/utils/currency';
 	import { enhance } from '$app/forms';
-	import { invalidateAll } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import ProductImage from '$lib/components/ui/ProductImage.svelte';
 
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
 
 	let quantity = $state(1);
 	let _imageIndex = $state(0);
-	let addedToCart = $state(false);
+	let submitting = $state(false);
 	let wishlistOverride = $state<boolean | null>(null);
 	const isWishlisted = $derived(wishlistOverride !== null ? wishlistOverride : data.isWishlisted);
 
@@ -271,20 +271,18 @@
 			{#if form?.error}
 				<p class="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 ring-1 ring-red-200 dark:bg-red-900/40 dark:text-red-300 dark:ring-red-800">{form.error}</p>
 			{/if}
-			{#if addedToCart}
-				<p class="mt-4 rounded-lg bg-green-50 px-4 py-3 text-sm text-green-700 ring-1 ring-green-200 dark:bg-green-900/40 dark:text-green-300 dark:ring-green-700">¡Agregado al carrito!</p>
-			{/if}
 
 			<div class="mt-6 flex gap-3">
 				<form
 					method="post"
 					action="?/addToCart"
 					use:enhance={() => {
+						submitting = true;
 						return async ({ result }) => {
+							submitting = false;
 							if (result.type === 'success') {
-								addedToCart = true;
-								setTimeout(() => (addedToCart = false), 3000);
 								await invalidateAll();
+								goto('/carrito');
 							}
 						};
 					}}
@@ -309,10 +307,10 @@
 					</div>
 					<button
 						type="submit"
-						disabled={!selectedVariantId || stockStatus === 'agotado'}
+						disabled={!selectedVariantId || stockStatus === 'agotado' || submitting}
 						class="h-11 flex-1 cursor-pointer rounded-lg bg-amber-400 text-sm font-semibold text-gray-950 transition hover:bg-amber-300 disabled:cursor-not-allowed disabled:opacity-50"
 					>
-						Agregar al carrito
+						{submitting ? 'Agregando...' : 'Agregar al carrito'}
 					</button>
 				</form>
 
