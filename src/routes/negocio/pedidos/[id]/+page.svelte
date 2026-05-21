@@ -17,7 +17,7 @@
 </script>
 
 <svelte:head>
-	<title>Pedido — Vision Lego</title>
+	<title>Pedido — Visión Lego</title>
 </svelte:head>
 
 <div class="mb-6 flex items-center gap-4">
@@ -59,7 +59,7 @@
 			</table>
 			<div class="mt-4 border-t border-gray-200 pt-4 text-right text-sm dark:border-gray-800">
 				<p class="text-gray-500">Envío: {data.order.shippingCostFormatted}</p>
-				<p class="mt-1 text-lg font-bold text-amber-500 dark:text-amber-400">Total: {data.order.totalFormatted}</p>
+				<p class="mt-1 text-lg font-bold text-brand-orange dark:text-brand-orange">Total: {data.order.totalFormatted}</p>
 			</div>
 		</section>
 
@@ -95,13 +95,13 @@
 				<select
 					id="status"
 					name="status"
-					class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+					class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
 				>
 					{#each Object.entries(data.statusLabels) as [val, label] (val)}
 						<option value={val} selected={data.order.status === val}>{label}</option>
 					{/each}
 				</select>
-				<button type="submit" class="w-full cursor-pointer rounded-lg bg-amber-400 py-2 text-sm font-semibold text-gray-950 transition hover:bg-amber-300">
+				<button type="submit" class="w-full cursor-pointer rounded-lg bg-brand-orange py-2 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light">
 					Actualizar estado
 				</button>
 			</form>

@@ -119,7 +119,7 @@
 </script>
 
 <svelte:head>
-	<title>{data.product.name} — Vision Lego</title>
+	<title>{data.product.name} — Visión Lego</title>
 </svelte:head>
 
 <div class="mb-6 flex items-center gap-4">
@@ -159,7 +159,7 @@
 					type="text"
 					required
 					value={data.product.name}
-					class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+					class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white"
 				/>
 			</div>
 
@@ -169,7 +169,7 @@
 					<select
 						id="category"
 						name="category"
-						class="mt-1 block w-full cursor-pointer rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+						class="mt-1 block w-full cursor-pointer rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
 					>
 						<option value="sunglasses" selected={data.product.category === 'sunglasses'}>Gafas de sol</option>
 						<option value="optical" selected={data.product.category === 'optical'}>Montura óptica</option>
@@ -180,7 +180,7 @@
 					<select
 						id="gender"
 						name="gender"
-						class="mt-1 block w-full cursor-pointer rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+						class="mt-1 block w-full cursor-pointer rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
 					>
 						<option value="" selected={!data.product.gender}>Sin especificar</option>
 						<option value="hombre" selected={data.product.gender === 'hombre'}>Hombre</option>
@@ -196,7 +196,7 @@
 				<select
 					id="brandId"
 					name="brandId"
-					class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+					class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
 				>
 					<option value="">Sin marca</option>
 					{#each data.brands as brand (brand.id)}
@@ -214,7 +214,7 @@
 					required
 					min="1"
 					value={data.product.basePrice}
-					class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+					class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white"
 				/>
 			</div>
 
@@ -224,17 +224,17 @@
 					id="description"
 					name="description"
 					rows="3"
-					class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+					class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white"
 				>{data.product.description ?? ''}</textarea>
 			</div>
 
 			<div class="flex gap-4">
 				<label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-					<input type="checkbox" name="isActive" value="true" checked={data.product.isActive} class="rounded border-gray-300 bg-white accent-amber-400 dark:border-gray-600 dark:bg-gray-800" />
+					<input type="checkbox" name="isActive" value="true" checked={data.product.isActive} class="rounded border-gray-300 bg-white accent-brand-orange dark:border-gray-600 dark:bg-gray-800" />
 					Activo
 				</label>
 				<label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-					<input type="checkbox" name="isFeatured" value="true" checked={data.product.isFeatured} class="rounded border-gray-300 bg-white accent-amber-400 dark:border-gray-600 dark:bg-gray-800" />
+					<input type="checkbox" name="isFeatured" value="true" checked={data.product.isFeatured} class="rounded border-gray-300 bg-white accent-brand-orange dark:border-gray-600 dark:bg-gray-800" />
 					Destacado
 				</label>
 			</div>
@@ -242,7 +242,7 @@
 			<button
 				type="submit"
 				disabled={saving}
-				class="cursor-pointer rounded-lg bg-amber-400 px-4 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-amber-300 disabled:opacity-60"
+				class="cursor-pointer rounded-lg bg-brand-orange px-4 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light disabled:opacity-60"
 			>
 				{saving ? 'Guardando…' : 'Guardar cambios'}
 			</button>
@@ -259,7 +259,7 @@
 					<div class="group relative aspect-square overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
 						<ProductImage basePath={image.url} alt={image.altText ?? ''} size="medium" class="h-full w-full object-cover" />
 						{#if image.isPrimary}
-							<span class="absolute left-1 top-1 rounded bg-amber-400 px-1.5 py-0.5 text-xs font-medium text-gray-950">
+							<span class="absolute left-1 top-1 rounded bg-brand-orange px-1.5 py-0.5 text-xs font-medium text-gray-950">
 								Principal
 							</span>
 						{/if}
@@ -362,7 +362,7 @@
 					<select
 						id="img-variant"
 						name="variantId"
-						class="mt-1 w-full cursor-pointer rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+						class="mt-1 w-full cursor-pointer rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
 					>
 						<option value="">Imagen general (todas las variantes)</option>
 						{#each variantGroups as group (group.variantId)}
@@ -377,7 +377,7 @@
 					<button
 						type="submit"
 						disabled={uploadingImages}
-						class="cursor-pointer rounded-lg bg-amber-400 px-4 py-2.5 text-sm font-semibold text-gray-950 hover:bg-amber-300 disabled:opacity-60"
+						class="cursor-pointer rounded-lg bg-brand-orange px-4 py-2.5 text-sm font-semibold text-gray-950 hover:bg-brand-orange-light disabled:opacity-60"
 					>
 						{uploadingImages ? 'Subiendo…' : 'Subir imágenes'}
 					</button>
@@ -414,13 +414,13 @@
 					<tbody class="divide-y divide-gray-200 dark:divide-gray-800">
 						{#each data.product.variants as variant (variant.id)}
 							{#if editingVariantId === variant.id}
-								<tr class="bg-amber-50 dark:bg-amber-950/20">
-									<td class="px-3 py-2"><input form="edit-{variant.id}" name="color" bind:value={editColor} placeholder="—" class="w-full rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white" /></td>
-									<td class="px-3 py-2"><input form="edit-{variant.id}" name="size" bind:value={editSize} placeholder="—" class="w-full rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white" /></td>
-									<td class="px-3 py-2"><input form="edit-{variant.id}" name="material" bind:value={editMaterial} placeholder="—" class="w-full rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white" /></td>
-									<td class="px-3 py-2"><input form="edit-{variant.id}" name="sku" bind:value={editSku} placeholder="—" class="w-full rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white" /></td>
-									<td class="px-3 py-2"><input form="edit-{variant.id}" name="price" type="number" min="0" value={editPrice} placeholder="Base" class="w-24 rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white" /></td>
-									<td class="px-3 py-2"><input form="edit-{variant.id}" name="stock" type="number" min="0" bind:value={editStock} class="w-16 rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white" /></td>
+								<tr class="bg-brand-orange-tint dark:bg-brand-orange-hover/20">
+									<td class="px-3 py-2"><input form="edit-{variant.id}" name="color" bind:value={editColor} placeholder="—" class="w-full rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white" /></td>
+									<td class="px-3 py-2"><input form="edit-{variant.id}" name="size" bind:value={editSize} placeholder="—" class="w-full rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white" /></td>
+									<td class="px-3 py-2"><input form="edit-{variant.id}" name="material" bind:value={editMaterial} placeholder="—" class="w-full rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white" /></td>
+									<td class="px-3 py-2"><input form="edit-{variant.id}" name="sku" bind:value={editSku} placeholder="—" class="w-full rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white" /></td>
+									<td class="px-3 py-2"><input form="edit-{variant.id}" name="price" type="number" min="0" value={editPrice} placeholder="Base" class="w-24 rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white" /></td>
+									<td class="px-3 py-2"><input form="edit-{variant.id}" name="stock" type="number" min="0" bind:value={editStock} class="w-16 rounded border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white" /></td>
 									<td class="w-px whitespace-nowrap px-3 py-2">
 										<form
 											id="edit-{variant.id}"
@@ -486,7 +486,7 @@
 			<button
 				type="button"
 				onclick={() => (addingVariant = true)}
-				class="cursor-pointer rounded-lg bg-amber-400 px-4 py-2 text-sm font-semibold text-gray-950 transition hover:bg-amber-300"
+				class="cursor-pointer rounded-lg bg-brand-orange px-4 py-2 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light"
 			>
 				Agregar variante
 			</button>
@@ -496,30 +496,30 @@
 			<form method="post" action="?/addVariant" use:enhance={() => async ({ result, update }) => { if (result.type === 'success') { await invalidateAll(); } else { await update(); } }} class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
 				<div>
 					<label for="v-color" class="block text-xs font-medium text-gray-600 dark:text-gray-400">Color</label>
-					<input id="v-color" name="color" type="text" placeholder="Negro" class="mt-1 w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500" />
+					<input id="v-color" name="color" type="text" placeholder="Negro" class="mt-1 w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500" />
 				</div>
 				<div>
 					<label for="v-size" class="block text-xs font-medium text-gray-600 dark:text-gray-400">Talla</label>
-					<input id="v-size" name="size" type="text" placeholder="M" class="mt-1 w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500" />
+					<input id="v-size" name="size" type="text" placeholder="M" class="mt-1 w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500" />
 				</div>
 				<div>
 					<label for="v-material" class="block text-xs font-medium text-gray-600 dark:text-gray-400">Material</label>
-					<input id="v-material" name="material" type="text" placeholder="Acetato" class="mt-1 w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500" />
+					<input id="v-material" name="material" type="text" placeholder="Acetato" class="mt-1 w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500" />
 				</div>
 				<div>
 					<label for="v-sku" class="block text-xs font-medium text-gray-600 dark:text-gray-400">SKU</label>
-					<input id="v-sku" name="sku" type="text" placeholder="VL-001" class="mt-1 w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500" />
+					<input id="v-sku" name="sku" type="text" placeholder="VL-001" class="mt-1 w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500" />
 				</div>
 				<div>
 					<label for="v-price" class="block text-xs font-medium text-gray-600 dark:text-gray-400">Precio (COP)</label>
-					<input id="v-price" name="price" type="number" min="0" placeholder="Usar base" class="mt-1 w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500" />
+					<input id="v-price" name="price" type="number" min="0" placeholder="Usar base" class="mt-1 w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500" />
 				</div>
 				<div>
 					<label for="v-stock" class="block text-xs font-medium text-gray-600 dark:text-gray-400">Stock</label>
-					<input id="v-stock" name="stock" type="number" min="0" value="0" class="mt-1 w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+					<input id="v-stock" name="stock" type="number" min="0" value="0" class="mt-1 w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
 				</div>
 				<div class="col-span-full flex gap-3">
-					<button type="submit" class="cursor-pointer rounded-lg bg-amber-400 px-4 py-2 text-sm font-semibold text-gray-950 transition hover:bg-amber-300">
+					<button type="submit" class="cursor-pointer rounded-lg bg-brand-orange px-4 py-2 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light">
 						Agregar variante
 					</button>
 					<button type="button" onclick={() => (addingVariant = false)} class="cursor-pointer rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">

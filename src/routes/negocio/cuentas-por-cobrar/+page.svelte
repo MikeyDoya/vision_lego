@@ -21,14 +21,14 @@
 </script>
 
 <svelte:head>
-	<title>Cuentas por cobrar — Vision Lego</title>
+	<title>Cuentas por cobrar — Visión Lego</title>
 </svelte:head>
 
 <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
 	<h1 class="text-2xl font-bold text-gray-900 dark:text-white">Cuentas por cobrar</h1>
 	<button
 		onclick={() => (showForm = !showForm)}
-		class="cursor-pointer rounded-lg bg-amber-400 px-4 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-amber-300"
+		class="cursor-pointer rounded-lg bg-brand-orange px-4 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light"
 	>
 		{showForm ? 'Cancelar' : '+ Nueva cuenta'}
 	</button>
@@ -58,26 +58,26 @@
 		>
 			<div>
 				<label for="customerName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre del cliente</label>
-				<input id="customerName" name="customerName" type="text" required class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+				<input id="customerName" name="customerName" type="text" required class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
 			</div>
 			<div>
 				<label for="customerPhone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Teléfono</label>
-				<input id="customerPhone" name="customerPhone" type="tel" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+				<input id="customerPhone" name="customerPhone" type="tel" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
 			</div>
 			<div class="sm:col-span-2">
 				<label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descripción</label>
-				<input id="description" name="description" type="text" required class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+				<input id="description" name="description" type="text" required class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
 			</div>
 			<div>
 				<label for="amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Monto total (COP)</label>
-				<input id="amount" name="amount" type="number" required min="1" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+				<input id="amount" name="amount" type="number" required min="1" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
 			</div>
 			<div>
 				<label for="dueDate" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Fecha límite</label>
-				<input id="dueDate" name="dueDate" type="date" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+				<input id="dueDate" name="dueDate" type="date" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
 			</div>
 			<div>
-				<button type="submit" disabled={saving} class="cursor-pointer rounded-lg bg-amber-400 px-4 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-amber-300 disabled:opacity-60">
+				<button type="submit" disabled={saving} class="cursor-pointer rounded-lg bg-brand-orange px-4 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light disabled:opacity-60">
 					{saving ? 'Guardando…' : 'Guardar'}
 				</button>
 			</div>
@@ -106,7 +106,7 @@
 						<span class="rounded-full px-2 py-1 text-xs font-medium {statusColors[rec.paymentStatus] ?? 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'}">
 							{statusLabels[rec.paymentStatus]}
 						</span>
-						<p class="mt-2 text-lg font-bold text-amber-500 dark:text-amber-400">{rec.amountFormatted}</p>
+						<p class="mt-2 text-lg font-bold text-brand-orange dark:text-brand-orange">{rec.amountFormatted}</p>
 						{#if rec.paymentStatus !== 'paid'}
 							<p class="text-sm text-gray-500">Pendiente: {rec.remainingFormatted}</p>
 						{/if}
@@ -117,12 +117,12 @@
 					{#if payingId === rec.id}
 						<form method="post" action="?/recordPayment" use:enhance={() => async ({ result, update }) => { if (result.type === 'success') { await invalidateAll(); } else { await update(); } }} class="mt-4 flex gap-2">
 							<input type="hidden" name="id" value={rec.id} />
-							<input type="number" name="payment" min="1" placeholder="Monto recibido" class="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-600" />
+							<input type="number" name="payment" min="1" placeholder="Monto recibido" class="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-600" />
 							<button type="submit" class="cursor-pointer rounded-lg bg-green-600 px-3 py-2 text-sm font-medium text-white hover:bg-green-500">Registrar</button>
 							<button type="button" onclick={() => (payingId = null)} class="cursor-pointer rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-800">Cancelar</button>
 						</form>
 					{:else}
-						<button onclick={() => (payingId = rec.id)} class="mt-3 cursor-pointer text-sm font-medium text-amber-500 underline hover:text-amber-400 dark:text-amber-400 dark:hover:text-amber-300">
+						<button onclick={() => (payingId = rec.id)} class="mt-3 cursor-pointer text-sm font-medium text-brand-orange underline hover:text-brand-orange dark:text-brand-orange dark:hover:text-brand-orange-light">
 							Registrar pago
 						</button>
 					{/if}

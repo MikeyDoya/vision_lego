@@ -117,7 +117,7 @@
 					type="button"
 					disabled={confirming}
 					onclick={confirm}
-					class="flex min-h-[44px] cursor-pointer items-center justify-center rounded-lg bg-amber-400 px-5 text-sm font-semibold text-gray-950 hover:bg-amber-300 disabled:opacity-60"
+					class="flex min-h-[44px] cursor-pointer items-center justify-center rounded-lg bg-brand-orange px-5 text-sm font-semibold text-gray-950 hover:bg-brand-orange-light disabled:opacity-60"
 				>{confirming ? 'Procesando…' : 'Continuar'}</button>
 			</div>
 		</div>

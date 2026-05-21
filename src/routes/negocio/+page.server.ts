@@ -1,7 +1,7 @@
 import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
-import { orders, products, productVariants } from '$lib/server/db/schema';
-import { eq, and, gte, sum, count, lte } from 'drizzle-orm';
+import { orders } from '$lib/server/db/schema';
+import { eq, and, gte, sum, count } from 'drizzle-orm';
 import { formatCOP } from '$lib/utils/currency';
 import { auth } from '$lib/server/auth';
 import { redirect } from '@sveltejs/kit';
@@ -10,7 +10,7 @@ export const load: PageServerLoad = async () => {
 	const today = new Date();
 	today.setHours(0, 0, 0, 0);
 
-	const [todaySales, pendingOrders, lowStock] = await Promise.all([
+	const [todaySales, pendingOrders] = await Promise.all([
 		db
 			.select({ total: sum(orders.total) })
 			.from(orders)
@@ -19,16 +19,11 @@ export const load: PageServerLoad = async () => {
 			.select({ count: count() })
 			.from(orders)
 			.where(eq(orders.status, 'pending')),
-		db
-			.select({ count: count() })
-			.from(productVariants)
-			.where(and(eq(productVariants.isActive, true), lte(productVariants.stock, 3))),
 	]);
 
 	return {
 		todaySales: formatCOP(Number(todaySales[0]?.total ?? 0)),
 		pendingOrders: pendingOrders[0]?.count ?? 0,
-		lowStockCount: lowStock[0]?.count ?? 0,
 	};
 };
 

@@ -56,7 +56,7 @@
 </script>
 
 <svelte:head>
-	<title>Productos — Vision Lego</title>
+	<title>Productos — Visión Lego</title>
 </svelte:head>
 
 <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -72,13 +72,13 @@
 				</svg>
 				Filtros
 				{#if hasFilters}
-					<span class="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-amber-400 text-xs font-bold text-gray-950">!</span>
+					<span class="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-brand-orange text-xs font-bold text-gray-950">!</span>
 				{/if}
 			</button>
 			<label for="orden" class="sr-only">Ordenar por</label>
 			<select
 				id="orden"
-				class="h-11 cursor-pointer rounded-lg border-gray-300 bg-white text-sm text-gray-700 focus:border-amber-400 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+				class="h-11 cursor-pointer rounded-lg border-gray-300 bg-white text-sm text-gray-700 focus:border-brand-orange focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
 				value={data.filters.sort}
 				onchange={(e) => setFilter('orden', (e.target as HTMLSelectElement).value)}
 			>
@@ -101,7 +101,7 @@
 				{#if hasFilters}
 					<button
 						onclick={clearFilters}
-						class="cursor-pointer text-sm font-medium text-amber-500 underline underline-offset-2 hover:text-amber-400 dark:text-amber-400 dark:hover:text-amber-300"
+						class="cursor-pointer text-sm font-medium text-brand-orange underline underline-offset-2 hover:text-brand-orange dark:text-brand-orange dark:hover:text-brand-orange-light"
 					>
 						Limpiar filtros
 					</button>
@@ -119,7 +119,7 @@
 									value={val}
 									checked={data.filters.category === val}
 									onchange={() => setFilter('categoria', data.filters.category === val ? '' : val)}
-									class="rounded-full accent-amber-400"
+									class="rounded-full accent-brand-orange"
 								/>
 								{label}
 							</label>
@@ -140,7 +140,7 @@
 										value={brand.id}
 										checked={data.filters.brandId === brand.id}
 										onchange={() => setFilter('marca', data.filters.brandId === brand.id ? '' : brand.id)}
-										class="rounded-full accent-amber-400"
+										class="rounded-full accent-brand-orange"
 									/>
 									{brand.name}
 								</label>
@@ -161,7 +161,7 @@
 									value={val}
 									checked={data.filters.gender === val}
 									onchange={() => setFilter('genero', data.filters.gender === val ? '' : val)}
-									class="rounded-full accent-amber-400"
+									class="rounded-full accent-brand-orange"
 								/>
 								{label}
 							</label>
@@ -182,7 +182,7 @@
 										value={color}
 										checked={data.filters.color === color}
 										onchange={() => setFilter('color', data.filters.color === color ? '' : color)}
-										class="rounded-full accent-amber-400"
+										class="rounded-full accent-brand-orange"
 									/>
 									{color}
 								</label>
@@ -204,7 +204,7 @@
 										value={material}
 										checked={data.filters.material === material}
 										onchange={() => setFilter('material', data.filters.material === material ? '' : material)}
-										class="rounded-full accent-amber-400"
+										class="rounded-full accent-brand-orange"
 									/>
 									{material}
 								</label>
@@ -226,7 +226,7 @@
 										value={size}
 										checked={data.filters.size === size}
 										onchange={() => setFilter('talla', data.filters.size === size ? '' : size)}
-										class="rounded-full accent-amber-400"
+										class="rounded-full accent-brand-orange"
 									/>
 									{size}
 								</label>
@@ -249,7 +249,7 @@
 								step="10000"
 								value={data.filters.minPrice ?? ''}
 								onblur={(e) => setFilter('precioMin', (e.target as HTMLInputElement).value)}
-								class="w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-600"
+								class="w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-600"
 							/>
 						</div>
 						<div class="flex-1">
@@ -262,7 +262,7 @@
 								step="10000"
 								value={data.filters.maxPrice ?? ''}
 								onblur={(e) => setFilter('precioMax', (e.target as HTMLInputElement).value)}
-								class="w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-600"
+								class="w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-600"
 							/>
 						</div>
 					</div>
@@ -270,7 +270,7 @@
 
 				<button
 					onclick={() => (filtersOpen = false)}
-					class="h-11 w-full rounded-lg bg-amber-400 text-sm font-semibold text-gray-950 hover:bg-amber-300 lg:hidden"
+					class="h-11 w-full rounded-lg bg-brand-orange text-sm font-semibold text-gray-950 hover:bg-brand-orange-light lg:hidden"
 				>
 					Ver {data.products.length} producto{data.products.length !== 1 ? 's' : ''}
 				</button>
@@ -284,7 +284,7 @@
 					<p class="text-lg font-medium text-gray-900 dark:text-white">No encontramos productos</p>
 					<p class="mt-1 text-sm text-gray-500">Intenta cambiar los filtros de búsqueda.</p>
 					{#if hasFilters}
-						<button onclick={clearFilters} class="mt-4 text-sm font-medium text-amber-500 underline hover:text-amber-400 dark:text-amber-400 dark:hover:text-amber-300">
+						<button onclick={clearFilters} class="mt-4 text-sm font-medium text-brand-orange underline hover:text-brand-orange dark:text-brand-orange dark:hover:text-brand-orange-light">
 							Ver todos los productos
 						</button>
 					{/if}
@@ -315,7 +315,7 @@
 									{categoryLabels[product.category] ?? product.category}
 								</p>
 								<p class="line-clamp-2 text-sm font-semibold leading-tight text-gray-900 dark:text-white">{product.name}</p>
-								<p class="text-sm font-bold text-amber-500 dark:text-amber-400">{formatCOP(product.basePrice)}</p>
+								<p class="text-sm font-bold text-brand-orange dark:text-brand-orange">{formatCOP(product.basePrice)}</p>
 							</div>
 						</a>
 					{/each}

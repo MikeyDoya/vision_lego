@@ -1,13 +1,10 @@
 import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import { productVariants, products } from '$lib/server/db/schema';
-import { eq, lte, asc } from 'drizzle-orm';
+import { eq, asc } from 'drizzle-orm';
 import { fail } from '@sveltejs/kit';
 
-export const load: PageServerLoad = async ({ url }) => {
-	const onlyLow = url.searchParams.get('bajostock') === '1';
-	const threshold = 3;
-
+export const load: PageServerLoad = async () => {
 	const rows = await db
 		.select({
 			id: productVariants.id,
@@ -22,14 +19,9 @@ export const load: PageServerLoad = async ({ url }) => {
 		})
 		.from(productVariants)
 		.innerJoin(products, eq(productVariants.productId, products.id))
-		.where(
-			onlyLow
-				? lte(productVariants.stock, threshold)
-				: undefined
-		)
 		.orderBy(asc(productVariants.stock), asc(products.name));
 
-	return { variants: rows, onlyLow, threshold };
+	return { variants: rows };
 };
 
 export const actions: Actions = {

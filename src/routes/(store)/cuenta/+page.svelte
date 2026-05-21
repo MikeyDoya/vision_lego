@@ -26,7 +26,7 @@
 </script>
 
 <svelte:head>
-	<title>Mi cuenta — Vision Lego</title>
+	<title>Mi cuenta — Visión Lego</title>
 </svelte:head>
 
 <div class="mx-auto max-w-3xl px-4 py-8 sm:px-6">
@@ -73,7 +73,7 @@
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
 				</svg>
 				<p class="mt-4 font-medium text-gray-900 dark:text-white">No tienes pedidos aún</p>
-				<a href="/productos" class="mt-3 text-sm text-amber-500 underline hover:text-amber-400 dark:text-amber-400 dark:hover:text-amber-300">
+				<a href="/productos" class="mt-3 text-sm text-brand-orange underline hover:text-brand-orange dark:text-brand-orange dark:hover:text-brand-orange-light">
 					Explorar productos
 				</a>
 			</div>
@@ -93,7 +93,7 @@
 								<span class={['rounded-full px-2.5 py-0.5 text-xs font-medium', statusLabels[order.status]?.color ?? 'bg-gray-100 text-gray-700'].join(' ')}>
 									{statusLabels[order.status]?.label ?? order.status}
 								</span>
-								<span class="text-sm font-semibold text-amber-500 dark:text-amber-400">{formatCOP(order.total)}</span>
+								<span class="text-sm font-semibold text-brand-orange dark:text-brand-orange">{formatCOP(order.total)}</span>
 								<svg class={['h-4 w-4 text-gray-400 transition-transform', expandedOrderId === order.id ? 'rotate-180' : ''].join(' ')} fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
 								</svg>
@@ -149,11 +149,11 @@
 								type="text"
 								value={data.user.name}
 								required
-								class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 focus:border-amber-400 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+								class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 focus:border-brand-orange focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-900 dark:text-white"
 							/>
 						</div>
 						<div class="flex gap-3">
-							<button type="submit" class="h-10 cursor-pointer rounded-lg bg-amber-400 px-5 text-sm font-semibold text-gray-950 transition hover:bg-amber-300">
+							<button type="submit" class="h-10 cursor-pointer rounded-lg bg-brand-orange px-5 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light">
 								Guardar
 							</button>
 							<button type="button" onclick={() => (editingProfile = false)} class="h-10 cursor-pointer rounded-lg border border-gray-300 px-5 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">

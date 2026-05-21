@@ -11,13 +11,13 @@
 </script>
 
 <svelte:head>
-	<title>Vision Lego — Gafas de Sol y Monturas Ópticas</title>
+	<title>Visión Lego — Gafas de Sol y Monturas Ópticas</title>
 </svelte:head>
 
 <!-- Hero -->
-<section class="relative overflow-hidden bg-amber-50 text-gray-900 dark:bg-gray-950 dark:text-white">
+<section class="relative overflow-hidden bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-white">
 	<!-- Warm gradient layer -->
-	<div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-amber-200/60 via-amber-50 to-gray-100 dark:from-amber-900/40 dark:via-gray-950 dark:to-gray-900"></div>
+	<div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-brand-orange/10 via-transparent to-transparent dark:from-brand-orange-hover/40 dark:via-gray-950 dark:to-gray-900"></div>
 	<!-- Subtle texture dots -->
 	<div
 		class="pointer-events-none absolute inset-0 opacity-[0.04]"
@@ -25,10 +25,10 @@
 	></div>
 
 	<div class="relative mx-auto max-w-5xl px-6 py-28 text-center sm:py-36">
-		<p class="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-amber-600 dark:text-amber-400">Óptica & Estilo</p>
+		<p class="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-brand-orange-hover dark:text-brand-orange">Óptica & Estilo</p>
 		<h1 class="text-5xl font-bold leading-tight tracking-tight sm:text-7xl">
 			Tu visión,<br />
-			<span class="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent dark:from-amber-300 dark:to-orange-400">tu identidad.</span>
+			<span class="text-brand-orange dark:text-brand-orange-light">tu identidad.</span>
 		</h1>
 		<p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-gray-600 dark:text-gray-300">
 			Gafas de sol y monturas ópticas seleccionadas para cada personalidad. Calidad premium, precios reales.
@@ -36,7 +36,7 @@
 		<div class="mt-10 flex flex-wrap items-center justify-center gap-4">
 			<a
 				href="/productos"
-				class="rounded-xl bg-amber-400 px-8 py-3.5 text-sm font-semibold text-gray-950 transition hover:bg-amber-300"
+				class="rounded-xl bg-brand-orange px-8 py-3.5 text-sm font-semibold text-white transition hover:bg-brand-orange-hover"
 			>
 				Ver colección
 			</a>
@@ -55,7 +55,7 @@
 	<section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
 		<div class="mb-8 flex items-end justify-between">
 			<div>
-				<p class="text-xs font-semibold uppercase tracking-widest text-amber-500 dark:text-amber-400">Selección</p>
+				<p class="text-xs font-semibold uppercase tracking-widest text-brand-orange dark:text-brand-orange">Selección</p>
 				<h2 class="mt-1 text-2xl font-bold text-gray-900 dark:text-white">Productos destacados</h2>
 			</div>
 			<a href="/productos" class="text-sm font-medium text-gray-400 hover:text-gray-900 dark:text-gray-500 dark:hover:text-white">
@@ -88,7 +88,7 @@
 						<p class="line-clamp-2 text-sm font-semibold leading-tight text-gray-800 group-hover:underline dark:text-gray-100">
 							{product.name}
 						</p>
-						<p class="text-sm font-bold text-amber-500 dark:text-amber-400">{formatCOP(product.basePrice)}</p>
+						<p class="text-sm font-bold text-brand-orange dark:text-brand-orange">{formatCOP(product.basePrice)}</p>
 					</div>
 				</a>
 			{/each}
@@ -102,13 +102,13 @@
 		<div class="grid gap-4 sm:grid-cols-2">
 			<a
 				href="/productos?categoria=sunglasses"
-				class="group relative overflow-hidden rounded-2xl bg-amber-50 p-8 text-gray-900 dark:bg-gray-900 dark:text-white"
+				class="group relative overflow-hidden rounded-2xl bg-white p-8 text-gray-900 ring-1 ring-gray-200 dark:bg-gray-900 dark:text-white dark:ring-0"
 			>
-				<div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-amber-200/60 to-transparent dark:from-amber-800/50"></div>
-				<p class="relative text-xs font-semibold uppercase tracking-widest text-amber-600 dark:text-amber-400">Categoría</p>
+				<div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-brand-orange/15 to-transparent dark:from-brand-orange-hover/40"></div>
+				<p class="relative text-xs font-semibold uppercase tracking-widest text-brand-orange-hover dark:text-brand-orange">Categoría</p>
 				<h3 class="relative mt-2 text-2xl font-bold">Gafas de sol</h3>
 				<p class="relative mt-1 text-sm text-gray-600 dark:text-gray-300">Protección UV · Diseño · Estilo</p>
-				<span class="relative mt-6 inline-block text-sm font-medium text-amber-600 transition-transform group-hover:translate-x-1 dark:text-amber-300">
+				<span class="relative mt-6 inline-block text-sm font-medium text-brand-orange-hover transition-transform group-hover:translate-x-1 dark:text-brand-orange-light">
 					Explorar →
 				</span>
 			</a>
@@ -133,8 +133,8 @@
 	<div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
 		<div class="grid grid-cols-1 gap-8 sm:grid-cols-3">
 			<div class="flex flex-col items-center gap-3 text-center">
-				<div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-400/10">
-					<svg class="h-7 w-7 text-amber-500 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-orange/10">
+					<svg class="h-7 w-7 text-brand-orange dark:text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
 					</svg>
 				</div>

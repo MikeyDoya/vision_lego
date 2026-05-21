@@ -94,7 +94,7 @@
 </script>
 
 <svelte:head>
-	<title>{data.product.name} — Vision Lego</title>
+	<title>{data.product.name} — Visión Lego</title>
 </svelte:head>
 
 <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
@@ -150,7 +150,7 @@
 								onclick={() => (_imageIndex = i)}
 								class={[
 									'h-16 w-16 shrink-0 overflow-hidden rounded-lg border-2 transition-colors',
-									i === currentImageIndex ? 'border-amber-400' : 'border-gray-200 dark:border-gray-700',
+									i === currentImageIndex ? 'border-brand-orange' : 'border-gray-200 dark:border-gray-700',
 								].join(' ')}
 								aria-label="Ver imagen {i + 1}"
 							>
@@ -174,7 +174,7 @@
 				{categoryLabel[data.product.category] ?? data.product.category}
 			</p>
 			<h1 class="mt-1 text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">{data.product.name}</h1>
-			<p class="mt-3 text-2xl font-bold text-amber-500 dark:text-amber-400">{formatCOP(displayPrice)}</p>
+			<p class="mt-3 text-2xl font-bold text-brand-orange dark:text-brand-orange">{formatCOP(displayPrice)}</p>
 
 			{#if data.product.description}
 				<p class="mt-4 text-sm leading-relaxed text-gray-600 dark:text-gray-400">{data.product.description}</p>
@@ -194,7 +194,7 @@
 										class={[
 											'cursor-pointer min-h-11 rounded-lg border px-3 py-2 text-sm transition-colors',
 											selectedColor === color
-												? 'border-amber-400 bg-amber-400 text-gray-950 font-semibold'
+												? 'border-brand-orange bg-brand-orange text-gray-950 font-semibold'
 												: 'border-gray-300 text-gray-700 hover:border-gray-400 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-500',
 										].join(' ')}
 									>{color}</button>
@@ -215,7 +215,7 @@
 										class={[
 											'cursor-pointer min-h-11 rounded-lg border px-3 py-2 text-sm transition-colors',
 											selectedSize === size
-												? 'border-amber-400 bg-amber-400 text-gray-950 font-semibold'
+												? 'border-brand-orange bg-brand-orange text-gray-950 font-semibold'
 												: 'border-gray-300 text-gray-700 hover:border-gray-400 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-500',
 										].join(' ')}
 									>{size}</button>
@@ -236,7 +236,7 @@
 										class={[
 											'cursor-pointer min-h-11 rounded-lg border px-3 py-2 text-sm transition-colors',
 											selectedMaterial === material
-												? 'border-amber-400 bg-amber-400 text-gray-950 font-semibold'
+												? 'border-brand-orange bg-brand-orange text-gray-950 font-semibold'
 												: 'border-gray-300 text-gray-700 hover:border-gray-400 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-500',
 										].join(' ')}
 									>{material}</button>
@@ -254,8 +254,8 @@
 								Agotado
 							</span>
 						{:else if stockStatus === 'ultimas'}
-							<span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-sm font-medium text-amber-700 ring-1 ring-amber-200 dark:bg-amber-900/40 dark:text-amber-300 dark:ring-amber-800">
-								<span class="h-2 w-2 rounded-full bg-amber-500"></span>
+							<span class="inline-flex items-center gap-1.5 rounded-full bg-brand-orange-light px-3 py-1 text-sm font-medium text-brand-orange-hover ring-1 ring-brand-orange-light dark:bg-brand-orange-hover/40 dark:text-brand-orange-light dark:ring-brand-orange-hover">
+								<span class="h-2 w-2 rounded-full bg-brand-orange"></span>
 								Últimas unidades
 							</span>
 						{:else}
@@ -308,7 +308,7 @@
 					<button
 						type="submit"
 						disabled={!selectedVariantId || stockStatus === 'agotado' || submitting}
-						class="h-11 flex-1 cursor-pointer rounded-lg bg-amber-400 text-sm font-semibold text-gray-950 transition hover:bg-amber-300 disabled:cursor-not-allowed disabled:opacity-50"
+						class="h-11 flex-1 cursor-pointer rounded-lg bg-brand-orange text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light disabled:cursor-not-allowed disabled:opacity-50"
 					>
 						{submitting ? 'Agregando...' : 'Agregar al carrito'}
 					</button>

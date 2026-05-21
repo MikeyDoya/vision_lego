@@ -9,14 +9,14 @@
 </script>
 
 <svelte:head>
-	<title>Productos — Vision Lego</title>
+	<title>Productos — Visión Lego</title>
 </svelte:head>
 
 <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
 	<h1 class="text-2xl font-bold text-gray-900 dark:text-white">Productos</h1>
 	<a
 		href="/negocio/productos/nuevo"
-		class="rounded-lg bg-amber-400 px-4 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-amber-300"
+		class="rounded-lg bg-brand-orange px-4 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light"
 	>
 		+ Nuevo producto
 	</a>
@@ -28,11 +28,11 @@
 		type="search"
 		value={data.search}
 		placeholder="Buscar producto…"
-		class="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-600"
+		class="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-600"
 	/>
 	<select
 		name="categoria"
-		class="cursor-pointer rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+		class="cursor-pointer rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
 	>
 		<option value="">Todas las categorías</option>
 		<option value="sunglasses" selected={data.category === 'sunglasses'}>Gafas de sol</option>
@@ -47,7 +47,7 @@
 	{#if data.products.length === 0}
 		<div class="py-16 text-center text-gray-500">
 			<p>No hay productos todavía.</p>
-			<a href="/negocio/productos/nuevo" class="mt-2 inline-block text-sm font-medium text-amber-500 underline hover:text-amber-400 dark:text-amber-400 dark:hover:text-amber-300">
+			<a href="/negocio/productos/nuevo" class="mt-2 inline-block text-sm font-medium text-brand-orange underline hover:text-brand-orange dark:text-brand-orange dark:hover:text-brand-orange-light">
 				Crear el primero
 			</a>
 		</div>
@@ -102,7 +102,7 @@
 									<button
 										type="submit"
 										class="cursor-pointer rounded-full px-2 py-1 text-xs font-medium {product.isFeatured
-											? 'bg-amber-100 text-amber-700 ring-1 ring-amber-200 dark:bg-amber-900/50 dark:text-amber-400 dark:ring-amber-700'
+											? 'bg-brand-orange-light text-brand-orange-hover ring-1 ring-brand-orange-light dark:bg-brand-orange-hover/50 dark:text-brand-orange dark:ring-brand-orange-hover'
 											: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-500'}"
 									>
 										{product.isFeatured ? 'Destacado' : 'Normal'}

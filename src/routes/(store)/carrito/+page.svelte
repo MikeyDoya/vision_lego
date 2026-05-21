@@ -13,7 +13,7 @@
 </script>
 
 <svelte:head>
-	<title>Carrito — Vision Lego</title>
+	<title>Carrito — Visión Lego</title>
 </svelte:head>
 
 <div class="mx-auto max-w-4xl px-4 py-8 sm:px-6">
@@ -26,7 +26,7 @@
 			</svg>
 			<p class="mt-4 text-lg font-medium text-gray-900 dark:text-white">Tu carrito está vacío</p>
 			<p class="mt-1 text-sm text-gray-500">Explora nuestros productos y agrega algo que te guste.</p>
-			<a href="/productos" class="mt-6 inline-block rounded-lg bg-amber-400 px-6 py-3 text-sm font-semibold text-gray-950 transition hover:bg-amber-300">
+			<a href="/productos" class="mt-6 inline-block rounded-lg bg-brand-orange px-6 py-3 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light">
 				Ver productos
 			</a>
 		</div>
@@ -61,7 +61,7 @@
 								{#if item.variantLabel}
 									<p class="text-sm text-gray-500">{item.variantLabel}</p>
 								{/if}
-								<p class="text-sm font-semibold text-amber-500 dark:text-amber-400">{formatCOP(item.unitPrice)}</p>
+								<p class="text-sm font-semibold text-brand-orange dark:text-brand-orange">{formatCOP(item.unitPrice)}</p>
 
 								<div class="mt-2 flex items-center gap-4">
 									<div class="flex items-center rounded-lg border border-gray-300 dark:border-gray-700">
@@ -174,7 +174,7 @@
 					</div>
 					<a
 						href="/checkout"
-						class="mt-6 block h-12 w-full rounded-xl bg-amber-400 text-center text-sm font-semibold leading-[3rem] text-gray-950 transition hover:bg-amber-300"
+						class="mt-6 block h-12 w-full rounded-xl bg-brand-orange text-center text-sm font-semibold leading-[3rem] text-gray-950 transition hover:bg-brand-orange-light"
 					>
 						Finalizar pedido
 					</a>

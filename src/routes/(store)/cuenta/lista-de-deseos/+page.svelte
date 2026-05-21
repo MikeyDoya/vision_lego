@@ -9,7 +9,7 @@
 </script>
 
 <svelte:head>
-	<title>Lista de deseos — Vision Lego</title>
+	<title>Lista de deseos — Visión Lego</title>
 </svelte:head>
 
 <div class="mx-auto max-w-3xl px-4 py-8 sm:px-6">
@@ -27,7 +27,7 @@
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
 			</svg>
 			<p class="mt-4 font-medium text-gray-900 dark:text-white">Tu lista de deseos está vacía</p>
-			<a href="/productos" class="mt-3 text-sm text-amber-500 underline hover:text-amber-400 dark:text-amber-400 dark:hover:text-amber-300">
+			<a href="/productos" class="mt-3 text-sm text-brand-orange underline hover:text-brand-orange dark:text-brand-orange dark:hover:text-brand-orange-light">
 				Explorar productos
 			</a>
 		</div>
@@ -57,7 +57,7 @@
 							<a href="/productos/{item.slug}" class="line-clamp-2 text-sm font-medium text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-300">
 								{item.name}
 							</a>
-							<p class="mt-1 text-sm font-bold text-amber-500 dark:text-amber-400">{formatCOP(item.basePrice)}</p>
+							<p class="mt-1 text-sm font-bold text-brand-orange dark:text-brand-orange">{formatCOP(item.basePrice)}</p>
 							{#if !item.isActive || !item.hasStock}
 								<span class="mt-1 inline-block rounded-full bg-red-50 px-2 py-0.5 text-xs font-medium text-red-600 ring-1 ring-red-200 dark:bg-red-900/40 dark:text-red-300 dark:ring-red-800">
 									Agotado
@@ -69,7 +69,7 @@
 							{#if item.isActive && item.hasStock}
 								<a
 									href="/productos/{item.slug}"
-									class="flex h-9 flex-1 items-center justify-center rounded-lg bg-amber-400 text-xs font-semibold text-gray-950 transition hover:bg-amber-300"
+									class="flex h-9 flex-1 items-center justify-center rounded-lg bg-brand-orange text-xs font-semibold text-gray-950 transition hover:bg-brand-orange-light"
 								>
 									Ver producto
 								</a>

@@ -14,7 +14,7 @@
 </script>
 
 <svelte:head>
-	<title>Finalizar pedido — Vision Lego</title>
+	<title>Finalizar pedido — Visión Lego</title>
 </svelte:head>
 
 <div class="mx-auto max-w-5xl px-4 py-8 sm:px-6">
@@ -50,7 +50,7 @@
 								type="text"
 								required
 								value={data.user.name}
-								class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 focus:border-amber-400 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+								class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 focus:border-brand-orange focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-900 dark:text-white"
 							/>
 						</div>
 						<div>
@@ -61,7 +61,7 @@
 								type="email"
 								required
 								value={data.user.email}
-								class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 focus:border-amber-400 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+								class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 focus:border-brand-orange focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-900 dark:text-white"
 							/>
 						</div>
 						<div class="sm:col-span-2">
@@ -71,7 +71,7 @@
 								name="telefono"
 								type="tel"
 								placeholder="3001234567"
-								class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-600"
+								class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-600"
 							/>
 						</div>
 					</div>
@@ -89,7 +89,7 @@
 								type="text"
 								required
 								placeholder="Calle 123 #45-67, Apt 8"
-								class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-600"
+								class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-600"
 							/>
 						</div>
 						<div>
@@ -100,7 +100,7 @@
 								type="text"
 								required
 								placeholder="Medellín"
-								class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-600"
+								class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-600"
 							/>
 						</div>
 						<div>
@@ -111,7 +111,7 @@
 								type="text"
 								required
 								placeholder="Antioquia"
-								class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-600"
+								class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-600"
 							/>
 						</div>
 						<div>
@@ -120,7 +120,7 @@
 								id="codigoPostal"
 								name="codigoPostal"
 								type="text"
-								class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 focus:border-amber-400 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+								class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 focus:border-brand-orange focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-900 dark:text-white"
 							/>
 						</div>
 					</div>
@@ -135,7 +135,7 @@
 								<label class={[
 									'flex cursor-pointer items-center gap-4 rounded-xl border-2 p-4 transition-colors',
 									selectedShippingId === method.id
-										? 'border-amber-400 bg-amber-50 dark:bg-amber-400/10'
+										? 'border-brand-orange bg-brand-orange-tint dark:bg-brand-orange/10'
 										: 'border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600',
 								].join(' ')}>
 									<input
@@ -148,10 +148,10 @@
 									/>
 									<span class={[
 										'flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2',
-										selectedShippingId === method.id ? 'border-amber-400' : 'border-gray-300 dark:border-gray-600',
+										selectedShippingId === method.id ? 'border-brand-orange' : 'border-gray-300 dark:border-gray-600',
 									].join(' ')}>
 										{#if selectedShippingId === method.id}
-											<span class="h-2.5 w-2.5 rounded-full bg-amber-400"></span>
+											<span class="h-2.5 w-2.5 rounded-full bg-brand-orange"></span>
 										{/if}
 									</span>
 									<div class="flex-1">
@@ -160,7 +160,7 @@
 											<p class="text-xs text-gray-500">{method.description}</p>
 										{/if}
 									</div>
-									<span class="text-sm font-semibold text-amber-500 dark:text-amber-400">
+									<span class="text-sm font-semibold text-brand-orange dark:text-brand-orange">
 										{method.cost === 0 ? 'Gratis' : formatCOP(method.cost)}
 									</span>
 								</label>
@@ -177,7 +177,7 @@
 						name="notas"
 						rows="3"
 						placeholder="Instrucciones especiales de entrega, indicaciones, etc."
-						class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-600"
+						class="mt-1 block w-full rounded-lg border-gray-300 bg-white text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-900 dark:text-white dark:placeholder-gray-600"
 					></textarea>
 				</div>
 			</div>
@@ -225,7 +225,7 @@
 					<button
 						type="submit"
 						disabled={submitting}
-						class="mt-6 h-12 w-full cursor-pointer rounded-xl bg-amber-400 text-sm font-semibold text-gray-950 transition hover:bg-amber-300 disabled:opacity-50"
+						class="mt-6 h-12 w-full cursor-pointer rounded-xl bg-brand-orange text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light disabled:opacity-50"
 					>
 						{submitting ? 'Procesando...' : 'Confirmar pedido'}
 					</button>

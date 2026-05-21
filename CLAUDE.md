@@ -13,7 +13,7 @@
 - **Testing**: Vitest (unit + component) + Playwright (e2e)
 - **Currency**: COP (Colombian pesos), no decimals
 - **Local project name**: `vision_lego`
-- **Brand name**: Vision Lego (shown to end users)
+- **Brand name**: Visión Lego (shown to end users)
 
 ## Language rules
 
@@ -81,7 +81,7 @@ vision_lego/
 │           │   ├── +page.svelte                   # Product list
 │           │   ├── nuevo/+page.svelte             # Create product
 │           │   └── [id]/+page.svelte              # Edit product
-│           ├── inventario/+page.svelte             # Stock per variant + low-stock alerts
+│           ├── inventario/+page.svelte             # Stock per variant
 │           ├── pedidos/
 │           │   ├── +page.svelte                   # Order list
 │           │   └── [id]/+page.svelte              # Order detail + status change
@@ -188,7 +188,7 @@ productCategory: 'sunglasses' | 'optical'
 > Designed for a non-technical owner. Clear UI, simple actions, works well on mobile and desktop.
 
 ### Home (`/negocio`)
-- Daily summary: today's sales, pending orders, low-stock products
+- Daily summary: today's sales, pending orders
 - Quick-access shortcuts to the most-used sections
 
 ### Product management (`/negocio/productos`)
@@ -202,8 +202,6 @@ productCategory: 'sunglasses' | 'optical'
 ### Inventory (`/negocio/inventario`)
 - View all variants with current stock
 - Inline quick-edit of stock (numeric field)
-- **Low-stock alerts**: highlight in red any variant with stock ≤ threshold (configurable, default 3)
-- Filter to show only low-stock items
 
 ### Orders (`/negocio/pedidos`)
 - Order list sorted by date descending
@@ -314,7 +312,7 @@ Vision Lego must beat them on simplicity, speed, and trust — not on how much c
 3. Route protection hooks
 4. Product CRUD in `/negocio/productos`
 5. Image upload
-6. Inventory + low-stock alerts
+6. Inventory
 7. Public store: catalog + filters
 8. Product detail + variant selector
 9. Cart (persisted in DB for authenticated users)
@@ -454,7 +452,7 @@ All 15 steps of the implementation order are complete:
 - **Route protection**: `src/hooks.server.ts` guards all `/negocio/**` routes; redirects unauthenticated users to `/iniciar-sesion`
 - **Product CRUD** (`/negocio/productos`): list, create, edit, delete, activate/deactivate toggle, featured toggle
 - **Image upload**: multi-file input, stored at `static/uploads/products/[productId]/`, reorderable, primary image marking
-- **Inventory** (`/negocio/inventario`): inline stock editing, low-stock alerts (≤ 3 units highlighted in red), filter for low-stock only
+- **Inventory** (`/negocio/inventario`): inline stock editing
 - **Public catalog** (`/productos`): SSR-compatible URL-param filters (category, brand, gender, color, material, size, price range), sort options
 - **Product detail** (`/productos/[slug]`): variant selector, image gallery, stock indicator, add to cart / wishlist (requires login)
 - **Cart** (`/carrito`): DB-persisted per user, editable quantities, subtotals + grand total in COP
@@ -681,6 +679,66 @@ Items deleted from the guest cart reappeared on page refresh. Root cause: a race
 **Inherent limitation**: the cookie-backed race cannot be fully closed for two-tab scenarios or direct URL navigation mid-flight. The fix eliminates the race in the normal single-tab flow.
 
 Also removed all diagnostic `console.log` lines added during investigation from `cartCookie.ts` and `carrito/+page.server.ts`.
+
+### Brand color + name update (2026-05-20)
+Applied two global cosmetic changes across all 24 `.svelte` files, `layout.css`, `CLAUDE.md`, and `docs/IMAGE_STANDARDS.md`.
+
+**Change 1 — Brand orange** (#FF5800 replaces amber-400 #fbbf24):
+- Added `@theme` block to `src/routes/layout.css` registering three Tailwind v4 custom color tokens:
+  - `--color-brand-orange: #FF5800`
+  - `--color-brand-orange-hover: #E64F00` (10% darker, for hover states)
+  - `--color-brand-orange-light: #FF7530` (15% lighter, for dark mode accents)
+- All `amber-*` Tailwind classes replaced: `amber-400/500` → `brand-orange`, `amber-300` → `brand-orange-light`, `amber-600` → `brand-orange-hover`, lighter tints (`amber-50/100/200`) → `brand-orange-light`, darker shades (`amber-700+`) → `brand-orange-hover`.
+- **Note**: `amber-50/100/200` were light cream tints used as subtle backgrounds; they now map to `brand-orange-light` (#FF7530, a solid orange). If near-white tint backgrounds are needed in the future, use explicit `orange-50` or a custom CSS variable.
+- Total replacements: ~309 `amber-*` occurrences across 24 files.
+
+**Change 2 — Brand name accent mark** ("Vision Lego" → "Visión Lego"):
+- All user-visible occurrences updated: `<title>` tags, nav brand link, footer copyright line.
+- `docs/IMAGE_STANDARDS.md` heading updated.
+- `CLAUDE.md` `Brand name:` config line updated.
+- Technical identifiers left unchanged: folder `vision_lego`, DB name, `package.json`, PM2 process name, route paths, variables.
+- Total occurrences changed: 28.
+
+`svelte-autofixer` returned zero issues on all 24 modified `.svelte` files; `pnpm build` passed.
+
+### Removal — low-stock alerts feature (2026-05-20)
+Removed the low-stock alert system entirely by owner decision: not useful in practice, simpler is better.
+
+**Removed**:
+- `LOW_STOCK_THRESHOLD` constant (`threshold = 3`) from `inventario/+page.server.ts`
+- `?bajostock=1` URL search param and `onlyLow` filter from the inventario load function
+- `lte()` import and the third Promise branch (`lowStock` query) from `/negocio/+page.server.ts`
+- "Productos con stock bajo" stat card and `lowStockCount` from `/negocio/+page.svelte` (grid reduced from 3 to 2 columns)
+- "Solo stock bajo" / "Mostrar todo" toggle link from `inventario/+page.svelte`
+- Red row background (`bg-red-50 dark:bg-red-950/30`) on variants at or below threshold
+- Red stock number text and "Bajo" badge in the stock column
+- `products` import from `/negocio/+page.server.ts` (was only used for the low-stock query)
+
+**Kept unchanged**: inline stock editing, the `?/updateStock` and `?/updateVariant` actions, the `stock === 0` / `stock > 0` indicators on `/productos/[slug]`, and the catalog filter that hides fully out-of-stock products.
+
+`svelte-autofixer` returned zero issues on both modified `.svelte` files; `pnpm build` passed.
+
+### Fix — over-saturated orange on large surfaces in light mode (2026-05-21)
+Introduced a pale tint token and corrected every large-surface background that was using the solid `brand-orange-light` (#FF7530) in light mode.
+
+**New token** (`src/routes/layout.css`):
+- `--color-brand-orange-tint: #FFF1EA` — very pale peach, safe for large background surfaces
+
+**Hero + category card redesign** (`src/routes/(store)/+page.svelte`):
+- Hero section `bg-brand-orange-light` → `bg-gray-50`; gradient changed from fully-saturated orange layer to subtle `from-brand-orange/10 via-transparent to-transparent`
+- H1 accent span: removed `bg-gradient-to-r from-brand-orange to-orange-500 bg-clip-text text-transparent` → plain `text-brand-orange`
+- "Ver colección" CTA button: `text-gray-950 hover:bg-brand-orange-light` → `text-white hover:bg-brand-orange-hover`
+- Sunglasses category card: `bg-brand-orange-light` → `bg-white ring-1 ring-gray-200`; card gradient `from-brand-orange-light/60` → `from-brand-orange/15`
+
+**Surface background fixes** (other files):
+- `negocio/productos/[id]/+page.svelte` — editing row `<tr class="bg-brand-orange-light">` → `bg-brand-orange-tint`
+- `checkout/+page.svelte` — selected shipping method card `bg-brand-orange-light` → `bg-brand-orange-tint`
+
+**Kept as-is** (correct uses): all `hover:bg-brand-orange-light` button hover states, `dark:*-brand-orange-light` dark-mode text/accents, small inline badges (Destacado, Últimas unidades), gradient vivid stops.
+
+**Audit summary**: 38 `brand-orange-light` occurrences reviewed — 36 category (A) correct, 2 category (B) fixed to `brand-orange-tint`.
+
+`svelte-autofixer` returned zero issues on all 3 modified `.svelte` files; `pnpm build` passed.
 
 ---
 

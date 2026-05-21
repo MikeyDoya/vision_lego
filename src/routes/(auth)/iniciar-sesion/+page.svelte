@@ -7,7 +7,7 @@
 </script>
 
 <svelte:head>
-	<title>Iniciar sesión — Vision Lego</title>
+	<title>Iniciar sesión — Visión Lego</title>
 </svelte:head>
 
 <div class="rounded-xl bg-white px-8 py-10 ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-800">
@@ -36,7 +36,7 @@
 				type="email"
 				required
 				autocomplete="email"
-				class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+				class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
 			/>
 		</div>
 
@@ -48,14 +48,14 @@
 				type="password"
 				required
 				autocomplete="current-password"
-				class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+				class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
 			/>
 		</div>
 
 		<button
 			type="submit"
 			disabled={loading}
-			class="flex w-full cursor-pointer items-center justify-center rounded-lg bg-amber-400 px-4 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-amber-300 hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
+			class="flex w-full cursor-pointer items-center justify-center rounded-lg bg-brand-orange px-4 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
 		>
 			{loading ? 'Entrando…' : 'Entrar'}
 		</button>
@@ -63,6 +63,6 @@
 
 	<p class="mt-6 text-center text-sm text-gray-500">
 		¿No tienes cuenta?
-		<a href="/registrarse" class="font-medium text-amber-500 hover:text-amber-400 dark:text-amber-400 dark:hover:text-amber-300">Regístrate</a>
+		<a href="/registrarse" class="font-medium text-brand-orange hover:text-brand-orange dark:text-brand-orange dark:hover:text-brand-orange-light">Regístrate</a>
 	</p>
 </div>

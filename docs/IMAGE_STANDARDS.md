@@ -1,4 +1,4 @@
-# Image Standards — Vision Lego
+# Image Standards — Visión Lego
 
 ## Why a pipeline
 

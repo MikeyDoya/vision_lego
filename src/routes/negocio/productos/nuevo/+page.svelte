@@ -8,7 +8,7 @@
 </script>
 
 <svelte:head>
-	<title>Nuevo producto — Vision Lego</title>
+	<title>Nuevo producto — Visión Lego</title>
 </svelte:head>
 
 <div class="mb-6 flex items-center gap-4">
@@ -39,7 +39,7 @@
 			type="text"
 			required
 			placeholder="Marco Aviador Negro Mate"
-			class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+			class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
 		/>
 	</div>
 
@@ -50,7 +50,7 @@
 				id="category"
 				name="category"
 				required
-				class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+				class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
 			>
 				<option value="">Seleccionar…</option>
 				<option value="sunglasses">Gafas de sol</option>
@@ -63,7 +63,7 @@
 			<select
 				id="gender"
 				name="gender"
-				class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+				class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
 			>
 				<option value="">Sin especificar</option>
 				<option value="hombre">Hombre</option>
@@ -80,7 +80,7 @@
 			<div class="mt-1 flex gap-2">
 				<select
 					name="brandId"
-					class="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+					class="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white"
 				>
 					<option value="">Sin marca</option>
 					{#each data.brands as brand (brand.id)}
@@ -101,7 +101,7 @@
 					name="newBrandName"
 					type="text"
 					placeholder="Nombre de la marca"
-					class="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+					class="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
 				/>
 				<button
 					type="button"
@@ -123,7 +123,7 @@
 			required
 			min="1"
 			placeholder="150000"
-			class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+			class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
 		/>
 	</div>
 
@@ -134,7 +134,7 @@
 			name="description"
 			rows="4"
 			placeholder="Describe el producto…"
-			class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+			class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
 		></textarea>
 	</div>
 
@@ -142,7 +142,7 @@
 		<button
 			type="submit"
 			disabled={loading}
-			class="rounded-lg bg-amber-400 px-6 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-amber-300 disabled:opacity-60"
+			class="rounded-lg bg-brand-orange px-6 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light disabled:opacity-60"
 		>
 			{loading ? 'Guardando…' : 'Crear producto'}
 		</button>

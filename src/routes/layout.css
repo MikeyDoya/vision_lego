@@ -3,3 +3,10 @@
 @plugin '../../node_modules/@tailwindcss/typography/src/index.js';
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+	--color-brand-orange: #FF5800;
+	--color-brand-orange-hover: #E64F00;
+	--color-brand-orange-light: #FF7530;
+	--color-brand-orange-tint: #FFF1EA;
+}

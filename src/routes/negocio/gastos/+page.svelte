@@ -11,17 +11,17 @@
 </script>
 
 <svelte:head>
-	<title>Gastos — Vision Lego</title>
+	<title>Gastos — Visión Lego</title>
 </svelte:head>
 
 <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
 	<div>
 		<h1 class="text-2xl font-bold text-gray-900 dark:text-white">Gastos</h1>
-		<p class="mt-1 text-sm text-gray-500">Total del mes: <span class="font-semibold text-amber-500 dark:text-amber-400">{data.monthTotal}</span></p>
+		<p class="mt-1 text-sm text-gray-500">Total del mes: <span class="font-semibold text-brand-orange dark:text-brand-orange">{data.monthTotal}</span></p>
 	</div>
 	<button
 		onclick={() => (showForm = !showForm)}
-		class="cursor-pointer rounded-lg bg-amber-400 px-4 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-amber-300"
+		class="cursor-pointer rounded-lg bg-brand-orange px-4 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light"
 	>
 		{showForm ? 'Cancelar' : '+ Registrar gasto'}
 	</button>
@@ -51,15 +51,15 @@
 		>
 			<div class="lg:col-span-2">
 				<label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descripción</label>
-				<input id="description" name="description" type="text" required placeholder="Pago de arriendo…" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-600" />
+				<input id="description" name="description" type="text" required placeholder="Pago de arriendo…" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-600" />
 			</div>
 			<div>
 				<label for="amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Monto (COP)</label>
-				<input id="amount" name="amount" type="number" required min="1" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+				<input id="amount" name="amount" type="number" required min="1" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
 			</div>
 			<div>
 				<label for="category" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Categoría</label>
-				<select id="category" name="category" required class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+				<select id="category" name="category" required class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white">
 					<option value="">Seleccionar…</option>
 					{#each Object.entries(data.categoryLabels) as [val, label] (val)}
 						<option value={val}>{label}</option>
@@ -68,14 +68,14 @@
 			</div>
 			<div>
 				<label for="date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Fecha</label>
-				<input id="date" name="date" type="date" required value={today} class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+				<input id="date" name="date" type="date" required value={today} class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
 			</div>
 			<div>
 				<label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Notas (opcional)</label>
-				<input id="notes" name="notes" type="text" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+				<input id="notes" name="notes" type="text" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
 			</div>
 			<div class="flex items-end">
-				<button type="submit" disabled={saving} class="cursor-pointer rounded-lg bg-amber-400 px-4 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-amber-300 disabled:opacity-60">
+				<button type="submit" disabled={saving} class="cursor-pointer rounded-lg bg-brand-orange px-4 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light disabled:opacity-60">
 					{saving ? 'Guardando…' : 'Guardar'}
 				</button>
 			</div>
@@ -84,8 +84,8 @@
 {/if}
 
 <form method="get" class="mb-6 flex flex-wrap gap-3">
-	<input name="mes" type="month" value={data.month} class="cursor-pointer rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-white" />
-	<select name="categoria" class="cursor-pointer rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
+	<input name="mes" type="month" value={data.month} class="cursor-pointer rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-white" />
+	<select name="categoria" class="cursor-pointer rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
 		<option value="">Todas las categorías</option>
 		{#each Object.entries(data.categoryLabels) as [val, label] (val)}
 			<option value={val} selected={data.category === val}>{label}</option>
@@ -116,7 +116,7 @@
 								{#if expense.notes}<p class="text-xs text-gray-500">{expense.notes}</p>{/if}
 							</td>
 							<td class="px-4 py-3 text-gray-600 dark:text-gray-400">{expense.categoryLabel}</td>
-							<td class="px-4 py-3 font-medium text-amber-500 dark:text-amber-400">{expense.amountFormatted}</td>
+							<td class="px-4 py-3 font-medium text-brand-orange dark:text-brand-orange">{expense.amountFormatted}</td>
 							<td class="px-4 py-3 text-gray-500">{expense.date}</td>
 						</tr>
 					{/each}

@@ -15,7 +15,7 @@
 </script>
 
 <svelte:head>
-	<title>Pedidos — Vision Lego</title>
+	<title>Pedidos — Visión Lego</title>
 </svelte:head>
 
 <div class="mb-6 flex items-center justify-between">
@@ -25,7 +25,7 @@
 <form method="get" class="mb-6 flex flex-wrap gap-3">
 	<select
 		name="estado"
-		class="cursor-pointer rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:border-amber-400 focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+		class="cursor-pointer rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
 		onchange={(e) => (e.currentTarget.form as HTMLFormElement)?.submit()}
 	>
 		<option value="">Todos los estados</option>
@@ -62,7 +62,7 @@
 									{order.statusLabel}
 								</span>
 							</td>
-							<td class="px-4 py-3 font-medium text-amber-500 dark:text-amber-400">{order.totalFormatted}</td>
+							<td class="px-4 py-3 font-medium text-brand-orange dark:text-brand-orange">{order.totalFormatted}</td>
 							<td class="px-4 py-3 text-gray-500">
 								{new Date(order.createdAt).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' })}
 							</td>

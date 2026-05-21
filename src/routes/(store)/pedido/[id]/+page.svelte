@@ -5,7 +5,7 @@
 </script>
 
 <svelte:head>
-	<title>Pedido confirmado — Vision Lego</title>
+	<title>Pedido confirmado — Visión Lego</title>
 </svelte:head>
 
 <div class="mx-auto max-w-lg px-4 py-20 text-center">
@@ -27,7 +27,7 @@
 	<div class="mt-8 flex flex-col items-center gap-3">
 		<a
 			href="/productos"
-			class="inline-block rounded-lg bg-amber-400 px-8 py-3 text-sm font-semibold text-gray-950 transition hover:bg-amber-300"
+			class="inline-block rounded-lg bg-brand-orange px-8 py-3 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light"
 		>
 			Seguir comprando
 		</a>

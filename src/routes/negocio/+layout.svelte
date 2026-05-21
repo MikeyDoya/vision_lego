@@ -27,14 +27,14 @@
 	<!-- Sidebar desktop -->
 	<aside class="hidden w-56 shrink-0 flex-col border-r border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950 lg:flex">
 		<div class="flex h-16 items-center border-b border-gray-200 px-6 dark:border-gray-800">
-			<a href="/" class="text-lg font-bold text-gray-900 dark:text-white">Vision Lego</a>
+			<a href="/" class="text-lg font-bold text-gray-900 dark:text-white">Visión Lego</a>
 		</div>
 		<nav class="flex flex-col gap-1 p-3">
 			{#each navItems as item (item.href)}
 				<a
 					href={item.href}
 					class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition {isActive(item.href)
-						? 'bg-amber-400 text-gray-950'
+						? 'bg-brand-orange text-gray-950'
 						: 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-900 dark:hover:text-white'}"
 				>
 					{item.label}
@@ -61,7 +61,7 @@
 	<!-- Main content -->
 	<div class="flex min-w-0 flex-1 flex-col">
 		<header class="flex h-16 items-center justify-between border-b border-gray-200 bg-white px-4 dark:border-gray-800 dark:bg-gray-950 lg:hidden">
-			<a href="/" class="text-lg font-bold text-gray-900 dark:text-white">Vision Lego</a>
+			<a href="/" class="text-lg font-bold text-gray-900 dark:text-white">Visión Lego</a>
 			<ThemeToggle />
 		</header>
 
@@ -75,7 +75,7 @@
 				<a
 					href={item.href}
 					class="flex flex-1 flex-col items-center gap-1 py-2 text-xs font-medium {isActive(item.href)
-						? 'text-amber-500 dark:text-amber-400'
+						? 'text-brand-orange dark:text-brand-orange'
 						: 'text-gray-400 dark:text-gray-600'}"
 				>
 					<span class="text-base">{item.label.charAt(0)}</span>
