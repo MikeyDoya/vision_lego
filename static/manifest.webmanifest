@@ -1,0 +1,13 @@
+{
+  "name": "Visión Lego",
+  "short_name": "Visión Lego",
+  "description": "Gafas de sol, monturas ópticas y accesorios. Calidad premium, precios reales.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#030712",
+  "theme_color": "#FF5800",
+  "icons": [
+    { "src": "/favicon-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/favicon-512.png", "type": "image/png", "sizes": "512x512" }
+  ]
+}
