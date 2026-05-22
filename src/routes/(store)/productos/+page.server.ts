@@ -1,7 +1,8 @@
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import { products, productVariants, productImages, brands } from '$lib/server/db/schema';
-import { eq, and, gte, lte, inArray, sql, isNotNull } from 'drizzle-orm';
+import { eq, and, gte, inArray, sql, isNotNull } from 'drizzle-orm';
+import { applyDiscount } from '$lib/utils/currency';
 
 export const load: PageServerLoad = async ({ url }) => {
 	const category = url.searchParams.get('categoria') ?? '';
@@ -13,6 +14,8 @@ export const load: PageServerLoad = async ({ url }) => {
 	const minPrice = url.searchParams.get('precioMin') ? Number(url.searchParams.get('precioMin')) : null;
 	const maxPrice = url.searchParams.get('precioMax') ? Number(url.searchParams.get('precioMax')) : null;
 	const sort = url.searchParams.get('orden') ?? 'newest';
+	const promo = url.searchParams.get('promo') === 'true';
+	const tendencias = url.searchParams.get('tendencias') === 'true';
 
 	// Sub-query: product IDs that have at least one active variant with stock > 0
 	const inStockIds = await db
@@ -53,7 +56,7 @@ export const load: PageServerLoad = async ({ url }) => {
 			distinctColors,
 			distinctMaterials,
 			distinctSizes,
-			filters: { category, brandId, gender, color, material, size, minPrice, maxPrice, sort },
+			filters: { category, brandId, gender, color, material, size, minPrice, maxPrice, sort, promo, tendencias },
 		};
 	}
 
@@ -63,11 +66,11 @@ export const load: PageServerLoad = async ({ url }) => {
 		inArray(products.id, inStockProductIds),
 	];
 
-	if (category) conditions.push(eq(products.category, category as 'sunglasses' | 'optical'));
+	if (category) conditions.push(eq(products.category, category as 'sunglasses' | 'optical' | 'accessories'));
 	if (brandId) conditions.push(eq(products.brandId, brandId));
 	if (gender) conditions.push(eq(products.gender, gender));
-	if (minPrice !== null) conditions.push(gte(products.basePrice, String(minPrice)));
-	if (maxPrice !== null) conditions.push(lte(products.basePrice, String(maxPrice)));
+	if (promo) conditions.push(eq(products.isOnSale, true));
+	if (tendencias) conditions.push(eq(products.isFeatured, true));
 
 	let productRows = await db
 		.select({
@@ -78,6 +81,8 @@ export const load: PageServerLoad = async ({ url }) => {
 			category: products.category,
 			gender: products.gender,
 			isFeatured: products.isFeatured,
+			isOnSale: products.isOnSale,
+			discountPercent: products.discountPercent,
 			createdAt: products.createdAt,
 		})
 		.from(products)
@@ -99,11 +104,20 @@ export const load: PageServerLoad = async ({ url }) => {
 		productRows = productRows.filter((p) => matchingIds.has(p.id));
 	}
 
-	// Sort
+	// Filter by discounted price in memory (what the customer actually pays)
+	if (minPrice !== null) {
+		productRows = productRows.filter((p) => applyDiscount(Number(p.basePrice), p.discountPercent) >= minPrice);
+	}
+	if (maxPrice !== null) {
+		productRows = productRows.filter((p) => applyDiscount(Number(p.basePrice), p.discountPercent) <= maxPrice);
+	}
+
+	// Sort (price sorts use discounted price for consistency)
+	const effPrice = (p: typeof productRows[0]) => applyDiscount(Number(p.basePrice), p.discountPercent);
 	if (sort === 'price-asc') {
-		productRows.sort((a, b) => Number(a.basePrice) - Number(b.basePrice));
+		productRows.sort((a, b) => effPrice(a) - effPrice(b));
 	} else if (sort === 'price-desc') {
-		productRows.sort((a, b) => Number(b.basePrice) - Number(a.basePrice));
+		productRows.sort((a, b) => effPrice(b) - effPrice(a));
 	} else if (sort === 'featured') {
 		productRows.sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0));
 	} else {
@@ -129,12 +143,14 @@ export const load: PageServerLoad = async ({ url }) => {
 			category: p.category,
 			gender: p.gender,
 			isFeatured: p.isFeatured,
+			isOnSale: p.isOnSale,
+			discountPercent: p.discountPercent,
 			primaryImage: imageMap.get(p.id) ?? null,
 		})),
 		brands: allBrands,
 		distinctColors,
 		distinctMaterials,
 		distinctSizes,
-		filters: { category, brandId, gender, color, material, size, minPrice, maxPrice, sort },
+		filters: { category, brandId, gender, color, material, size, minPrice, maxPrice, sort, promo, tendencias },
 	};
 };

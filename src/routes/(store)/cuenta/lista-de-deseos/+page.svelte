@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PageServerData } from './$types';
-	import { formatCOP } from '$lib/utils/currency';
+	import { formatCOP, applyDiscount } from '$lib/utils/currency';
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import ProductImage from '$lib/components/ui/ProductImage.svelte';
@@ -34,6 +34,7 @@
 	{:else}
 		<div class="grid gap-4 sm:grid-cols-2">
 			{#each data.items as item (item.productId)}
+				{@const hasDiscount = !!item.isOnSale && !!item.discountPercent && item.discountPercent > 0}
 				<div class="group relative flex gap-4 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
 					<a href="/productos/{item.slug}" class="shrink-0">
 						{#if item.primaryImage}
@@ -57,7 +58,15 @@
 							<a href="/productos/{item.slug}" class="line-clamp-2 text-sm font-medium text-gray-900 hover:text-gray-600 dark:text-white dark:hover:text-gray-300">
 								{item.name}
 							</a>
-							<p class="mt-1 text-sm font-bold text-brand-orange dark:text-brand-orange">{formatCOP(item.basePrice)}</p>
+							{#if hasDiscount}
+								<div class="mt-1 flex items-baseline gap-2">
+									<span class="text-sm font-bold text-brand-orange">{formatCOP(applyDiscount(item.basePrice, item.discountPercent))}</span>
+									<span class="text-xs text-gray-400 line-through dark:text-gray-500">{formatCOP(item.basePrice)}</span>
+									<span class="rounded-md bg-brand-orange px-1.5 py-0.5 text-xs font-bold text-white">-{item.discountPercent}%</span>
+								</div>
+							{:else}
+								<p class="mt-1 text-sm font-bold text-brand-orange">{formatCOP(item.basePrice)}</p>
+							{/if}
 							{#if !item.isActive || !item.hasStock}
 								<span class="mt-1 inline-block rounded-full bg-red-50 px-2 py-0.5 text-xs font-medium text-red-600 ring-1 ring-red-200 dark:bg-red-900/40 dark:text-red-300 dark:ring-red-800">
 									Agotado

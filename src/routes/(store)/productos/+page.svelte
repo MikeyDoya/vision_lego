@@ -1,9 +1,8 @@
 <script lang="ts">
 	import type { PageServerData } from './$types';
-	import { formatCOP } from '$lib/utils/currency';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import ProductImage from '$lib/components/ui/ProductImage.svelte';
+	import ProductCard from '$lib/components/ui/ProductCard.svelte';
 
 	let { data }: { data: PageServerData } = $props();
 
@@ -32,6 +31,7 @@
 	const categoryLabels: Record<string, string> = {
 		sunglasses: 'Gafas de sol',
 		optical: 'Monturas ópticas',
+		accessories: 'Accesorios',
 	};
 
 	const genderLabels: Record<string, string> = {
@@ -51,7 +51,8 @@
 	let hasFilters = $derived(
 		!!(data.filters.category || data.filters.brandId || data.filters.gender ||
 			data.filters.color || data.filters.material || data.filters.size ||
-			data.filters.minPrice || data.filters.maxPrice)
+			data.filters.minPrice || data.filters.maxPrice ||
+			data.filters.promo || data.filters.tendencias)
 	);
 </script>
 
@@ -292,32 +293,7 @@
 			{:else}
 				<div class="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
 					{#each data.products as product (product.id)}
-						<a href="/productos/{product.slug}" class="group flex flex-col">
-							<div class="aspect-square overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-900">
-								{#if product.primaryImage}
-									<ProductImage
-										basePath={product.primaryImage}
-										alt={product.name}
-										size="thumb"
-										class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-										loading="lazy"
-									/>
-								{:else}
-									<div class="flex h-full items-center justify-center">
-										<svg class="h-12 w-12 text-gray-400 dark:text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-										</svg>
-									</div>
-								{/if}
-							</div>
-							<div class="mt-3 flex flex-col gap-1">
-								<p class="text-xs font-medium uppercase tracking-wide text-gray-500">
-									{categoryLabels[product.category] ?? product.category}
-								</p>
-								<p class="line-clamp-2 text-sm font-semibold leading-tight text-gray-900 dark:text-white">{product.name}</p>
-								<p class="text-sm font-bold text-brand-orange dark:text-brand-orange">{formatCOP(product.basePrice)}</p>
-							</div>
-						</a>
+						<ProductCard {product} />
 					{/each}
 				</div>
 			{/if}

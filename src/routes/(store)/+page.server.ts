@@ -11,6 +11,8 @@ export const load: PageServerLoad = async () => {
 			slug: products.slug,
 			basePrice: products.basePrice,
 			category: products.category,
+			isOnSale: products.isOnSale,
+			discountPercent: products.discountPercent,
 		})
 		.from(products)
 		.where(and(eq(products.isActive, true), eq(products.isFeatured, true)))
@@ -29,6 +31,8 @@ export const load: PageServerLoad = async () => {
 		slug: p.slug,
 		basePrice: Number(p.basePrice),
 		category: p.category,
+		isOnSale: p.isOnSale,
+		discountPercent: p.discountPercent,
 		primaryImage: imageMap.get(p.id) ?? null,
 	}));
 

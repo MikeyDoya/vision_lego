@@ -19,6 +19,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 			slug: products.slug,
 			basePrice: products.basePrice,
 			isActive: products.isActive,
+			isOnSale: products.isOnSale,
+			discountPercent: products.discountPercent,
 		})
 		.from(wishlistItems)
 		.innerJoin(products, eq(wishlistItems.productId, products.id))
@@ -50,6 +52,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 			slug: w.slug,
 			basePrice: Number(w.basePrice),
 			isActive: w.isActive,
+			isOnSale: w.isOnSale,
+			discountPercent: w.discountPercent,
 			hasStock: inStockSet.has(w.productId),
 			primaryImage: imageMap.get(w.productId) ?? null,
 		})),
