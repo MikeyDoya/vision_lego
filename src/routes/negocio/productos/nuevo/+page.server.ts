@@ -21,9 +21,15 @@ export const actions: Actions = {
 		const gender = data.get('gender')?.toString() || null;
 		const basePrice = Number(data.get('basePrice'));
 		const newBrandName = data.get('newBrandName')?.toString().trim() ?? '';
+		const isOnSale = data.get('isOnSale') === 'true';
+		const discountRaw = data.get('discountPercent')?.toString().trim();
+		const discountParsed = discountRaw ? parseInt(discountRaw, 10) : null;
+		const discountPercent = discountParsed !== null && !isNaN(discountParsed)
+			? Math.min(100, Math.max(0, discountParsed))
+			: null;
 
 		if (!name) return fail(400, { message: 'El nombre es obligatorio.' });
-		if (!category || !['sunglasses', 'optical'].includes(category)) {
+		if (!category || !['sunglasses', 'optical', 'accessories'].includes(category)) {
 			return fail(400, { message: 'Selecciona una categoría.' });
 		}
 		if (!basePrice || basePrice <= 0) return fail(400, { message: 'El precio base debe ser mayor a 0.' });
@@ -54,10 +60,12 @@ export const actions: Actions = {
 				name,
 				slug,
 				description: description || null,
-				category: category as 'sunglasses' | 'optical',
+				category: category as 'sunglasses' | 'optical' | 'accessories',
 				brandId: resolvedBrandId,
 				gender,
 				basePrice: String(basePrice),
+				isOnSale,
+				discountPercent,
 			});
 		} catch {
 			return fail(400, { message: 'Ya existe un producto con ese nombre.' });

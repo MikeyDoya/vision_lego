@@ -5,6 +5,14 @@
 	let { data, form }: { data: PageServerData; form: ActionData } = $props();
 	let loading = $state(false);
 	let showNewBrand = $state(false);
+
+	function clampDiscount(e: Event) {
+		const el = e.currentTarget as HTMLInputElement;
+		if (el.value === '') return;
+		const n = Number(el.value);
+		if (Number.isNaN(n)) { el.value = ''; return; }
+		el.value = String(Math.min(100, Math.max(0, Math.round(n))));
+	}
 </script>
 
 <svelte:head>
@@ -55,6 +63,7 @@
 				<option value="">Seleccionar…</option>
 				<option value="sunglasses">Gafas de sol</option>
 				<option value="optical">Montura óptica</option>
+				<option value="accessories">Accesorios</option>
 			</select>
 		</div>
 
@@ -125,6 +134,29 @@
 			placeholder="150000"
 			class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
 		/>
+	</div>
+
+	<div class="flex flex-wrap gap-4">
+		<label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+			<input type="checkbox" name="isOnSale" value="true" class="rounded border-gray-300 bg-white accent-brand-orange dark:border-gray-600 dark:bg-gray-800" />
+			En promoción
+		</label>
+	</div>
+
+	<div>
+		<label for="discountPercent" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descuento (%)</label>
+		<input
+			id="discountPercent"
+			name="discountPercent"
+			type="number"
+			min="0"
+			max="100"
+			step="1"
+			placeholder="0"
+			oninput={clampDiscount}
+			class="mt-1 block w-32 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+		/>
+		<p class="mt-1 text-xs text-gray-400 dark:text-gray-500">Entre 0 y 100. Déjalo vacío si no hay descuento.</p>
 	</div>
 
 	<div>

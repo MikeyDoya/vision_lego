@@ -16,6 +16,7 @@ export const orderStatusEnum = pgEnum('order_status', [
 export const productCategoryEnum = pgEnum('product_category', [
 	'sunglasses',   // gafas de sol
 	'optical',      // monturas ópticas
+	'accessories',  // accesorios
 ])
 
 export const expenseCategoryEnum = pgEnum('expense_category', [
@@ -93,9 +94,11 @@ export const products = pgTable('products', {
 	brandId:     text('brand_id').references(() => brands.id, { onDelete: 'set null' }),
 	gender:      text('gender'),               // 'hombre' | 'mujer' | 'unisex' | 'niño'
 	basePrice:   numeric('base_price', { precision: 10, scale: 2 }).notNull(),
-	isActive:    boolean('is_active').notNull().default(true),
-	isFeatured:  boolean('is_featured').notNull().default(false),
-	createdAt:   timestamp('created_at').notNull().defaultNow(),
+	isActive:        boolean('is_active').notNull().default(true),
+	isFeatured:      boolean('is_featured').notNull().default(false),
+	isOnSale:        boolean('is_on_sale').notNull().default(false),
+	discountPercent: integer('discount_percent'),
+	createdAt:       timestamp('created_at').notNull().defaultNow(),
 	updatedAt:   timestamp('updated_at').notNull().defaultNow(),
 })
 

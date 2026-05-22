@@ -33,6 +33,12 @@ export const actions: Actions = {
 		const basePrice = Number(data.get('basePrice'));
 		const isActive = data.get('isActive') === 'true';
 		const isFeatured = data.get('isFeatured') === 'true';
+		const isOnSale = data.get('isOnSale') === 'true';
+		const discountRaw = data.get('discountPercent')?.toString().trim();
+		const discountParsed = discountRaw ? parseInt(discountRaw, 10) : null;
+		const discountPercent = discountParsed !== null && !isNaN(discountParsed)
+			? Math.min(100, Math.max(0, discountParsed))
+			: null;
 
 		if (!name) return fail(400, { message: 'El nombre es obligatorio.' });
 		if (!basePrice || basePrice <= 0) return fail(400, { message: 'El precio base debe ser mayor a 0.' });
@@ -41,12 +47,14 @@ export const actions: Actions = {
 			name,
 			slug: toSlug(name),
 			description: description || null,
-			category: category as 'sunglasses' | 'optical',
+			category: category as 'sunglasses' | 'optical' | 'accessories',
 			brandId,
 			gender,
 			basePrice: String(basePrice),
 			isActive,
 			isFeatured,
+			isOnSale,
+			discountPercent,
 			updatedAt: new Date(),
 		}).where(eq(products.id, params.id));
 	},

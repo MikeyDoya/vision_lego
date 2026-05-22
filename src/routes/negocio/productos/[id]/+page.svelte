@@ -57,6 +57,14 @@
 		editingVariantId = null;
 	}
 
+	function clampDiscount(e: Event) {
+		const el = e.currentTarget as HTMLInputElement;
+		if (el.value === '') return;
+		const n = Number(el.value);
+		if (Number.isNaN(n)) { el.value = ''; return; }
+		el.value = String(Math.min(100, Math.max(0, Math.round(n))));
+	}
+
 	async function handleImageSelect(e: Event) {
 		const input = e.currentTarget as HTMLInputElement;
 		cropQueue = [];
@@ -173,6 +181,7 @@
 					>
 						<option value="sunglasses" selected={data.product.category === 'sunglasses'}>Gafas de sol</option>
 						<option value="optical" selected={data.product.category === 'optical'}>Montura óptica</option>
+						<option value="accessories" selected={data.product.category === 'accessories'}>Accesorios</option>
 					</select>
 				</div>
 				<div>
@@ -228,7 +237,7 @@
 				>{data.product.description ?? ''}</textarea>
 			</div>
 
-			<div class="flex gap-4">
+			<div class="flex flex-wrap gap-4">
 				<label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
 					<input type="checkbox" name="isActive" value="true" checked={data.product.isActive} class="rounded border-gray-300 bg-white accent-brand-orange dark:border-gray-600 dark:bg-gray-800" />
 					Activo
@@ -237,6 +246,27 @@
 					<input type="checkbox" name="isFeatured" value="true" checked={data.product.isFeatured} class="rounded border-gray-300 bg-white accent-brand-orange dark:border-gray-600 dark:bg-gray-800" />
 					Destacado
 				</label>
+				<label class="flex cursor-pointer items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+					<input type="checkbox" name="isOnSale" value="true" checked={data.product.isOnSale} class="rounded border-gray-300 bg-white accent-brand-orange dark:border-gray-600 dark:bg-gray-800" />
+					En promoción
+				</label>
+			</div>
+
+			<div>
+				<label for="discountPercent" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descuento (%)</label>
+				<input
+					id="discountPercent"
+					name="discountPercent"
+					type="number"
+					min="0"
+					max="100"
+					step="1"
+					value={data.product.discountPercent ?? ''}
+					placeholder="0"
+					oninput={clampDiscount}
+					class="mt-1 block w-32 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+				/>
+				<p class="mt-1 text-xs text-gray-400 dark:text-gray-500">Entre 0 y 100. Déjalo vacío si no hay descuento.</p>
 			</div>
 
 			<button

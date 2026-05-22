@@ -6,6 +6,7 @@ import {
 import { eq, and, inArray } from 'drizzle-orm';
 import { redirect, fail } from '@sveltejs/kit';
 import { readGuestCart, writeGuestCart } from '$lib/server/cartCookie';
+import { applyDiscount } from '$lib/utils/currency';
 
 export const load: PageServerLoad = async ({ locals, cookies }) => {
 	const availableShipping = await db
@@ -33,6 +34,8 @@ export const load: PageServerLoad = async ({ locals, cookies }) => {
 				variantStock: productVariants.stock,
 				productName: products.name,
 				basePrice: products.basePrice,
+				isOnSale: products.isOnSale,
+				discountPercent: products.discountPercent,
 			})
 			.from(cartItems)
 			.innerJoin(productVariants, eq(cartItems.variantId, productVariants.id))
@@ -42,7 +45,8 @@ export const load: PageServerLoad = async ({ locals, cookies }) => {
 		if (!items.length) redirect(302, '/carrito');
 
 		const cartData = items.map((item) => {
-			const unitPrice = item.variantPrice ? Number(item.variantPrice) : Number(item.basePrice);
+			const rawPrice = item.variantPrice ? Number(item.variantPrice) : Number(item.basePrice);
+			const unitPrice = applyDiscount(rawPrice, item.discountPercent);
 			const variantParts = [item.variantColor, item.variantSize, item.variantMaterial].filter(Boolean);
 			return {
 				cartItemId: item.cartItemId,
@@ -79,6 +83,8 @@ export const load: PageServerLoad = async ({ locals, cookies }) => {
 			variantStock: productVariants.stock,
 			productName: products.name,
 			basePrice: products.basePrice,
+			isOnSale: products.isOnSale,
+			discountPercent: products.discountPercent,
 		})
 		.from(productVariants)
 		.innerJoin(products, eq(productVariants.productId, products.id))
@@ -87,7 +93,8 @@ export const load: PageServerLoad = async ({ locals, cookies }) => {
 	const cartData = guestCart.flatMap((guestItem) => {
 		const row = rows.find((r) => r.variantId === guestItem.variantId);
 		if (!row) return [];
-		const unitPrice = row.variantPrice ? Number(row.variantPrice) : Number(row.basePrice);
+		const rawPrice = row.variantPrice ? Number(row.variantPrice) : Number(row.basePrice);
+		const unitPrice = applyDiscount(rawPrice, row.discountPercent);
 		const variantParts = [row.variantColor, row.variantSize, row.variantMaterial].filter(Boolean);
 		return [{
 			cartItemId: guestItem.variantId,
@@ -150,6 +157,8 @@ export const actions: Actions = {
 					variantStock: productVariants.stock,
 					productName: products.name,
 					basePrice: products.basePrice,
+					isOnSale: products.isOnSale,
+					discountPercent: products.discountPercent,
 				})
 				.from(cartItems)
 				.innerJoin(productVariants, eq(cartItems.variantId, productVariants.id))
@@ -165,7 +174,8 @@ export const actions: Actions = {
 			}
 
 			const subtotal = cartData.reduce((sum, item) => {
-				const unitPrice = item.variantPrice ? Number(item.variantPrice) : Number(item.basePrice);
+				const rawPrice = item.variantPrice ? Number(item.variantPrice) : Number(item.basePrice);
+				const unitPrice = applyDiscount(rawPrice, item.discountPercent);
 				return sum + unitPrice * item.quantity;
 			}, 0);
 
@@ -188,7 +198,8 @@ export const actions: Actions = {
 			});
 
 			for (const item of cartData) {
-				const unitPrice = item.variantPrice ? Number(item.variantPrice) : Number(item.basePrice);
+				const rawPrice = item.variantPrice ? Number(item.variantPrice) : Number(item.basePrice);
+				const unitPrice = applyDiscount(rawPrice, item.discountPercent);
 				const variantParts = [item.variantColor, item.variantSize, item.variantMaterial].filter(Boolean);
 				await db.insert(orderItems).values({
 					id: crypto.randomUUID(),
@@ -221,6 +232,8 @@ export const actions: Actions = {
 				variantStock: productVariants.stock,
 				productName: products.name,
 				basePrice: products.basePrice,
+				isOnSale: products.isOnSale,
+				discountPercent: products.discountPercent,
 			})
 			.from(productVariants)
 			.innerJoin(products, eq(productVariants.productId, products.id))
@@ -235,7 +248,8 @@ export const actions: Actions = {
 
 		const subtotal = guestCart.reduce((sum, guestItem) => {
 			const row = rows.find((r) => r.variantId === guestItem.variantId)!;
-			const unitPrice = row.variantPrice ? Number(row.variantPrice) : Number(row.basePrice);
+			const rawPrice = row.variantPrice ? Number(row.variantPrice) : Number(row.basePrice);
+			const unitPrice = applyDiscount(rawPrice, row.discountPercent);
 			return sum + unitPrice * guestItem.quantity;
 		}, 0);
 
@@ -259,7 +273,8 @@ export const actions: Actions = {
 
 		for (const guestItem of guestCart) {
 			const row = rows.find((r) => r.variantId === guestItem.variantId)!;
-			const unitPrice = row.variantPrice ? Number(row.variantPrice) : Number(row.basePrice);
+			const rawPrice = row.variantPrice ? Number(row.variantPrice) : Number(row.basePrice);
+			const unitPrice = applyDiscount(rawPrice, row.discountPercent);
 			const variantParts = [row.variantColor, row.variantSize, row.variantMaterial].filter(Boolean);
 			await db.insert(orderItems).values({
 				id: crypto.randomUUID(),
