@@ -49,8 +49,10 @@ jobs:
           rsync -az --delete --exclude='client/uploads/' \
             build/ "${REMOTE}:~/vision_lego/build/"
           rsync -az \
-            package.json pnpm-lock.yaml ecosystem.config.cjs \
+            package.json pnpm-lock.yaml ecosystem.config.cjs drizzle.config.ts \
             "${REMOTE}:~/vision_lego/"
+          rsync -az --delete \
+            drizzle/ "${REMOTE}:~/vision_lego/drizzle/"
 
       - name: Write .env on droplet
         env:
@@ -67,6 +69,18 @@ jobs:
             echo "PORT=3000"
             echo "BODY_SIZE_LIMIT=5242880"
           } | ssh "${REMOTE}" "cat > ~/vision_lego/.env"
+
+      - name: Run database migrations on droplet
+        env:
+          REMOTE: ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}
+        run: |
+          ssh "${REMOTE}" bash << 'MIGRATE'
+            set -e
+            export PATH="/home/mikey/.local/share/fnm/node-versions/v24.14.1/installation/bin:/home/mikey/.local/share/pnpm:$PATH"
+            cd ~/vision_lego
+            set -a; source .env; set +a
+            pnpm dlx drizzle-kit migrate
+          MIGRATE
 
       - name: Install production deps and restart app
         env:
