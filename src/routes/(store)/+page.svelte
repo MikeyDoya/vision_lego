@@ -7,6 +7,7 @@
 	const categoryLabels: Record<string, string> = {
 		sunglasses: 'Gafas de sol',
 		optical: 'Monturas ópticas',
+		accessories: 'Accesorios',
 	};
 </script>
 
@@ -27,11 +28,11 @@
 	<div class="relative mx-auto max-w-5xl px-6 py-28 text-center sm:py-36">
 		<p class="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-brand-orange-hover dark:text-brand-orange">Óptica & Estilo</p>
 		<h1 class="text-5xl font-bold leading-tight tracking-tight sm:text-7xl">
-			Tu visión,<br />
-			<span class="text-brand-orange dark:text-brand-orange-light">tu identidad.</span>
+			Gafas que <span class="text-brand-orange dark:text-brand-orange-light">enamoran.</span>
 		</h1>
 		<p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-gray-600 dark:text-gray-300">
-			Gafas de sol y monturas ópticas seleccionadas para cada personalidad. Calidad premium, precios reales.
+			En Visión Lego reunimos tendencia, calidad premium, precios reales y estilo en cada colección.<br />
+			Encuentra monturas, gafas de sol y accesorios diseñados para acompañar tu personalidad y resaltar tu identidad.
 		</p>
 		<div class="mt-10 flex flex-wrap items-center justify-center gap-4">
 			<a
@@ -99,7 +100,8 @@
 <!-- Category blocks -->
 <section class="bg-gray-50 py-14 dark:bg-gray-950">
 	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-		<div class="grid gap-4 sm:grid-cols-2">
+		<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+			<!-- Gafas de sol — warm orange -->
 			<a
 				href="/productos?categoria=sunglasses"
 				class="group relative overflow-hidden rounded-2xl bg-white p-8 text-gray-900 ring-1 ring-gray-200 dark:bg-gray-900 dark:text-white dark:ring-0"
@@ -112,15 +114,55 @@
 					Explorar →
 				</span>
 			</a>
+			<!-- Monturas — cool blue -->
 			<a
 				href="/productos?categoria=optical"
-				class="group relative overflow-hidden rounded-2xl bg-blue-50 p-8 text-gray-900 dark:bg-gray-800 dark:text-white"
+				class="group relative overflow-hidden rounded-2xl bg-white p-8 text-gray-900 ring-1 ring-gray-200 dark:bg-gray-900 dark:text-white dark:ring-0"
 			>
-				<div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-blue-100/80 to-transparent dark:from-blue-900/40"></div>
+				<div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-blue-400/15 to-transparent dark:from-blue-900/40"></div>
 				<p class="relative text-xs font-semibold uppercase tracking-widest text-blue-600 dark:text-blue-300">Categoría</p>
-				<h3 class="relative mt-2 text-2xl font-bold">Monturas ópticas</h3>
+				<h3 class="relative mt-2 text-2xl font-bold">Monturas</h3>
 				<p class="relative mt-1 text-sm text-gray-600 dark:text-gray-300">Acetato · Metal · TR90</p>
 				<span class="relative mt-6 inline-block text-sm font-medium text-blue-600 transition-transform group-hover:translate-x-1 dark:text-blue-300">
+					Explorar →
+				</span>
+			</a>
+			<!-- Promociones — warm orange (urgency) -->
+			<a
+				href="/productos?promo=true"
+				class="group relative overflow-hidden rounded-2xl bg-white p-8 text-gray-900 ring-1 ring-gray-200 dark:bg-gray-900 dark:text-white dark:ring-0"
+			>
+				<div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-brand-orange/15 to-transparent dark:from-brand-orange-hover/40"></div>
+				<p class="relative text-xs font-semibold uppercase tracking-widest text-brand-orange-hover dark:text-brand-orange">Ofertas</p>
+				<h3 class="relative mt-2 text-2xl font-bold">Promociones</h3>
+				<p class="relative mt-1 text-sm text-gray-600 dark:text-gray-300">Descuentos por tiempo limitado</p>
+				<span class="relative mt-6 inline-block text-sm font-medium text-brand-orange-hover transition-transform group-hover:translate-x-1 dark:text-brand-orange-light">
+					Explorar →
+				</span>
+			</a>
+			<!-- Últimas tendencias — emerald (fresh/new) -->
+			<a
+				href="/productos?tendencias=true"
+				class="group relative overflow-hidden rounded-2xl bg-white p-8 text-gray-900 ring-1 ring-gray-200 dark:bg-gray-900 dark:text-white dark:ring-0"
+			>
+				<div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-emerald-400/15 to-transparent dark:from-emerald-900/40"></div>
+				<p class="relative text-xs font-semibold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Novedades</p>
+				<h3 class="relative mt-2 text-2xl font-bold">Últimas tendencias</h3>
+				<p class="relative mt-1 text-sm text-gray-600 dark:text-gray-300">Lo más nuevo en montura y sol</p>
+				<span class="relative mt-6 inline-block text-sm font-medium text-emerald-600 transition-transform group-hover:translate-x-1 dark:text-emerald-400">
+					Explorar →
+				</span>
+			</a>
+			<!-- Accesorios — violet (soft, neutral-warm) -->
+			<a
+				href="/productos?categoria=accessories"
+				class="group relative overflow-hidden rounded-2xl bg-white p-8 text-gray-900 ring-1 ring-gray-200 dark:bg-gray-900 dark:text-white dark:ring-0"
+			>
+				<div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet-400/15 to-transparent dark:from-violet-900/40"></div>
+				<p class="relative text-xs font-semibold uppercase tracking-widest text-violet-600 dark:text-violet-400">Categoría</p>
+				<h3 class="relative mt-2 text-2xl font-bold">Accesorios</h3>
+				<p class="relative mt-1 text-sm text-gray-600 dark:text-gray-300">Estuches, paños y más</p>
+				<span class="relative mt-6 inline-block text-sm font-medium text-violet-600 transition-transform group-hover:translate-x-1 dark:text-violet-400">
 					Explorar →
 				</span>
 			</a>
