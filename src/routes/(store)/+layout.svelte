@@ -3,6 +3,8 @@
 	import type { LayoutServerData } from './$types';
 	import ThemeToggle from '$lib/components/ui/ThemeToggle.svelte';
 	import Logo from '$lib/components/ui/Logo.svelte';
+	import Footer from '$lib/components/store/Footer.svelte';
+	import WhatsappFab from '$lib/components/store/WhatsappFab.svelte';
 
 	let { children, data }: { children: import('svelte').Snippet; data: LayoutServerData } = $props();
 	let mobileMenuOpen = $state(false);
@@ -126,7 +128,6 @@
 		{@render children()}
 	</main>
 
-	<footer class="border-t border-gray-200 bg-white py-8 text-center text-sm text-gray-500 dark:border-gray-800 dark:bg-gray-950">
-		<p>&copy; {new Date().getFullYear()} Visión Lego. Todos los derechos reservados.</p>
-	</footer>
+	<Footer />
+	<WhatsappFab />
 </div>
