@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import type { LayoutServerData } from './$types';
 	import ThemeToggle from '$lib/components/ui/ThemeToggle.svelte';
+	import Logo from '$lib/components/ui/Logo.svelte';
 
 	let { children, data }: { children: import('svelte').Snippet; data: LayoutServerData } = $props();
 	let mobileMenuOpen = $state(false);
@@ -13,7 +14,9 @@
 <div class="flex min-h-screen flex-col bg-white dark:bg-gray-950">
 	<header class="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur dark:border-gray-800 dark:bg-gray-950/95">
 		<div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-			<a href="/" class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Visión Lego</a>
+			<a href="/" aria-label="Visión Lego — Inicio">
+				<Logo width={75} />
+			</a>
 
 			<!-- Desktop nav -->
 			<nav class="hidden items-center gap-6 md:flex">

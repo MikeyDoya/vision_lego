@@ -3,6 +3,7 @@
 	import { enhance } from '$app/forms';
 	import type { LayoutServerData } from './$types';
 	import ThemeToggle from '$lib/components/ui/ThemeToggle.svelte';
+	import Logo from '$lib/components/ui/Logo.svelte';
 
 	let { children, data }: { children: import('svelte').Snippet; data: LayoutServerData } = $props();
 
@@ -27,7 +28,9 @@
 	<!-- Sidebar desktop -->
 	<aside class="hidden w-56 shrink-0 flex-col border-r border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950 lg:flex">
 		<div class="flex h-16 items-center border-b border-gray-200 px-6 dark:border-gray-800">
-			<a href="/" class="text-lg font-bold text-gray-900 dark:text-white">Visión Lego</a>
+			<a href="/negocio" aria-label="Visión Lego — Panel">
+				<Logo width={100} />
+			</a>
 		</div>
 		<nav class="flex flex-col gap-1 p-3">
 			{#each navItems as item (item.href)}
@@ -61,7 +64,9 @@
 	<!-- Main content -->
 	<div class="flex min-w-0 flex-1 flex-col">
 		<header class="flex h-16 items-center justify-between border-b border-gray-200 bg-white px-4 dark:border-gray-800 dark:bg-gray-950 lg:hidden">
-			<a href="/" class="text-lg font-bold text-gray-900 dark:text-white">Visión Lego</a>
+			<a href="/negocio" aria-label="Visión Lego — Panel">
+				<Logo width={100} />
+			</a>
 			<ThemeToggle />
 		</header>
 

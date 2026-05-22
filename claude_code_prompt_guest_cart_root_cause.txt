@@ -1,0 +1,123 @@
+Vision Lego — Guest cart Eliminar bug: ROOT CAUSE FOUND IN LOGS
+
+The diagnostic logs from the previous round revealed the exact bug. Read this
+whole prompt, then act. Do not improvise outside the plan.
+
+THE EVIDENCE (from PM2 production logs)
+For a single Eliminar click on /carrito, the server prints this sequence:
+
+  [removeItem] cartItemId received: "dbe55741-0aac-4a98-a4bb-a633e6bb719f"
+  [removeItem] raw cookie: "[{\"variantId\":\"dbe55741-...\",\"quantity\":1}]"
+  [removeItem] parsed cart: [{"variantId":"dbe55741-...","quantity":1}]
+  [removeItem] filtered array to write: []
+  [writeGuestCart] deleting cookie, opts: {"path":"/"}
+  [writeGuestCart] delete called
+  [removeItem] done
+  [writeGuestCart] setting cookie, items: [{"variantId":"dbe55741-...","quantity":1}] opts: {"path":"/","maxAge":2592000,"sameSite":"lax","secure":false}
+  [writeGuestCart] set called
+
+The action correctly deletes the cookie. Then SOMETHING ELSE — almost certainly
+the load() function in src/routes/(store)/carrito/+page.server.ts (or a parent
+layout's load) — calls writeGuestCart AGAIN after the action, writing the cart
+back with the item still in it. That second write is what the browser receives.
+On refresh, the cookie still has the item. That's the bug.
+
+For comparison, the decrement (−) case shows only "set called" with the new
+quantity, never a "delete" followed by a contradictory "set". The bug manifests
+only on Eliminar because deletion is the only operation where action-output
+("[]") disagrees with load-output ("the item still exists").
+
+WHY IT HAPPENS
+Within a single HTTP response cycle:
+  1. The removeItem action runs, calls cookies.delete().
+  2. SvelteKit re-invokes load() on the same response to refresh page data.
+  3. The load() reads the cookie (via readGuestCart) — but at this point in the
+     response pipeline, the cookies object may still be returning the pre-action
+     state, OR load() is reading event.request.headers.cookie which IS still the
+     pre-action value (request headers are immutable for the rest of the
+     request lifecycle).
+  4. Whatever load() reads, it writes back via writeGuestCart — re-resurrecting
+     the cart. This second Set-Cookie header overwrites the delete.
+
+THE FIX
+Identify and remove the write-from-load. The load() function for /carrito should
+ONLY READ the guest cart, never write it. Writes belong to the form actions
+(addToCart, updateQuantity, removeItem) and to nowhere else.
+
+STEP-BY-STEP
+
+1. READ THESE FILES IN FULL, NO CHANGES YET:
+     - src/routes/(store)/carrito/+page.server.ts   (whole file)
+     - src/routes/(store)/+layout.server.ts          (if it exists)
+     - src/routes/+layout.server.ts                  (if it exists)
+     - src/lib/server/cartCookie.ts                  (whole file)
+
+2. FIND THE OFFENDING writeGuestCart() CALL.
+   It is somewhere in the load chain for /carrito. The most likely shapes:
+     a. load() reads the cart, "cleans" it (drops invalid variantIds, deletes
+        out-of-stock items, recomputes something), then writes it back.
+     b. load() touches the cart to "extend" the 30-day expiry on every page
+        view — a common but incorrect pattern that re-writes the cookie on
+        every request.
+     c. A parent layout's load() does something similar at a higher level.
+
+   Print the offending function (or functions) so the developer can see what
+   was running. Quote it verbatim, with the file path.
+
+3. APPLY THE FIX. Choose the smallest correct change:
+
+   Case A — load() is "cleaning" the cart and writing it back:
+     The cleanup is fine; the write is not. Compute the cleaned cart in
+     memory for THIS render only. Do NOT writeGuestCart from load. If the
+     cookie genuinely contains stale data (invalid variantId, etc.), let the
+     next form-action write fix it — those actions already read+filter+write
+     correctly.
+
+   Case B — load() is "extending" the 30-day expiry:
+     Remove the rolling-expiry write. The cookie's maxAge is already set on
+     every legitimate write (addToCart / updateQuantity / removeItem). A
+     guest who's actively using the cart will hit at least one of those
+     actions within 30 days. A guest who only browses passively does not
+     need their empty/idle cart to renew forever.
+
+   Case C — a parent layout load is the culprit:
+     Same rule. Remove the write. Layout loads should never mutate cart
+     state.
+
+   Case D — something else entirely:
+     Stop and report back what you found. Do not invent a fix.
+
+4. VERIFY THE FIX BEFORE REMOVING LOGS.
+   Run pnpm build to confirm it compiles. Then KEEP the [removeItem] and
+   [writeGuestCart] log statements in place for one more deploy — the
+   developer will redeploy and reproduce the Eliminar flow in production to
+   confirm only ONE writeGuestCart line appears per removeItem now (the
+   "delete called" one), with no follow-up "set called" resurrecting the
+   item. Once the developer confirms the logs look correct, do a second pass
+   to remove the temporary diagnostic logs and run svelte-autofixer on any
+   .svelte file touched (likely none for this fix).
+
+CONSTRAINTS
+  - Do NOT change the optimistic-update pattern in /carrito/+page.svelte.
+  - Do NOT change the formData.set('cartItemId', id) pattern.
+  - Do NOT add a new dependency.
+  - Do NOT touch the action code if the bug is in load(). The actions are
+    correct — the proof is in the logs.
+  - All UI strings stay Spanish; all code/comments/identifiers stay English.
+
+DELIVERABLE
+  Report after Step 2: the exact function that's writing from load(), quoted.
+  Report after Step 3: the diff applied.
+  Report after Step 4 (pass 1): "logs still in place, please deploy and test."
+  Report after Step 4 (pass 2, after dev confirms): "logs removed, fix final."
+
+TEST PLAN (developer, after pass 1 deploy)
+  Production, fresh incognito:
+    1. Add a product to /carrito.
+    2. Eliminar it.
+    3. ssh to droplet, run: pm2 logs vision_lego --lines 30 | grep -E "removeItem|writeGuestCart"
+    4. Confirm the trailing "[writeGuestCart] setting cookie, items: [{...}]"
+       line is GONE. Only the "deleting cookie" / "delete called" remain.
+    5. Refresh /carrito. The cart must be empty.
+    6. Repeat the decrement test (− to qty 1, then − again) — should still
+       end up empty on refresh.
