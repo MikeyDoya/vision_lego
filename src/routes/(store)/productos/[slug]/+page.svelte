@@ -87,6 +87,19 @@
 		}
 	}
 
+	async function openZoom() {
+		if (!displayImages.length) return;
+		const { default: PhotoSwipe } = await import('photoswipe');
+		const dataSource = displayImages.map((img) => ({
+			src: img.url + '-large.webp',
+			width: 1600,
+			height: 1600,
+			alt: img.altText ?? data.product.name,
+		}));
+		const pswp = new PhotoSwipe({ dataSource, index: currentImageIndex });
+		pswp.init();
+	}
+
 	const categoryLabel: Record<string, string> = {
 		sunglasses: 'Gafas de sol',
 		optical: 'Monturas ópticas',
@@ -115,13 +128,31 @@
 					role="img"
 					aria-label="Galería de imágenes del producto"
 				>
-					<ProductImage
-						basePath={displayImages[currentImageIndex].url}
-						alt={displayImages[currentImageIndex].altText ?? data.product.name}
-						size="large"
-						loading="eager"
-						class="h-full w-full object-cover"
-					/>
+					<button
+						type="button"
+						onclick={openZoom}
+						class="absolute inset-0 cursor-zoom-in"
+						tabindex="-1"
+						aria-hidden="true"
+					>
+						<ProductImage
+							basePath={displayImages[currentImageIndex].url}
+							alt={displayImages[currentImageIndex].altText ?? data.product.name}
+							size="large"
+							loading="eager"
+							class="h-full w-full object-cover"
+						/>
+					</button>
+					<button
+						type="button"
+						onclick={openZoom}
+						class="absolute bottom-3 right-3 flex h-11 w-11 items-center justify-center rounded-full bg-white/80 text-gray-900 shadow hover:bg-white dark:bg-gray-950/80 dark:text-white dark:hover:bg-gray-950"
+						aria-label="Ampliar imagen"
+					>
+						<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6" />
+						</svg>
+					</button>
 					{#if displayImages.length > 1}
 						<button
 							onclick={prevImage}
@@ -361,3 +392,7 @@
 		</div>
 	</div>
 </div>
+
+<style>
+	@import 'photoswipe/dist/photoswipe.css';
+</style>

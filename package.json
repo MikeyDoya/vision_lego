@@ -58,6 +58,7 @@
 	},
 	"dependencies": {
 		"cropperjs": "^1.6.2",
+		"photoswipe": "^5.4.4",
 		"sharp": "^0.34.5"
 	}
 }
