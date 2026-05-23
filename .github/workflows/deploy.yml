@@ -79,7 +79,10 @@ jobs:
             export PATH="/home/mikey/.local/share/fnm/node-versions/v24.14.1/installation/bin:/home/mikey/.local/share/pnpm:$PATH"
             cd ~/vision_lego
             set -a; source .env; set +a
-            pnpm dlx drizzle-kit migrate
+            # Full install so drizzle-kit and drizzle-orm share the same node_modules.
+            # The later prod install step prunes devDeps after migrations run.
+            pnpm install --frozen-lockfile
+            pnpm exec drizzle-kit migrate
           MIGRATE
 
       - name: Install production deps and restart app
