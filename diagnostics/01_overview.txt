@@ -1,0 +1,77 @@
+===== git status =====
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   CLAUDE.md
+	modified:   docs/IMAGE_STANDARDS.md
+	modified:   nginx.conf
+	modified:   src/lib/components/store/Footer.svelte
+	modified:   src/lib/components/ui/ImageCropper.svelte
+	modified:   src/lib/server/cartCookie.ts
+	modified:   src/routes/(auth)/iniciar-sesion/+page.svelte
+	modified:   src/routes/(auth)/registrarse/+page.svelte
+	modified:   src/routes/(store)/+layout.svelte
+	modified:   src/routes/(store)/+page.svelte
+	modified:   src/routes/(store)/carrito/+page.svelte
+	modified:   src/routes/(store)/checkout/+page.svelte
+	modified:   src/routes/(store)/cuenta/+page.svelte
+	modified:   src/routes/(store)/productos/+page.svelte
+	modified:   src/routes/(store)/productos/[slug]/+page.svelte
+	modified:   src/routes/layout.css
+	modified:   src/routes/negocio/analiticas/+page.svelte
+	modified:   src/routes/negocio/cuentas-por-cobrar/+page.svelte
+	modified:   src/routes/negocio/envios/+page.svelte
+	modified:   src/routes/negocio/gastos/+page.svelte
+	modified:   src/routes/negocio/pedidos/[id]/+page.svelte
+	modified:   src/routes/negocio/productos/[id]/+page.server.ts
+	modified:   src/routes/negocio/productos/[id]/+page.svelte
+	modified:   src/routes/negocio/productos/nuevo/+page.svelte
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	diagnose_hero.sh
+	diagnostics/
+	static/fonts/
+	static/images/
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+===== git diff --stat =====
+ CLAUDE.md                                          | 41 ++++++++++++++++------
+ docs/IMAGE_STANDARDS.md                            |  2 +-
+ nginx.conf                                         | 24 +++++++++----
+ src/lib/components/store/Footer.svelte             |  4 +--
+ src/lib/components/ui/ImageCropper.svelte          |  6 ++--
+ src/lib/server/cartCookie.ts                       |  5 +--
+ src/routes/(auth)/iniciar-sesion/+page.svelte      |  2 +-
+ src/routes/(auth)/registrarse/+page.svelte         |  2 +-
+ src/routes/(store)/+layout.svelte                  |  8 ++---
+ src/routes/(store)/+page.svelte                    | 37 ++++++++++---------
+ src/routes/(store)/carrito/+page.svelte            |  2 +-
+ src/routes/(store)/checkout/+page.svelte           |  2 +-
+ src/routes/(store)/cuenta/+page.svelte             |  2 +-
+ src/routes/(store)/productos/+page.svelte          |  2 +-
+ src/routes/(store)/productos/[slug]/+page.svelte   |  8 ++---
+ src/routes/layout.css                              | 19 ++++++++++
+ src/routes/negocio/analiticas/+page.svelte         |  2 +-
+ src/routes/negocio/cuentas-por-cobrar/+page.svelte |  2 +-
+ src/routes/negocio/envios/+page.svelte             |  2 +-
+ src/routes/negocio/gastos/+page.svelte             |  2 +-
+ src/routes/negocio/pedidos/[id]/+page.svelte       |  2 +-
+ src/routes/negocio/productos/[id]/+page.server.ts  |  2 +-
+ src/routes/negocio/productos/[id]/+page.svelte     |  2 +-
+ src/routes/negocio/productos/nuevo/+page.svelte    |  2 +-
+ 24 files changed, 119 insertions(+), 63 deletions(-)
+
+===== static/images/hero/ contents =====
+total 212
+drwxrwxr-x 2 mikeydoya mikeydoya   4096 Jun 26 16:17 .
+drwxrwxr-x 3 mikeydoya mikeydoya   4096 Jun 26 16:17 ..
+-rw-r--r-- 1 mikeydoya mikeydoya 157110 Jun 26 16:17 hero-bg-1920.webp
+-rw-r--r-- 1 mikeydoya mikeydoya  49088 Jun 26 16:17 hero-bg-960.webp
+
+===== source PNG still in root? =====
+ls: cannot access 'portada_Mesa_de_trabajo_1.png': No such file or directory

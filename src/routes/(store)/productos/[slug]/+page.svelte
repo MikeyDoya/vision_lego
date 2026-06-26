@@ -225,7 +225,7 @@
 										class={[
 											'cursor-pointer min-h-11 rounded-lg border px-3 py-2 text-sm transition-colors',
 											selectedColor === color
-												? 'border-brand-orange bg-brand-orange text-gray-950 font-semibold'
+												? 'border-brand-orange bg-brand-orange text-gray-950 font-medium'
 												: 'border-gray-300 text-gray-700 hover:border-gray-400 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-500',
 										].join(' ')}
 									>{color}</button>
@@ -246,7 +246,7 @@
 										class={[
 											'cursor-pointer min-h-11 rounded-lg border px-3 py-2 text-sm transition-colors',
 											selectedSize === size
-												? 'border-brand-orange bg-brand-orange text-gray-950 font-semibold'
+												? 'border-brand-orange bg-brand-orange text-gray-950 font-medium'
 												: 'border-gray-300 text-gray-700 hover:border-gray-400 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-500',
 										].join(' ')}
 									>{size}</button>
@@ -267,7 +267,7 @@
 										class={[
 											'cursor-pointer min-h-11 rounded-lg border px-3 py-2 text-sm transition-colors',
 											selectedMaterial === material
-												? 'border-brand-orange bg-brand-orange text-gray-950 font-semibold'
+												? 'border-brand-orange bg-brand-orange text-gray-950 font-medium'
 												: 'border-gray-300 text-gray-700 hover:border-gray-400 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-500',
 										].join(' ')}
 									>{material}</button>
@@ -339,7 +339,7 @@
 					<button
 						type="submit"
 						disabled={!selectedVariantId || stockStatus === 'agotado' || submitting}
-						class="h-11 flex-1 cursor-pointer rounded-lg bg-brand-orange text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light disabled:cursor-not-allowed disabled:opacity-50"
+						class="h-11 flex-1 cursor-pointer rounded-lg bg-brand-orange text-sm font-medium text-gray-950 transition hover:bg-brand-orange-light disabled:cursor-not-allowed disabled:opacity-50"
 					>
 						{submitting ? 'Agregando...' : 'Agregar al carrito'}
 					</button>

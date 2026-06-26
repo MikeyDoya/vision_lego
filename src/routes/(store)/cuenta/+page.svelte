@@ -153,7 +153,7 @@
 							/>
 						</div>
 						<div class="flex gap-3">
-							<button type="submit" class="h-10 cursor-pointer rounded-lg bg-brand-orange px-5 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light">
+							<button type="submit" class="h-10 cursor-pointer rounded-lg bg-brand-orange px-5 text-sm font-medium text-gray-950 transition hover:bg-brand-orange-light">
 								Guardar
 							</button>
 							<button type="button" onclick={() => (editingProfile = false)} class="h-10 cursor-pointer rounded-lg border border-gray-300 px-5 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">

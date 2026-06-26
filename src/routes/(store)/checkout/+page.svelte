@@ -225,7 +225,7 @@
 					<button
 						type="submit"
 						disabled={submitting}
-						class="mt-6 h-12 w-full cursor-pointer rounded-xl bg-brand-orange text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light disabled:opacity-50"
+						class="mt-6 h-12 w-full cursor-pointer rounded-xl bg-brand-orange text-sm font-medium text-gray-950 transition hover:bg-brand-orange-light disabled:opacity-50"
 					>
 						{submitting ? 'Procesando...' : 'Confirmar pedido'}
 					</button>

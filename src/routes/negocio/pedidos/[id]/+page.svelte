@@ -101,7 +101,7 @@
 						<option value={val} selected={data.order.status === val}>{label}</option>
 					{/each}
 				</select>
-				<button type="submit" class="w-full cursor-pointer rounded-lg bg-brand-orange py-2 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light">
+				<button type="submit" class="w-full cursor-pointer rounded-lg bg-brand-orange py-2 text-sm font-medium text-gray-950 transition hover:bg-brand-orange-light">
 					Actualizar estado
 				</button>
 			</form>

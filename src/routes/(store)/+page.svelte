@@ -12,14 +12,19 @@
 </svelte:head>
 
 <!-- Hero -->
-<section class="relative overflow-hidden bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-white">
-	<!-- Warm gradient layer -->
-	<div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-brand-orange/10 via-transparent to-transparent dark:from-brand-orange-hover/40 dark:via-gray-950 dark:to-gray-900"></div>
-	<!-- Subtle texture dots -->
-	<div
-		class="pointer-events-none absolute inset-0 opacity-[0.04]"
-		style="background-image: radial-gradient(circle, #000 1px, transparent 1px); background-size: 28px 28px;"
-	></div>
+<section class="relative isolate overflow-hidden text-gray-900 dark:text-white">
+	<!-- Full-bleed background photo — eager, above-the-fold -->
+	<img
+		src="/images/hero/hero-bg-1920.webp"
+		srcset="/images/hero/hero-bg-960.webp 960w, /images/hero/hero-bg-1920.webp 1920w"
+		sizes="100vw"
+		alt="Personas usando monturas y gafas de Visión Lego"
+		class="pointer-events-none absolute inset-0 -z-10 h-full w-full object-cover"
+		loading="eager"
+		fetchpriority="high"
+	/>
+	<!-- Legibility scrim: light→transparent in light mode, dark→transparent in dark mode -->
+	<div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/80 via-white/55 to-white/20 dark:from-gray-950/92 dark:via-gray-950/75 dark:to-gray-950/40"></div>
 
 	<div class="relative mx-auto max-w-5xl px-6 py-28 text-center sm:py-36">
 		<p class="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-brand-orange-hover dark:text-brand-orange">Óptica & Estilo</p>
@@ -33,13 +38,13 @@
 		<div class="mt-10 flex flex-wrap items-center justify-center gap-4">
 			<a
 				href="/productos"
-				class="rounded-xl bg-brand-orange px-8 py-3.5 text-sm font-semibold text-white transition hover:bg-brand-orange-hover"
+				class="rounded-xl bg-brand-orange px-8 py-3.5 text-sm font-medium text-white transition hover:bg-brand-orange-hover"
 			>
 				Ver colección
 			</a>
 			<a
 				href="/productos?categoria=sunglasses"
-				class="rounded-xl border border-gray-300 px-8 py-3.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-100 dark:border-white/20 dark:text-white dark:hover:bg-white/10"
+				class="rounded-xl border border-gray-300 px-8 py-3.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:border-white/20 dark:text-white dark:hover:bg-white/10"
 			>
 				Gafas de sol
 			</a>
@@ -53,7 +58,7 @@
 		<div class="mb-8 flex items-end justify-between">
 			<div>
 				<p class="text-xs font-semibold uppercase tracking-widest text-brand-orange dark:text-brand-orange">Selección</p>
-				<h2 class="mt-1 text-2xl font-bold text-gray-900 dark:text-white">Productos destacados</h2>
+				<h2 class="mt-1 text-2xl font-semibold text-gray-900 dark:text-white">Productos destacados</h2>
 			</div>
 			<a href="/productos" class="text-sm font-medium text-gray-400 hover:text-gray-900 dark:text-gray-500 dark:hover:text-white">
 				Ver todos →
@@ -78,7 +83,7 @@
 			>
 				<div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-brand-orange/15 to-transparent dark:from-brand-orange-hover/40"></div>
 				<p class="relative text-xs font-semibold uppercase tracking-widest text-brand-orange-hover dark:text-brand-orange">Categoría</p>
-				<h3 class="relative mt-2 text-2xl font-bold">Gafas de sol</h3>
+				<h3 class="relative mt-2 text-2xl font-semibold">Gafas de sol</h3>
 				<p class="relative mt-1 text-sm text-gray-600 dark:text-gray-300">Protección UV · Diseño · Estilo</p>
 				<span class="relative mt-6 inline-block text-sm font-medium text-brand-orange-hover transition-transform group-hover:translate-x-1 dark:text-brand-orange-light">
 					Explorar →
@@ -91,7 +96,7 @@
 			>
 				<div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-blue-400/15 to-transparent dark:from-blue-900/40"></div>
 				<p class="relative text-xs font-semibold uppercase tracking-widest text-blue-600 dark:text-blue-300">Categoría</p>
-				<h3 class="relative mt-2 text-2xl font-bold">Monturas</h3>
+				<h3 class="relative mt-2 text-2xl font-semibold">Monturas</h3>
 				<p class="relative mt-1 text-sm text-gray-600 dark:text-gray-300">Acetato · Metal · TR90</p>
 				<span class="relative mt-6 inline-block text-sm font-medium text-blue-600 transition-transform group-hover:translate-x-1 dark:text-blue-300">
 					Explorar →
@@ -104,7 +109,7 @@
 			>
 				<div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-brand-orange/15 to-transparent dark:from-brand-orange-hover/40"></div>
 				<p class="relative text-xs font-semibold uppercase tracking-widest text-brand-orange-hover dark:text-brand-orange">Ofertas</p>
-				<h3 class="relative mt-2 text-2xl font-bold">Promociones</h3>
+				<h3 class="relative mt-2 text-2xl font-semibold">Promociones</h3>
 				<p class="relative mt-1 text-sm text-gray-600 dark:text-gray-300">Descuentos por tiempo limitado</p>
 				<span class="relative mt-6 inline-block text-sm font-medium text-brand-orange-hover transition-transform group-hover:translate-x-1 dark:text-brand-orange-light">
 					Explorar →
@@ -117,7 +122,7 @@
 			>
 				<div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-emerald-400/15 to-transparent dark:from-emerald-900/40"></div>
 				<p class="relative text-xs font-semibold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Novedades</p>
-				<h3 class="relative mt-2 text-2xl font-bold">Últimas tendencias</h3>
+				<h3 class="relative mt-2 text-2xl font-semibold">Últimas tendencias</h3>
 				<p class="relative mt-1 text-sm text-gray-600 dark:text-gray-300">Lo más nuevo en montura y sol</p>
 				<span class="relative mt-6 inline-block text-sm font-medium text-emerald-600 transition-transform group-hover:translate-x-1 dark:text-emerald-400">
 					Explorar →
@@ -130,7 +135,7 @@
 			>
 				<div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-violet-400/15 to-transparent dark:from-violet-900/40"></div>
 				<p class="relative text-xs font-semibold uppercase tracking-widest text-violet-600 dark:text-violet-400">Categoría</p>
-				<h3 class="relative mt-2 text-2xl font-bold">Accesorios</h3>
+				<h3 class="relative mt-2 text-2xl font-semibold">Accesorios</h3>
 				<p class="relative mt-1 text-sm text-gray-600 dark:text-gray-300">Estuches, paños y más</p>
 				<span class="relative mt-6 inline-block text-sm font-medium text-violet-600 transition-transform group-hover:translate-x-1 dark:text-violet-400">
 					Explorar →

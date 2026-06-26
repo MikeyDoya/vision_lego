@@ -549,7 +549,7 @@
 					<input id="v-stock" name="stock" type="number" min="0" value="0" class="mt-1 w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
 				</div>
 				<div class="col-span-full flex gap-3">
-					<button type="submit" class="cursor-pointer rounded-lg bg-brand-orange px-4 py-2 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light">
+					<button type="submit" class="cursor-pointer rounded-lg bg-brand-orange px-4 py-2 text-sm font-medium text-gray-950 transition hover:bg-brand-orange-light">
 						Agregar variante
 					</button>
 					<button type="button" onclick={() => (addingVariant = false)} class="cursor-pointer rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">

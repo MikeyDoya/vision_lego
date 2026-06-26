@@ -11,7 +11,7 @@
 </svelte:head>
 
 <div class="rounded-xl bg-white px-8 py-10 ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-800">
-	<h1 class="mb-6 text-xl font-semibold text-gray-900 dark:text-white">Iniciar sesión</h1>
+	<h1 class="mb-6 text-xl font-bold text-gray-900 dark:text-white">Iniciar sesión</h1>
 
 	{#if form?.message}
 		<p class="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 ring-1 ring-red-200 dark:bg-red-900/40 dark:text-red-300 dark:ring-red-800">{form.message}</p>

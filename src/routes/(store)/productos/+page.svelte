@@ -271,7 +271,7 @@
 
 				<button
 					onclick={() => (filtersOpen = false)}
-					class="h-11 w-full rounded-lg bg-brand-orange text-sm font-semibold text-gray-950 hover:bg-brand-orange-light lg:hidden"
+					class="h-11 w-full rounded-lg bg-brand-orange text-sm font-medium text-gray-950 hover:bg-brand-orange-light lg:hidden"
 				>
 					Ver {data.products.length} producto{data.products.length !== 1 ? 's' : ''}
 				</button>

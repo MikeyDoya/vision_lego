@@ -26,7 +26,7 @@
 			</svg>
 			<p class="mt-4 text-lg font-medium text-gray-900 dark:text-white">Tu carrito está vacío</p>
 			<p class="mt-1 text-sm text-gray-500">Explora nuestros productos y agrega algo que te guste.</p>
-			<a href="/productos" class="mt-6 inline-block rounded-lg bg-brand-orange px-6 py-3 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light">
+			<a href="/productos" class="mt-6 inline-block rounded-lg bg-brand-orange px-6 py-3 text-sm font-medium text-gray-950 transition hover:bg-brand-orange-light">
 				Ver productos
 			</a>
 		</div>

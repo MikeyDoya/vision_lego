@@ -174,7 +174,7 @@
 		<button
 			type="submit"
 			disabled={loading}
-			class="rounded-lg bg-brand-orange px-6 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light disabled:opacity-60"
+			class="rounded-lg bg-brand-orange px-6 py-2.5 text-sm font-medium text-gray-950 transition hover:bg-brand-orange-light disabled:opacity-60"
 		>
 			{loading ? 'Guardando…' : 'Crear producto'}
 		</button>

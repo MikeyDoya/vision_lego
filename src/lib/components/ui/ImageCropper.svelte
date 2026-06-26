@@ -92,13 +92,13 @@
 					type="button"
 					onclick={() => cropper?.zoom(0.1)}
 					aria-label="Acercar"
-					class="flex min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center rounded-lg bg-gray-100 text-xl font-bold text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+					class="flex min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center rounded-lg bg-gray-100 text-xl font-medium text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
 				>+</button>
 				<button
 					type="button"
 					onclick={() => cropper?.zoom(-0.1)}
 					aria-label="Alejar"
-					class="flex min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center rounded-lg bg-gray-100 text-xl font-bold text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+					class="flex min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center rounded-lg bg-gray-100 text-xl font-medium text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
 				>−</button>
 				<button
 					type="button"
@@ -117,7 +117,7 @@
 					type="button"
 					disabled={confirming}
 					onclick={confirm}
-					class="flex min-h-[44px] cursor-pointer items-center justify-center rounded-lg bg-brand-orange px-5 text-sm font-semibold text-gray-950 hover:bg-brand-orange-light disabled:opacity-60"
+					class="flex min-h-[44px] cursor-pointer items-center justify-center rounded-lg bg-brand-orange px-5 text-sm font-medium text-gray-950 hover:bg-brand-orange-light disabled:opacity-60"
 				>{confirming ? 'Procesando…' : 'Continuar'}</button>
 			</div>
 		</div>

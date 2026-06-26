@@ -8,7 +8,7 @@
 
 			<!-- Column 1: Brand + address -->
 			<div>
-				<p class="text-lg font-bold text-gray-900 dark:text-white">Visión Lego</p>
+				<p class="text-lg font-semibold text-gray-900 dark:text-white">Visión Lego</p>
 				<div class="mt-3 flex items-start gap-2">
 					<svg class="mt-0.5 h-4 w-4 shrink-0 text-brand-orange" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 						<path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
@@ -71,7 +71,7 @@
 					</li>
 					<li>
 						<a
-							href="https://facebook.com/visionlego"
+							href="https://www.facebook.com/people/Visión-Lego/100063579805958/"
 							target="_blank"
 							rel="noopener noreferrer"
 							class="flex items-center gap-2 py-1 text-sm text-gray-600 hover:text-brand-orange dark:text-gray-300 dark:hover:text-brand-orange"

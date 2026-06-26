@@ -20,7 +20,7 @@ JPEG at equivalent visual quality, with native support across all modern browser
 | Formats accepted | JPG, JPEG, PNG, WebP |
 | Minimum dimensions | 1200 × 1200 px |
 | Expected dimensions | 3024 × 3024 px (iPhone Square mode) |
-| Maximum file size | 10 MB per file |
+| Maximum file size | 5 MB per file |
 | Aspect ratio | Square (1:1) preferred; non-square is auto-cropped |
 
 Images below 1200 × 1200 px are rejected at upload time with a Spanish error message:

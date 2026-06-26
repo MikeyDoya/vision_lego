@@ -364,10 +364,10 @@ Vision Lego must beat them on simplicity, speed, and trust — not on how much c
 - SSH key: `~/.ssh/Digital_Ocean_Key`
 
 ### Nginx and HTTPS
-- **Current state**: HTTP only, no domain yet — the app is accessed via the droplet's IP address
-- **Nginx config to generate**: HTTP only (port 80), reverse proxy to `localhost:3000`
-- **Future**: when a domain is purchased and pointed to the droplet, add HTTPS via Certbot (Let's Encrypt) — do not implement this yet
-- Do not generate any HTTPS/SSL configuration until explicitly asked
+- **Current state**: HTTPS live — domain `visionlego.com` (and `www.visionlego.com`) is purchased, pointed to the droplet, and serving over HTTPS
+- **Certificate**: Certbot (Let's Encrypt) — already installed and auto-renewing on the droplet
+- **HTTP → HTTPS**: port 80 block 301-redirects all traffic to `https://`
+- **Nginx config** (`nginx.conf` in repo): updated to HTTPS with Certbot cert paths — for documentation and fresh-droplet rebuilds only; Certbot manages the live config directly
 
 ### How deployment works
 Claude Code runs on `mikeydoya`'s local machine, not on the server. The build always happens locally. The droplet only receives the compiled output and runs it.
@@ -426,7 +426,7 @@ BETTER_AUTH_URL=http://localhost:5173
 # Production (stored as GitHub Actions secrets, not in .env file)
 # DATABASE_URL=postgresql://mikey:your_strong_password@localhost:5432/vision_lego
 # BETTER_AUTH_SECRET=same_value_as_local
-# BETTER_AUTH_URL=http://YOUR_DROPLET_IP  <- update to https://domain when domain is ready
+# BETTER_AUTH_URL=https://visionlego.com
 ```
 
 _(Wompi merchant credentials — public key + private key — are added when payment integration begins)_
@@ -740,6 +740,19 @@ Introduced a pale tint token and corrected every large-surface background that w
 
 `svelte-autofixer` returned zero issues on all 3 modified `.svelte` files; `pnpm build` passed.
 
+### Fix — upload cap aligned to 5 MB end-to-end (2026-06-26)
+The live Nginx has `client_max_body_size 5M` and the droplet runs `BODY_SIZE_LIMIT=5242880` (5 MB), but the upload action and docs still referenced 10 MB — any 5–10 MB file would pass the app check and then get a confusing 413 from Nginx.
+
+**Changes** (no server touch — live Nginx and BODY_SIZE_LIMIT left as-is):
+- `src/routes/negocio/productos/[id]/+page.server.ts` — `maxSize` changed from `10 * 1024 * 1024` back to `5 * 1024 * 1024` (5 242 880 bytes)
+- `docs/IMAGE_STANDARDS.md` — "Maximum file size" table row: 10 MB → 5 MB per file
+- `nginx.conf` (repo documentation copy only):
+  - `client_max_body_size 10M` → `5M`
+  - Restructured to HTTP-only (removed hardcoded Certbot cert paths); `certbot --nginx` adds the TLS blocks on a fresh-droplet rebuild so `nginx -t` passes before certs exist
+  - Header comment updated: live config path is `/etc/nginx/conf.d/vision_lego.conf`, Certbot-managed, this file is documentation only
+
+No `.svelte` files changed; `pnpm build` confirmed green.
+
 ---
 
 ## Pending
@@ -759,8 +772,16 @@ Introduced a pale tint token and corrected every large-surface background that w
 - ✓ DONE: Copy nginx config, disable default site, reload Nginx (see comments inside `nginx.conf`)
 - ✓ DONE: After first successful deploy: `pm2 startup` + `pm2 save` to survive reboots
 
-### HTTPS + domain (future)
-- Purchase and point a domain to the DigitalOcean droplet
-- Run Certbot (Let's Encrypt) to enable HTTPS
-- Update `BETTER_AUTH_URL` secret to `https://yourdomain.com`
-- Update nginx config to redirect HTTP → HTTPS and proxy SSL
+### HTTPS + domain (2026-06-26) ✓ DONE
+- ✓ Domain `visionlego.com` purchased and pointed to the droplet
+- ✓ Certbot (Let's Encrypt) installed on the droplet; both `https://visionlego.com` and `https://www.visionlego.com` serve the app over HTTPS
+- ✓ HTTP → HTTPS 301 redirect configured in Nginx
+- ✓ `nginx.conf` in repo updated to HTTPS with Certbot cert paths (documentation / fresh-droplet rebuild reference)
+- ✓ `BETTER_AUTH_URL` GitHub Actions secret updated to `https://visionlego.com`
+- ✓ Canonical host: `www.visionlego.com` 301-redirects to `visionlego.com` (apex); `BETTER_AUTH_URL` is the apex domain
+- ✓ Guest cart cookie `secure` flag changed to `!dev` (`src/lib/server/cartCookie.ts`) — `false` in local dev over HTTP, `true` in production over HTTPS; set and delete use identical attributes
+
+### Photo hero background (2026-06-26) ✓ DONE
+- Source: `portada_Mesa de trabajo 1.png` (8000×4500 px, 16:9) — processed and deleted from repo
+- Outputs (committed to `static/images/hero/`): `hero-bg-1920.webp` (153 KB, q80) and `hero-bg-960.webp` (48 KB, q80)
+- `src/routes/(store)/+page.svelte` hero section: replaced gradient background with full-bleed `<img>` (`-z-10`, `object-cover`, `loading="eager"`, `fetchpriority="high"`, `srcset` 960w/1920w) plus a legibility scrim (`from-white/80 via-white/55 to-white/20` light / `from-gray-950/92 via-gray-950/75 to-gray-950/40` dark) — no decorative animation

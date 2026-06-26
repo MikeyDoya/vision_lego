@@ -24,7 +24,7 @@
 			<nav class="hidden items-center gap-6 md:flex">
 				<a
 					href="/productos"
-					class="text-sm font-semibold text-brand-orange transition hover:text-brand-orange dark:text-brand-orange dark:hover:text-brand-orange-light"
+					class="text-sm font-medium text-brand-orange transition hover:text-brand-orange dark:text-brand-orange dark:hover:text-brand-orange-light"
 				>
 					Productos
 				</a>
@@ -58,7 +58,7 @@
 						</form>
 					{:else}
 						<a href="/iniciar-sesion" class="text-sm font-medium text-gray-600 transition hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Iniciar sesión</a>
-						<a href="/registrarse" class="rounded-lg bg-brand-orange px-4 py-2 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light">Registrarse</a>
+						<a href="/registrarse" class="rounded-lg bg-brand-orange px-4 py-2 text-sm font-medium text-gray-950 transition hover:bg-brand-orange-light">Registrarse</a>
 					{/if}
 				{/if}
 
@@ -104,7 +104,7 @@
 		{#if mobileMenuOpen}
 			<div class="border-t border-gray-200 bg-white px-4 py-4 dark:border-gray-800 dark:bg-gray-950 md:hidden">
 				<nav class="flex flex-col gap-4">
-					<a href="/productos" class="text-sm font-semibold text-brand-orange dark:text-brand-orange">Productos</a>
+					<a href="/productos" class="text-sm font-medium text-brand-orange dark:text-brand-orange">Productos</a>
 					{#if isStaff}
 						<a href="/negocio" class="text-sm font-medium text-gray-700 dark:text-gray-300">Panel</a>
 						<form method="post" action="/cuenta?/salir" use:enhance>
@@ -117,7 +117,7 @@
 						</form>
 					{:else}
 						<a href="/iniciar-sesion" class="text-sm font-medium text-gray-700 dark:text-gray-300">Iniciar sesión</a>
-						<a href="/registrarse" class="inline-block rounded-lg bg-brand-orange px-4 py-2 text-sm font-semibold text-gray-950">Registrarse</a>
+						<a href="/registrarse" class="inline-block rounded-lg bg-brand-orange px-4 py-2 text-sm font-medium text-gray-950">Registrarse</a>
 					{/if}
 				</nav>
 			</div>

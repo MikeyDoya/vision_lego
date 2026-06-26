@@ -75,7 +75,7 @@
 				<input id="notes" name="notes" type="text" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-brand-orange focus:outline-none focus:ring-1 focus:ring-brand-orange dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
 			</div>
 			<div class="flex items-end">
-				<button type="submit" disabled={saving} class="cursor-pointer rounded-lg bg-brand-orange px-4 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light disabled:opacity-60">
+				<button type="submit" disabled={saving} class="cursor-pointer rounded-lg bg-brand-orange px-4 py-2.5 text-sm font-medium text-gray-950 transition hover:bg-brand-orange-light disabled:opacity-60">
 					{saving ? 'Guardando…' : 'Guardar'}
 				</button>
 			</div>

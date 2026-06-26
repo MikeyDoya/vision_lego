@@ -21,7 +21,7 @@
 		<label for="hasta" class="block text-sm font-medium text-gray-600 dark:text-gray-400">Hasta</label>
 		<input id="hasta" name="hasta" type="date" value={data.to} class="mt-1 cursor-pointer rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-brand-orange focus:outline-none dark:border-gray-700 dark:bg-gray-900 dark:text-white" />
 	</div>
-	<button type="submit" class="cursor-pointer rounded-lg bg-brand-orange px-4 py-2.5 text-sm font-semibold text-gray-950 transition hover:bg-brand-orange-light">Ver</button>
+	<button type="submit" class="cursor-pointer rounded-lg bg-brand-orange px-4 py-2.5 text-sm font-medium text-gray-950 transition hover:bg-brand-orange-light">Ver</button>
 </form>
 
 <!-- Summary cards -->

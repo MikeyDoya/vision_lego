@@ -117,7 +117,7 @@ export const actions: Actions = {
 		const variantId = data.get('variantId')?.toString() || null;
 
 		const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-		const maxSize = 10 * 1024 * 1024;
+		const maxSize = 5 * 1024 * 1024;
 
 		const existing = await db
 			.select({ position: productImages.position })
