@@ -1,0 +1,109 @@
+===== deploy.yml =====
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+          BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
+        run: pnpm build
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.DROPLET_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "${{ secrets.DROPLET_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Transfer build to droplet
+        env:
+          REMOTE: ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}
+        run: |
+          ssh "${REMOTE}" "mkdir -p ~/vision_lego/build"
+          # Sync build output — preserve any uploaded images already on the server
+          rsync -az --delete --exclude='client/uploads/' \
+            build/ "${REMOTE}:~/vision_lego/build/"
+          rsync -az \
+            package.json pnpm-lock.yaml ecosystem.config.cjs drizzle.config.ts \
+            "${REMOTE}:~/vision_lego/"
+          rsync -az --delete \
+            drizzle/ "${REMOTE}:~/vision_lego/drizzle/"
+
+      - name: Write .env on droplet
+        env:
+          REMOTE: ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+          BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
+        run: |
+          {
+            echo "DATABASE_URL=${DATABASE_URL}"
+            echo "BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}"
+            echo "BETTER_AUTH_URL=${BETTER_AUTH_URL}"
+            echo "ORIGIN=${BETTER_AUTH_URL}"
+            echo "PORT=3000"
+            echo "BODY_SIZE_LIMIT=5242880"
+          } | ssh "${REMOTE}" "cat > ~/vision_lego/.env"
+
+      - name: Run database migrations on droplet
+        env:
+          REMOTE: ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}
+        run: |
+          ssh "${REMOTE}" bash << 'MIGRATE'
+            set -e
+            export PATH="/home/mikey/.local/share/fnm/node-versions/v24.14.1/installation/bin:/home/mikey/.local/share/pnpm:$PATH"
+            cd ~/vision_lego
+            set -a; source .env; set +a
+            # Full install so drizzle-kit and drizzle-orm share the same node_modules.
+            # The later prod install step prunes devDeps after migrations run.
+            pnpm install --frozen-lockfile
+            pnpm exec drizzle-kit migrate
+          MIGRATE
+
+      - name: Install production deps and restart app
+        env:
+          REMOTE: ${{ secrets.DROPLET_USER }}@${{ secrets.DROPLET_HOST }}
+        run: |
+          ssh "${REMOTE}" bash << 'DEPLOY'
+            set -e
+            export PATH="/home/mikey/.local/share/fnm/node-versions/v24.14.1/installation/bin:/home/mikey/.local/share/pnpm:$PATH"
+            cd ~/vision_lego
+            pnpm install --prod --frozen-lockfile
+            pm2 restart vision_lego || pm2 start ecosystem.config.cjs
+          DEPLOY
+
+===== playwright en package.json? =====
+10:		"prepare": "playwright install && svelte-kit sync || echo ''",
+17:		"test:e2e": "playwright test",
+29:		"@playwright/test": "^1.59.1",
+37:		"@vitest/browser-playwright": "^4.1.3",
+45:		"playwright": "^1.59.1",
+
+===== scripts prepare/postinstall? =====
+10:		"prepare": "playwright install && svelte-kit sync || echo ''",

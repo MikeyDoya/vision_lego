@@ -1,0 +1,47 @@
+===== último commit =====
+commit afa0fcbb055613928536ede9701509992cf8db25
+Author: Esteban Bedoya <mikeydoya@tuta.io>
+Date:   Fri Jun 26 18:02:51 2026 -0500
+
+    feat: add Lexend font and photo hero background
+
+ CLAUDE.md                                          |  41 +-
+ diagnose_hero.sh                                   |  73 +++
+ diagnostics/01_overview.txt                        |  77 +++
+ diagnostics/02_home_page.txt                       | 292 ++++++++++
+ diagnostics/03_layout_css.txt                      |  34 ++
+ diagnostics/04_other_changed_files.txt             | 586 +++++++++++++++++++++
+ docs/IMAGE_STANDARDS.md                            |   2 +-
+ nginx.conf                                         |  24 +-
+ src/lib/components/store/Footer.svelte             |   4 +-
+ src/lib/components/ui/ImageCropper.svelte          |   6 +-
+ src/lib/server/cartCookie.ts                       |   5 +-
+ src/routes/(auth)/iniciar-sesion/+page.svelte      |   2 +-
+ src/routes/(auth)/registrarse/+page.svelte         |   2 +-
+ src/routes/(store)/+layout.svelte                  |   8 +-
+ src/routes/(store)/+page.svelte                    |  37 +-
+ src/routes/(store)/carrito/+page.svelte            |   2 +-
+ src/routes/(store)/checkout/+page.svelte           |   2 +-
+ src/routes/(store)/cuenta/+page.svelte             |   2 +-
+ src/routes/(store)/productos/+page.svelte          |   2 +-
+ src/routes/(store)/productos/[slug]/+page.svelte   |   8 +-
+ src/routes/layout.css                              |  19 +
+ src/routes/negocio/analiticas/+page.svelte         |   2 +-
+ src/routes/negocio/cuentas-por-cobrar/+page.svelte |   2 +-
+ src/routes/negocio/envios/+page.svelte             |   2 +-
+ src/routes/negocio/gastos/+page.svelte             |   2 +-
+ src/routes/negocio/pedidos/[id]/+page.svelte       |   2 +-
+ src/routes/negocio/productos/[id]/+page.server.ts  |   2 +-
+ src/routes/negocio/productos/[id]/+page.svelte     |   2 +-
+ src/routes/negocio/productos/nuevo/+page.svelte    |   2 +-
+ static/fonts/Lexend-VariableFont_wght.ttf          | Bin 0 -> 174528 bytes
+ static/images/hero/hero-bg-1920.webp               | Bin 0 -> 157110 bytes
+ static/images/hero/hero-bg-960.webp                | Bin 0 -> 49088 bytes
+ 32 files changed, 1181 insertions(+), 63 deletions(-)
+
+===== photoswipe en package.json? =====
+61:		"photoswipe": "^5.4.4",
+
+===== lock y package sincronizados? =====
+ ERROR  Unknown option: 'dry-run'
+For help, run: pnpm help install
